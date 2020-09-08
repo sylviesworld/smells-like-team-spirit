@@ -10,6 +10,7 @@ class AppWidget(QWidget):
         
         # Create main layout to nest new layouts within
         self.mainLayout = QVBoxLayout()
+        #self.mainLayout.setContentsMargins(25, 25, 25, 150)
         
         # Create Text box
         self.textBox = QTextEdit()
@@ -17,4 +18,8 @@ class AppWidget(QWidget):
 
         # Set main layout to app widget
         self.setLayout(self.mainLayout)
-
+    
+    def saveFile(self, fileName):
+        f = open(fileName, 'w')
+        f.write(self.textBox.toPlainText())
+        f.close()
