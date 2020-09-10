@@ -89,14 +89,21 @@ class MainWindow(QMainWindow):
         # open_file_action = QAction(QIcon(os.path.join(
         #     'images', 'blue-folder-open-document.png')), "Open file...", self)
         open_file_action = QAction("Open File", self)
-        open_file_action.setStatusTip("Open file")
+        open_file_action.setStatusTip("Open a file")
         open_file_action.triggered.connect(self.openEvent)
         file_toolbar.addAction(open_file_action)
+
+        font_choice = QAction('Font', self)
+        font_choice.triggered.connect(self.fontChoice)
+        # file_toolbar.addToolBar(font_choice)
+        file_toolbar.addAction(font_choice)
+        # self.file_toolbar.addAction(font_choice)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
         if valid:
-            self.styleChoice.setFont(font)
+            # self.styleChoice.setFont(font)
+            self.setFont(font)
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
