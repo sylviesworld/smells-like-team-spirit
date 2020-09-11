@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         editMenu.addAction(editButton)
 
         file_toolbar = QToolBar("File")
-        file_toolbar.setIconSize(QSize(14, 14))
+        file_toolbar.setIconSize(QSize(18, 18))
         self.addToolBar(file_toolbar)
 
         # open_file_action = QAction(QIcon(os.path.join(
@@ -100,6 +100,12 @@ class MainWindow(QMainWindow):
         open_file_action.setStatusTip("Open a file")
         open_file_action.triggered.connect(self.openEvent)
         file_toolbar.addAction(open_file_action)
+
+        copy_action = QAction('Copy', self)
+        copy_action.setStatusTip('Copy Selected Text to Clipboard')
+        copy_action.setShortcut(QKeySequence.Copy)
+        copy_action.triggered.connect(self.centralWidget.textBox.copy)
+        file_toolbar.addAction(copy_action)
 
         font_choice = QAction('Font', self)
         font_choice.triggered.connect(self.fontChoice)
@@ -199,7 +205,7 @@ class MainWindow(QMainWindow):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Question)
         msg.setText('Do you want to save changes to the current file?')
-        msg.setWindowTitle('Notepad App Message')
+        msg.setWindowTitle('Notepad App Save Message')
         msg.setStandardButtons(
             QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
         msg.buttonClicked.connect(self.saveMessageEvent)
