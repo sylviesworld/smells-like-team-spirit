@@ -48,8 +48,16 @@ class MainWindow(QMainWindow):
         self.centralWidget.textBox.textChanged.connect(self.textEditedEvent)
         self.needsSave = False
 
+        font = QFont('Helvetica', 20)
+        self.centralWidget.textBox.setFont(font)
+        self.centralWidget.textBox.setFontPointSize(20)
+
         # Define menu bar
         menuBar = self.menuBar()
+
+        # Define status bar
+        self.status = QStatusBar()
+        self.setStatusBar(self.status)
 
         # Define file options for menu bar
         fileMenu = menuBar.addMenu('File')
