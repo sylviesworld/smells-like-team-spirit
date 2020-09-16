@@ -1,4 +1,5 @@
 import os
+import time
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -217,7 +218,7 @@ class MainWindow(QMainWindow):
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
                     self.setWindowTitle(
-                        'Notepad App - ' + os.path.basename(fileName))
+                        'Notepad App - ' + os.path.basename(fileName) + ' -- Last Modified - ' + time.ctime(os.path.getmtime(fileName)))
 
             self.needsSave = False
 
