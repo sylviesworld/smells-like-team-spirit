@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore
@@ -16,8 +14,6 @@ from PyQt5.QtWidgets import QFontDialog, QColorDialog, QTextEdit
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
-
 from app_widget import AppWidget
 
 # this class inherits from QMainWindow and will be used to set up the applications GUI
@@ -32,9 +28,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Notepad App - untitled.txt')
         self.setGeometry(0, 0, screenBounds.width() *
                          0.5, screenBounds.height() * 0.6)
-
-        # self.setWindowIcon(QtGui.QIcon(
-        #   'paper-calendar-notepad-notebook-png-favpng-cZMwKJMjDvrcDcGFdxhcgHAbd_t.jpg'))
 
         # Center the screen
         rect = self.frameGeometry()
@@ -59,58 +52,86 @@ class MainWindow(QMainWindow):
         self.status = QStatusBar()
         self.setStatusBar(self.status)
 
-        # Define file options for menu bar
+        # Create menu bars
         fileMenu = menuBar.addMenu('File')
+        editMenu = menuBar.addMenu('Edit')
 
+        # File menu bar
         newButton = QAction('New', self)
         newButton.setShortcut('Ctrl+N')
         newButton.triggered.connect(lambda: self.openEvent(True))
+        fileMenu.addAction(newButton)
 
         openButton = QAction('Open...', self)
         openButton.setShortcut('Ctrl+O')
         openButton.triggered.connect(lambda: self.openEvent(False))
+        fileMenu.addAction(openButton)
 
         saveIcon = QIcon.fromTheme('document-save')
         saveButton = QAction(saveIcon, 'Save', self)
         saveButton.setShortcut('Ctrl+S')
         saveButton.triggered.connect(self.saveEvent)
         self.currentFile = ''
+        fileMenu.addAction(saveButton)
 
         saveAsButton = QAction(saveIcon, 'Save As...', self)
         saveAsButton.setShortcut('Ctrl+Shift+S')
         saveAsButton.triggered.connect(self.saveAsEvent)
-
-        fileMenu.addAction(newButton)
-        fileMenu.addAction(openButton)
-        fileMenu.addAction(saveButton)
         fileMenu.addAction(saveAsButton)
 
-        editMenu = menuBar.addMenu('Edit')
-
+        # Edit menu bar
         editButton = QAction('yo dude', self)
         editMenu.addAction(editButton)
 
+        copyButton = QAction('Copy', self)
+        # copyButton.setShortcut()
+        # copyButton.setShortcut(QKeySequence.Copy)
+        copyButton.triggered.connect(self.centralWidget.textBox.copy)
+        editMenu.addAction(copyButton)
+
+        # Create toolbars
         file_toolbar = QToolBar("File")
         file_toolbar.setIconSize(QSize(18, 18))
         self.addToolBar(file_toolbar)
+        edit_toolbar = QToolBar("Edit")
+        edit_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(edit_toolbar)
 
-        # open_file_action = QAction(QIcon(os.path.join(
-        #     'images', 'blue-folder-open-document.png')), "Open file...", self)
-        open_file_action = QAction("Open File", self)
-        open_file_action.setStatusTip("Open a file")
+        # File toolbar
+        open_file_action = QAction("Open...", self)
+        open_file_action.setStatusTip("Open an Existing File")
         open_file_action.triggered.connect(self.openEvent)
         file_toolbar.addAction(open_file_action)
 
+        #saveIcon = QIcon.fromTheme('document-save')
+        save_file_action = QAction(saveIcon, 'Save', self)
+        save_file_action.setStatusTip('Save Changes to Current File')
+        save_file_action.triggered.connect(self.saveEvent)
+        self.currentFile = ''
+        file_toolbar.addAction(save_file_action)
+
+        save_as_action = QAction(saveIcon, 'Save As...', self)
+        save_as_action.setStatusTip("Save Current Note to Specified File")
+        save_as_action.triggered.connect(self.saveAsEvent)
+        file_toolbar.addAction(save_as_action)
+
+        # Edit toolbar
         copy_action = QAction('Copy', self)
         copy_action.setStatusTip('Copy Selected Text to Clipboard')
         copy_action.setShortcut(QKeySequence.Copy)
         copy_action.triggered.connect(self.centralWidget.textBox.copy)
-        file_toolbar.addAction(copy_action)
+        edit_toolbar.addAction(copy_action)
 
-        font_choice = QAction('Font', self)
-        font_choice.triggered.connect(self.fontChoice)
+        paste_action = QAction('Paste', self)
+        paste_action.setStatusTip('Paste From Clipboard')
+        paste_action.setShortcut(QKeySequence.Paste)
+        paste_action.triggered.connect(self.centralWidget.textBox.paste)
+        edit_toolbar.addAction(paste_action)
+
+        font_choice_action = QAction('Font', self)
+        font_choice_action.triggered.connect(self.fontChoice)
         # file_toolbar.addToolBar(font_choice)
-        file_toolbar.addAction(font_choice)
+        edit_toolbar.addAction(font_choice_action)
         # self.file_toolbar.addAction(font_choice)
 
     def fontChoice(self):
