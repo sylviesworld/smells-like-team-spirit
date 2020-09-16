@@ -1,24 +1,29 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
+
+filename = '.note_accounts'
 
 class SignupWindow(QWidget):
     def create_account(self):
-        f = open('note_accounts.txt', 'r')
+        f = open(filename, 'r')
 
         num_accounts = int(f.readline())
         num_accounts += 1
 
         all_file = f.read()
-        
-        f.close()
-
-        f = open('note_accounts.txt', 'w')
-        
-        f.write(str(num_accounts) + '\n' + all_file + self.lineEdit_newname.text() + '\n' + self.lineEdit_newpassword.text() + '\n\n')
 
         f.close()
-    
+
+        f = open(filename, 'w')
+
+        f.write(str(num_accounts) + '\n' + all_file + self.lineEdit_newname.text() +
+                '\n' + self.lineEdit_newpassword.text() + '\n\n')
+
+        f.close()
+
         self.close()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Signup window')
@@ -44,30 +49,31 @@ class SignupWindow(QWidget):
 
         self.setLayout(layout)
 
+
 class LoginWindow(QWidget):
     def check_credentials(self):
         #print("Made it to function")
 
-        f = open('note_accounts.txt', 'r')
+        f = open(filename, 'r')
         num_accounts = int(f.readline())
 
-        f.readline() #reads whitespace between num_accounts and first user/pass pair
+        f.readline()  # reads whitespace between num_accounts and first user/pass pair
 
         for x in range(num_accounts):
             username = f.readline()
             password = f.readline()
-            
+
             username = username.strip()
             password = password.strip()
 
             if self.lineEdit_username.text() == username and self.lineEdit_password.text() == password:
                 return 'True'
-        
+
             elif self.lineEdit_username.text() == username and self.lineEdit_password.text() != password:
                 return 'Wrong pass'
 
-            f.readline() #reads whitespace between current account and next user/pass pair
-        
+            f.readline()  # reads whitespace between current account and next user/pass pair
+
         f.close()
 
         return 'False'
@@ -82,11 +88,11 @@ class LoginWindow(QWidget):
             msg.exec_()
             self.main_window.show()
             self.close()
-        
+
         elif result == 'Wrong pass':
             msg.setText('Incorrect password')
             msg.exec_()
-        
+
         elif result == 'False':
             msg.setText('Username not found')
             msg.exec_()
@@ -94,7 +100,7 @@ class LoginWindow(QWidget):
     def create_account_window(self):
         self.dialog = SignupWindow()
         self.dialog.show()
-        
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Login Window')
@@ -114,7 +120,6 @@ class LoginWindow(QWidget):
         layout.addWidget(label_password, 1, 0)
         layout.addWidget(self.lineEdit_password, 1, 1)
 
-        
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.login_result)
         layout.addWidget(button_login, 2, 0)
