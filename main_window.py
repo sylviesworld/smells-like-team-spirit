@@ -1,7 +1,8 @@
-#import os
+import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 
 # this class inherits from QMainWindow and will be used to set up the applications GUI
@@ -66,6 +67,11 @@ class MainWindow(QMainWindow):
         saveAsButton.setShortcut('Ctrl+Shift+S')
         saveAsButton.triggered.connect(self.saveAsEvent)
         fileMenu.addAction(saveAsButton)
+
+        printButton = QAction(saveIcon, 'Print', self)
+        printButton.setShortcut('Ctrl+P')
+        printButton.triggered.connect(self.printEvent)
+        fileMenu.addAction(printButton)
 
         # Edit menu bar
         editButton = QAction('yo dude', self)
@@ -144,15 +150,23 @@ class MainWindow(QMainWindow):
     def saveEvent(self):
         if self.currentFile == '':
             fileName, _ = QFileDialog.getSaveFileName(
-                self, 'Save As', '', 'Text Files (*.txt)')
+                self, 'Save As', '', 'Text Files (*.txt);;PDF Files (*.pdf)')
 
-            if fileName:
+            path, extension = os.path.splitext(fileName)
+
+            # Save text file
+            if fileName and extension == '.txt':
                 self.centralWidget.saveFile(fileName)
                 self.currentFile = fileName
                 self.statusBar().showMessage('File saved.')
                 self.needsSave = False
                 self.setWindowTitle('Notepad App - ' +
                                     os.path.basename(fileName))
+                return True
+            
+            # Save PDF
+            elif fileName and extension == '.pdf' :
+                self.savePDF(fileName)
                 return True
 
             # File dialog canceled
@@ -197,7 +211,7 @@ class MainWindow(QMainWindow):
             # Open file dialog
             else:
                 fileName, _ = QFileDialog.getOpenFileName(
-                    self, 'Open File', '', 'Text Files (*.txt)')
+                    self, 'Open File', '', 'Text Files (*.txt *.pdf)')
 
                 if fileName:
                     self.centralWidget.openFile(fileName)
@@ -228,3 +242,19 @@ class MainWindow(QMainWindow):
         # Skip saving the file
         elif button.text() == '&No':
             self.needsSave = False
+
+    # Opens the print dialog
+    def printEvent(self) :
+        printer = QPrinter(QPrinter.HighResolution)
+        dialogue = QPrintDialog(printer, self)
+        
+        if dialogue.exec_() == QPrintDialog.Accepted :
+            self.centralWidget.textBox.print_(printer)
+
+    # Saves the file as a PDF
+    def savePDF(self, fileName) :
+        printer = QPrinter(QPrinter.HighResolution)
+        printer.setPageSize(QPrinter.A4)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setOutputFileName(fileName)
+        self.centralWidget.textBox.document().print_(printer)
