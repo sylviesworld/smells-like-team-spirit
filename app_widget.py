@@ -1,4 +1,3 @@
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtWidgets import QWidget
@@ -15,8 +14,6 @@ class AppWidget(QWidget):
 
         # Create Text box
         self.textBox = QTextEdit()
-        # self.textBox.setLineWrapMode(QTextEdit.NoWrap)
-        # self.textBox.setFontPointSize(10)
         self.mainLayout.addWidget(self.textBox)
 
         # Set main layout to app widget

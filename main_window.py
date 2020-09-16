@@ -1,16 +1,4 @@
-import os
-from PyQt5.QtCore import Qt
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QToolBar
-from PyQt5.QtWidgets import QAction
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QStatusBar
-from PyQt5.QtWidgets import QDesktopWidget
-from PyQt5.QtWidgets import QTextEdit
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QFontDialog, QColorDialog, QTextEdit
+#import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -130,9 +118,7 @@ class MainWindow(QMainWindow):
 
         font_choice_action = QAction('Font', self)
         font_choice_action.triggered.connect(self.fontChoice)
-        # file_toolbar.addToolBar(font_choice)
         edit_toolbar.addAction(font_choice_action)
-        # self.file_toolbar.addAction(font_choice)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
