@@ -7,8 +7,22 @@ from PyQt5.QtWidgets import QApplication
 
 def main():
 
+    #placeholder stylesheet
+    stylesheet = """
+
+    QTextEdit {
+        background-color: white;
+    }
+
+    MainWindow {
+        background-color: white;
+    }
+
+    """
+    
     # Declare an instance of the application
     app_example = QApplication(sys.argv)
+    app_example.setStyleSheet(stylesheet)
     
     login_window = LoginWindow()
     login_window.show()
