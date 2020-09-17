@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle('Notepad App - untitled.txt')
         self.setGeometry(0, 0, screenBounds.width() *
-                         0.25, screenBounds.height() * 0.3)
+                         0.5, screenBounds.height() * 0.6)
 
         # Center the screen
         rect = self.frameGeometry()
