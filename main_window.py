@@ -124,12 +124,9 @@ class MainWindow(QMainWindow):
         # formatMenu.addAction(fontButton)
 
         # Create toolbars
-        file_toolbar = QToolBar("File")
-        file_toolbar.setIconSize(QSize(18, 18))
-        self.addToolBar(file_toolbar)
-        edit_toolbar = QToolBar("Edit")
-        edit_toolbar.setIconSize(QSize(18, 18))
-        self.addToolBar(edit_toolbar)
+        # file_toolbar = QToolBar("File")
+        # file_toolbar.setIconSize(QSize(18, 18))
+        # self.addToolBar(file_toolbar)
 
         paste_action = QAction('Paste', self)
         paste_action.setShortcut(QKeySequence.Paste)
@@ -164,7 +161,11 @@ class MainWindow(QMainWindow):
         # save_as_action.triggered.connect(self.saveAsEvent)
         # file_toolbar.addAction(save_as_action)
 
-        # Edit toolbar
+        # Create edit toolbar
+        edit_toolbar = QToolBar("Edit")
+        edit_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(edit_toolbar)
+
         copy_action = QAction('Copy', self)
         copy_action.setStatusTip('Copy Selected Text to Clipboard')
         copy_action.setShortcut(QKeySequence.Copy)
@@ -178,8 +179,32 @@ class MainWindow(QMainWindow):
         edit_toolbar.addAction(paste_action)
 
         font_choice_action = QAction('Font', self)
+        font_choice_action.setStatusTip(
+            'Open System Dialogue for Font Choice')
         font_choice_action.triggered.connect(self.fontChoice)
         edit_toolbar.addAction(font_choice_action)
+
+        # Create format toolbar
+        format_toolbar = QToolBar("Format")
+        format_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(format_toolbar)
+
+        bold_action = QAction("Bold", self)
+        bold_action.setStatusTip("Set font to Bold (strong)")
+        bold_action.setShortcut(QKeySequence.Bold)
+        bold_action.setCheckable(True)
+        bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
+            QFont.Bold if x else QFont.Normal))
+        format_toolbar.addAction(bold_action)
+        formatMenu.addAction(bold_action)
+
+        italic_action = QAction("Italic", self)
+        italic_action.setStatusTip("Set font to Italic (emphasis)")
+        italic_action.setShortcut(QKeySequence.Italic)
+        italic_action.setCheckable(True)
+        italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
+        format_toolbar.addAction(italic_action)
+        formatMenu.addAction(italic_action)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
@@ -272,7 +297,8 @@ class MainWindow(QMainWindow):
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
                     self.setWindowTitle(
-                        'Notepad App - ' + os.path.basename(fileName) + ' -- Last Modified - ' + time.ctime(os.path.getmtime(fileName)))
+                        'Notepad App - ' + os.path.basename(fileName) + ' -- Last Modified - ' +
+                        time.ctime(os.path.getmtime(fileName)))
 
             self.needsSave = False
 
