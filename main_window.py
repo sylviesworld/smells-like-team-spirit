@@ -15,7 +15,9 @@ class MainWindow(QMainWindow):
         # Get screen resolution
         screenBounds = QDesktopWidget().screenGeometry(0)
 
-        self.setWindowTitle('Notepad App - untitled.txt')
+        self.window_title = 'Notepad App - untitled.txt'
+        self.setWindowTitle(self.window_title)
+
         self.setGeometry(0, 0, screenBounds.width() *
                          0.5, screenBounds.height() * 0.6)
 
@@ -225,6 +227,9 @@ class MainWindow(QMainWindow):
     def textEditedEvent(self):
         self.needsSave = True
         self.statusBar().clearMessage()
+        if "Edited" not in str(self.window_title):
+            self.window_title = self.window_title + " -- Edited"
+            self.setWindowTitle(self.window_title)
 
     # Opens the file dialog to save a new file or the working file. Returns false if canceled
     def saveEvent(self):
@@ -240,8 +245,8 @@ class MainWindow(QMainWindow):
                 self.currentFile = fileName
                 self.statusBar().showMessage('File saved.')
                 self.needsSave = False
-                self.setWindowTitle('Notepad App - ' +
-                                    os.path.basename(fileName))
+                self.window_title = f'Notepad App - {os.path.basename(fileName)}'
+                self.setWindowTitle(self.window_title)
                 return True
 
             # Save PDF
@@ -286,7 +291,8 @@ class MainWindow(QMainWindow):
             # New file
             if isNew:
                 self.centralWidget.textBox.clear()
-                self.setWindowTitle('Notepad App - untitled.txt')
+                self.window_title = 'Notepad App - untitled.txt'
+                self.setWindowTitle(self.window_title)
 
             # Open file dialog
             else:
@@ -296,9 +302,8 @@ class MainWindow(QMainWindow):
                 if fileName:
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
-                    self.setWindowTitle(
-                        'Notepad App - ' + os.path.basename(fileName) + ' -- Last Modified - ' +
-                        time.ctime(os.path.getmtime(fileName)))
+                    self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                    self.setWindowTitle(self.window_title)
 
             self.needsSave = False
 
