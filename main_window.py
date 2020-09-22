@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
 
         # Create menu bars
         fileMenu = menuBar.addMenu('File')
-        editMenu = menuBar.addMenu('Edit')
+
         formatMenu = menuBar.addMenu('Format')
 
         # File menu bar
@@ -57,6 +57,13 @@ class MainWindow(QMainWindow):
         openButton.setShortcut('Ctrl+O')
         openButton.triggered.connect(lambda: self.openEvent(False))
         fileMenu.addAction(openButton)
+
+        closeButton = QAction('Close', self)
+        closeButton.setShortcut('Ctrl+W')
+        closeButton.triggered.connect(lambda: self.closeEvent)
+        fileMenu.addAction(closeButton)
+
+        fileMenu.addSeparator()
 
         saveIcon = QIcon.fromTheme('document-save')
         saveButton = QAction(saveIcon, 'Save', self)
@@ -76,6 +83,8 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(printButton)
 
         # Edit menu bar
+        editMenu = menuBar.addMenu('Edit')
+
         undoButton = QAction('Undo', self)
         undoButton.setShortcut(QKeySequence.Undo)
         undoButton.triggered.connect(self.centralWidget.textBox.undo)
@@ -85,6 +94,8 @@ class MainWindow(QMainWindow):
         redoButton.setShortcut(QKeySequence.Redo)
         redoButton.triggered.connect(self.centralWidget.textBox.redo)
         editMenu.addAction(redoButton)
+
+        editMenu.addSeparator()
 
         cutButton = QAction('Cut', self)
         cutButton.setShortcut(QKeySequence.Cut)
@@ -98,7 +109,6 @@ class MainWindow(QMainWindow):
         editMenu.addAction(copyButton)
 
         pasteButton = QAction('Paste', self)
-        pasteButton.setStatusTip('Paste From Clipboard')
         pasteButton.setShortcut(QKeySequence.Paste)
         pasteButton.triggered.connect(self.centralWidget.textBox.paste)
         editMenu.addAction(pasteButton)
@@ -109,9 +119,67 @@ class MainWindow(QMainWindow):
         editMenu.addAction(selectButton)
 
         # Format menu button
-        fontButton = QAction('Font', self)
+        # fontButton = QAction('Font', self)
+        # fontButton.triggered.connect(self.fontChoice)
+        # formatMenu.addAction(fontButton)
+
+        # Create toolbars
+        file_toolbar = QToolBar("File")
+        file_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(file_toolbar)
+        edit_toolbar = QToolBar("Edit")
+        edit_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(edit_toolbar)
+
+        paste_action = QAction('Paste', self)
+        paste_action.setShortcut(QKeySequence.Paste)
+        paste_action.setStatusTip('Paste From Clipboard')
+        paste_action.triggered.connect(self.centralWidget.textBox.paste)
+        editMenu.addAction(paste_action)
+
+        selectButton = QAction('Select All', self)
+        selectButton.setShortcut(QKeySequence.SelectAll)
+        selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
+        editMenu.addAction(selectButton)
+
+        # File toolbar
+        # open_file_action = QAction("Open...", self)
+        # open_file_action.setStatusTip("Open an Existing File")
+        # open_file_action.triggered.connect(self.openEvent)
+        # file_toolbar.addAction(open_file_action)
+
+        # Format menu button
+        fontButton = QAction('Font System Dialogue', self)
         fontButton.triggered.connect(self.fontChoice)
         formatMenu.addAction(fontButton)
+
+        # save_file_action = QAction(saveIcon, 'Save', self)
+        # save_file_action.setStatusTip('Save Changes to Current File')
+        # save_file_action.triggered.connect(self.saveEvent)
+        # self.currentFile = ''
+        # file_toolbar.addAction(save_file_action)
+
+        # save_as_action = QAction(saveIcon, 'Save As...', self)
+        # save_as_action.setStatusTip("Save Current Note to Specified File")
+        # save_as_action.triggered.connect(self.saveAsEvent)
+        # file_toolbar.addAction(save_as_action)
+
+        # Edit toolbar
+        copy_action = QAction('Copy', self)
+        copy_action.setStatusTip('Copy Selected Text to Clipboard')
+        copy_action.setShortcut(QKeySequence.Copy)
+        copy_action.triggered.connect(self.centralWidget.textBox.copy)
+        edit_toolbar.addAction(copy_action)
+
+        paste_action = QAction('Paste', self)
+        paste_action.setStatusTip('Paste From Clipboard')
+        paste_action.setShortcut(QKeySequence.Paste)
+        paste_action.triggered.connect(self.centralWidget.textBox.paste)
+        edit_toolbar.addAction(paste_action)
+
+        font_choice_action = QAction('Font', self)
+        font_choice_action.triggered.connect(self.fontChoice)
+        edit_toolbar.addAction(font_choice_action)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
@@ -150,9 +218,9 @@ class MainWindow(QMainWindow):
                 self.setWindowTitle('Notepad App - ' +
                                     os.path.basename(fileName))
                 return True
-            
+
             # Save PDF
-            elif fileName and extension == '.pdf' :
+            elif fileName and extension == '.pdf':
                 self.savePDF(fileName)
                 return True
 
@@ -231,15 +299,15 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
     # Opens the print dialog
-    def printEvent(self) :
+    def printEvent(self):
         printer = QPrinter(QPrinter.HighResolution)
         dialogue = QPrintDialog(printer, self)
-        
-        if dialogue.exec_() == QPrintDialog.Accepted :
+
+        if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
     # Saves the file as a PDF
-    def savePDF(self, fileName) :
+    def savePDF(self, fileName):
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFormat(QPrinter.PdfFormat)
