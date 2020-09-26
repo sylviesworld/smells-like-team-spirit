@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtWidgets import QVBoxLayout
-
+from find_window import FindWindow
 
 class AppWidget(QWidget):
     def __init__(self):
@@ -15,6 +15,9 @@ class AppWidget(QWidget):
         # Create Text box
         self.textBox = QTextEdit()
         self.mainLayout.addWidget(self.textBox)
+
+        # Create find window
+        self.findWindow = FindWindow(self.textBox)
 
         # Set main layout to app widget
         self.setLayout(self.mainLayout)

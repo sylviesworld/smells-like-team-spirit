@@ -110,15 +110,11 @@ class MainWindow(QMainWindow):
         copyButton.triggered.connect(self.centralWidget.textBox.copy)
         editMenu.addAction(copyButton)
 
-        pasteButton = QAction('Paste', self)
-        pasteButton.setShortcut(QKeySequence.Paste)
-        pasteButton.triggered.connect(self.centralWidget.textBox.paste)
-        editMenu.addAction(pasteButton)
-
-        selectButton = QAction('Select All', self)
-        selectButton.setShortcut(QKeySequence.SelectAll)
-        selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
-        editMenu.addAction(selectButton)
+        # Duplicate paste edit menu button
+        # pasteButton = QAction('Paste', self)
+        # pasteButton.setShortcut(QKeySequence.Paste)
+        # pasteButton.triggered.connect(self.centralWidget.textBox.paste)
+        # editMenu.addAction(pasteButton)
 
         # Format menu button
         # fontButton = QAction('Font', self)
@@ -140,6 +136,11 @@ class MainWindow(QMainWindow):
         selectButton.setShortcut(QKeySequence.SelectAll)
         selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
         editMenu.addAction(selectButton)
+
+        findButton = QAction('Find', self)
+        findButton.setShortcut(QKeySequence.Find)
+        findButton.triggered.connect(self.centralWidget.findWindow.createWindow)
+        editMenu.addAction(findButton)
 
         # File toolbar
         # open_file_action = QAction("Open...", self)
