@@ -33,9 +33,9 @@ class MainWindow(QMainWindow):
         self.centralWidget.textBox.textChanged.connect(self.textEditedEvent)
         self.needsSave = False
 
-        font = QFont('Helvetica', 20)
-        self.centralWidget.textBox.setFont(font)
-        self.centralWidget.textBox.setFontPointSize(20)
+        # font = QFont('Helvetica', 16)
+        # self.centralWidget.textBox.setFont(font)
+        # self.centralWidget.textBox.setFontPointSize(16)
 
         # Define menu bar
         menuBar = self.menuBar()
@@ -139,30 +139,14 @@ class MainWindow(QMainWindow):
 
         findButton = QAction('Find', self)
         findButton.setShortcut(QKeySequence.Find)
-        findButton.triggered.connect(self.centralWidget.findWindow.createWindow)
+        findButton.triggered.connect(
+            self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
 
-        # File toolbar
-        # open_file_action = QAction("Open...", self)
-        # open_file_action.setStatusTip("Open an Existing File")
-        # open_file_action.triggered.connect(self.openEvent)
-        # file_toolbar.addAction(open_file_action)
-
         # Format menu button
-        fontButton = QAction('Font System Dialogue', self)
+        fontButton = QAction('Font (System Dialogue)', self)
         fontButton.triggered.connect(self.fontChoice)
         formatMenu.addAction(fontButton)
-
-        # save_file_action = QAction(saveIcon, 'Save', self)
-        # save_file_action.setStatusTip('Save Changes to Current File')
-        # save_file_action.triggered.connect(self.saveEvent)
-        # self.currentFile = ''
-        # file_toolbar.addAction(save_file_action)
-
-        # save_as_action = QAction(saveIcon, 'Save As...', self)
-        # save_as_action.setStatusTip("Save Current Note to Specified File")
-        # save_as_action.triggered.connect(self.saveAsEvent)
-        # file_toolbar.addAction(save_as_action)
 
         # Create edit toolbar
         edit_toolbar = QToolBar("Edit")
@@ -187,17 +171,36 @@ class MainWindow(QMainWindow):
         paste_action.triggered.connect(self.centralWidget.textBox.paste)
         edit_toolbar.addAction(paste_action)
 
-        # Create format toolbar
-        format_toolbar = QToolBar("Format")
-        format_toolbar.setIconSize(QSize(18, 18))
-        self.addToolBar(format_toolbar)
+        # Create font toolbar
+        font_toolbar = QToolBar("Font")
+        font_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(font_toolbar)
 
-        # FIXME this does not apply to text in window
         font_choice_action = QAction('Font', self)
         font_choice_action.setStatusTip(
             'Open System Dialogue for Font Choice')
         font_choice_action.triggered.connect(self.fontChoice)
-        format_toolbar.addAction(font_choice_action)
+        font_toolbar.addAction(font_choice_action)
+
+        self.fonts = QFontComboBox()
+        self.fonts.currentFontChanged.connect(
+            self.centralWidget.textBox.setCurrentFont)
+        font_toolbar.addWidget(self.fonts)
+
+        FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
+        FONT_SIZES.extend(range(12, 30, 2))
+        FONT_SIZES.extend([36, 48, 72])
+
+        self.fontsize = QComboBox()
+        self.fontsize.addItems([str(s) for s in FONT_SIZES])
+        self.fontsize.currentIndexChanged[str].connect(
+            lambda s: self.centralWidget.textBox.setFontPointSize(float(s)))
+        font_toolbar.addWidget(self.fontsize)
+
+        # Create format toolbar
+        format_toolbar = QToolBar("Format")
+        format_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(format_toolbar)
 
         bold_action = QAction("Bold", self)
         bold_action.setStatusTip("Set selected font to Bold (strong)")
@@ -224,6 +227,43 @@ class MainWindow(QMainWindow):
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
         formatMenu.addAction(underline_action)
+
+        font = QFont('Helvetica', 16)
+        self.centralWidget.textBox.setFont(font)
+        self.centralWidget.textBox.setFontPointSize(16)
+
+        # Create paragraph toolbar
+        paragraph_toolbar = QToolBar("Paragraph")
+        paragraph_toolbar.setIconSize(QSize(18, 18))
+        self.addToolBar(paragraph_toolbar)
+
+        self.aln_left_action = QAction("Align Left", self)
+        self.aln_left_action.setStatusTip("Align Text Left")
+        self.aln_left_action.setChecked(True)
+        self.aln_left_action.triggered.connect(
+            lambda: self.centralWidget.textBox.setAlignment(Qt.AlignLeft))
+        paragraph_toolbar.addAction(self.aln_left_action)
+
+        self.aln_center_action = QAction("Center", self)
+        self.aln_center_action.setStatusTip("Center Text")
+        self.aln_center_action.setChecked(True)
+        self.aln_center_action.triggered.connect(
+            lambda: self.centralWidget.textBox.setAlignment(Qt.AlignCenter))
+        paragraph_toolbar.addAction(self.aln_center_action)
+
+        self.aln_right_action = QAction("Align Right", self)
+        self.aln_right_action.setStatusTip("Align Text Right")
+        self.aln_right_action.setChecked(True)
+        self.aln_right_action.triggered.connect(
+            lambda: self.centralWidget.textBox.setAlignment(Qt.AlignRight))
+        paragraph_toolbar.addAction(self.aln_right_action)
+
+        self.aln_justify_action = QAction("Justify", self)
+        self.aln_justify_action.setStatusTip("Justify Text")
+        self.aln_justify_action.setChecked(True)
+        self.aln_justify_action.triggered.connect(
+            lambda: self.centralWidget.textBox.setAlignment(Qt.AlignJustify))
+        paragraph_toolbar.addAction(self.aln_justify_action)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
