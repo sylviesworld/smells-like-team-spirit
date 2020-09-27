@@ -168,6 +168,12 @@ class MainWindow(QMainWindow):
         edit_toolbar.setIconSize(QSize(18, 18))
         self.addToolBar(edit_toolbar)
 
+        cut_action = QAction('Cut', self)
+        cut_action.setStatusTip('Cut Selected Text (Copy and Delete)')
+        cut_action.setShortcut(QKeySequence.Cut)
+        cut_action.triggered.connect(self.centralWidget.textBox.cut)
+        edit_toolbar.addAction(cut_action)
+
         copy_action = QAction('Copy', self)
         copy_action.setStatusTip('Copy Selected Text to Clipboard')
         copy_action.setShortcut(QKeySequence.Copy)
@@ -180,19 +186,20 @@ class MainWindow(QMainWindow):
         paste_action.triggered.connect(self.centralWidget.textBox.paste)
         edit_toolbar.addAction(paste_action)
 
-        font_choice_action = QAction('Font', self)
-        font_choice_action.setStatusTip(
-            'Open System Dialogue for Font Choice')
-        font_choice_action.triggered.connect(self.fontChoice)
-        edit_toolbar.addAction(font_choice_action)
-
         # Create format toolbar
         format_toolbar = QToolBar("Format")
         format_toolbar.setIconSize(QSize(18, 18))
         self.addToolBar(format_toolbar)
 
+        # FIXME this does not apply to text in window
+        font_choice_action = QAction('Font', self)
+        font_choice_action.setStatusTip(
+            'Open System Dialogue for Font Choice')
+        font_choice_action.triggered.connect(self.fontChoice)
+        format_toolbar.addAction(font_choice_action)
+
         bold_action = QAction("Bold", self)
-        bold_action.setStatusTip("Set font to Bold (strong)")
+        bold_action.setStatusTip("Set selected font to Bold (strong)")
         bold_action.setShortcut(QKeySequence.Bold)
         bold_action.setCheckable(True)
         bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
@@ -201,18 +208,28 @@ class MainWindow(QMainWindow):
         formatMenu.addAction(bold_action)
 
         italic_action = QAction("Italic", self)
-        italic_action.setStatusTip("Set font to Italic (emphasis)")
+        italic_action.setStatusTip("Set selected font to Italic (emphasis)")
         italic_action.setShortcut(QKeySequence.Italic)
         italic_action.setCheckable(True)
         italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
         format_toolbar.addAction(italic_action)
         formatMenu.addAction(italic_action)
 
+        underline_action = QAction("Underline", self)
+        underline_action.setStatusTip("Set selected font to Underline")
+        underline_action.setShortcut(QKeySequence.Underline)
+        underline_action.setCheckable(True)
+        underline_action.toggled.connect(
+            self.centralWidget.textBox.setFontUnderline)
+        format_toolbar.addAction(underline_action)
+        formatMenu.addAction(underline_action)
+
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
         if valid:
             # self.styleChoice.setFont(font)
-            self.setFont(font)
+            # self.setFont(font)
+            self.centralWidget.textBox.setFont(font)
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
