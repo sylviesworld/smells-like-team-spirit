@@ -9,6 +9,7 @@ filename = '.note_accounts'
 
 # class containing functions that open and operate a separate window for creating an account
 
+
 class SignupWindow(QWidget):
     # reads in all currently existing accounts, encrypts user/pass, writes new file
     def create_account(self):
@@ -22,11 +23,13 @@ class SignupWindow(QWidget):
         f.close()
 
         # does encryption on new username and password (see encrypt.py)
-        encrypted_pair = do_encryption(self.lineEdit_newname.text(), self.lineEdit_newpassword.text())
+        encrypted_pair = do_encryption(
+            self.lineEdit_newname.text(), self.lineEdit_newpassword.text())
 
         f = open(filename, 'w')
 
-        f.write(str(num_accounts) + '\n' + all_file + encrypted_pair[0] + '\n' + encrypted_pair[1] + '\n\n')
+        f.write(str(num_accounts) + '\n' + all_file +
+                encrypted_pair[0] + '\n' + encrypted_pair[1] + '\n\n')
 
         f.close()
 
@@ -43,22 +46,25 @@ class SignupWindow(QWidget):
         label_newname = QLabel('<font size="4"> Username: </font>')
         self.lineEdit_newname = QLineEdit()
         self.lineEdit_newname.setPlaceholderText('Please enter username')
+
         layout.addWidget(label_newname, 0, 0)
         layout.addWidget(self.lineEdit_newname, 0, 1)
 
         label_newpassword = QLabel('<font size="4"> Password: </font>')
         self.lineEdit_newpassword = QLineEdit()
+        self.lineEdit_newpassword.setEchoMode(QLineEdit.Password)
         self.lineEdit_newpassword.setPlaceholderText('Please enter password')
         layout.addWidget(label_newpassword, 1, 0)
         layout.addWidget(self.lineEdit_newpassword, 1, 1)
 
         button_create_account = QPushButton('Create account')
         button_create_account.clicked.connect(self.create_account)
-        layout.addWidget(button_create_account, 2, 0)
+        layout.addWidget(button_create_account, 2, 1)
 
         self.setLayout(layout)
 
 # class containing functions that open and operate first window when starting app, for logging in
+
 
 class LoginWindow(QWidget):
     # reads in accounts from file and checks if entered user/pass pair matches any existing
@@ -77,7 +83,8 @@ class LoginWindow(QWidget):
             password = password.strip()
 
             # do encryption on entered user/pass to compare to encrypted accounts in file
-            encrypted_pair = do_encryption(self.lineEdit_username.text(), self.lineEdit_password.text())
+            encrypted_pair = do_encryption(
+                self.lineEdit_username.text(), self.lineEdit_password.text())
 
             # checks for account's existence as well as correct password for outputting appropriate message
             if encrypted_pair[0] == username and encrypted_pair[1] == password:
@@ -136,15 +143,16 @@ class LoginWindow(QWidget):
         label_password = QLabel('<font size="4"> Password: </font>')
         self.lineEdit_password = QLineEdit()
         self.lineEdit_password.setPlaceholderText('Please enter your password')
+        self.lineEdit_password.setEchoMode(QLineEdit.Password)
         layout.addWidget(label_password, 1, 0)
         layout.addWidget(self.lineEdit_password, 1, 1)
 
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.login_result)
-        layout.addWidget(button_login, 2, 0)
+        layout.addWidget(button_login, 2, 1)
 
         button_signup = QPushButton('Sign up')
         button_signup.clicked.connect(self.create_account_window)
-        layout.addWidget(button_signup, 2, 1)
+        layout.addWidget(button_signup, 2, 0)
 
         self.setLayout(layout)
