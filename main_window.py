@@ -366,6 +366,7 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
     # Creates the save message prompt window
+
     def promptSaveMessage(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Question)
@@ -387,7 +388,11 @@ class MainWindow(QMainWindow):
         elif button.text() == '&No':
             self.needsSave = False
 
+        else:
+            return
+
     # Opens the print dialog
+
     def printEvent(self):
         printer = QPrinter(QPrinter.HighResolution)
         dialogue = QPrintDialog(printer, self)
