@@ -5,7 +5,7 @@
 ## Running the program
 From the _smells-like-team-spirit_ directory, run _main.py_:
 
-UNIX> python main.py
+    UNIX> python main.py
 
 
 ## Dependencies 
@@ -19,13 +19,7 @@ PyQt5==5.15.1
 To automatically install these dependencies, run the following commands in the _smells-like-team-spirit_ directory:
 
 ```
-UNIX> pip install pipreqs
-...
-UNIX> pipreqs .
-INFO: Successfully saved requirements file in ./requirements.txt
-UNIX> OUTPUT=$(cat requirements.txt)
-UNIX> pip install $OUTPUT
-...
+UNIX> cat requirements.txt | xargs pip install
 ```
 
 ## Authors
