@@ -228,6 +228,13 @@ class MainWindow(QMainWindow):
         format_toolbar.addAction(underline_action)
         formatMenu.addAction(underline_action)
 
+        self.currentColor = Qt.black
+        self.centralWidget.textBox.setTextColor(Qt.black) # Set inital text color HTML
+        colorAction = QAction('Color', self)
+        colorAction.triggered.connect(self.colorPicker)
+        format_toolbar.addAction(colorAction)
+        formatMenu.addAction(colorAction)
+
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
         self.centralWidget.textBox.setFontPointSize(16)
@@ -271,6 +278,19 @@ class MainWindow(QMainWindow):
             # self.styleChoice.setFont(font)
             # self.setFont(font)
             self.centralWidget.textBox.setFont(font)
+
+    # Opens the color dialog
+    def colorPicker(self):
+        cursor = self.centralWidget.textBox.textCursor()
+        color = QColorDialog.getColor(self.currentColor)
+
+        if color.isValid():
+            if cursor.hasSelection() :
+                cursor.insertHtml('<font color= "' + color.name() + '">' + cursor.selectedText() + '</font>')
+            else:
+                self.centralWidget.textBox.setTextColor(color)
+            
+            self.currentColor = color
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
