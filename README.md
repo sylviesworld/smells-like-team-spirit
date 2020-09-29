@@ -5,7 +5,7 @@
 ## Running the program
 From the _smells-like-team-spirit_ directory, run _main.py_:
 
-UNIX> python main.py
+    UNIX> python main.py
 
 
 ## Dependencies 
