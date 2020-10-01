@@ -375,7 +375,7 @@ class MainWindow(QMainWindow):
             self.centralWidget.saveFile(self.currentFile)
             self.statusBar().showMessage('File saved.')
             self.needsSave = False
-            add_permission(self.user, os.path.basename(fileName))
+            add_permission(self.user, os.path.basename(self.currentFile))
             return True
 
     # Opens the file dialog even if a file is already open. Returns false if canceled
