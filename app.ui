@@ -211,9 +211,9 @@
  <connections>
   <connection>
    <sender>commandLinkButton</sender>
-   <signal>clicked()</signal>
+   <signal>clicked(bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>newNoteSlot()</slot>
+   <slot>openNoteSlot(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
