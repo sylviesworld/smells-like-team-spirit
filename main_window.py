@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 
-# this class inherits from QMainWindow and will be used to set up the applications GUI
+#this class inherits from QMainWindow and will be used to set up the applications GUI
 class MainWindow(QMainWindow):
 
     def __init__(self):

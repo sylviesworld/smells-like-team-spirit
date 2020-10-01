@@ -29,7 +29,6 @@ def main():
 
     # Create main window
     main_window = MainWindow()
-    
     login_window.main_window = main_window
 
     # This triggers the event loop for the application
