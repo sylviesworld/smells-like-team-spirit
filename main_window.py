@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
+from permissions import check_permission, add_permission
 
 #this class inherits from QMainWindow and will be used to set up the applications GUI
 class MainWindow(QMainWindow):
@@ -358,11 +359,13 @@ class MainWindow(QMainWindow):
                 self.needsSave = False
                 self.window_title = f'Notepad App - {os.path.basename(fileName)}'
                 self.setWindowTitle(self.window_title)
+                add_permission(self.user, os.path.basename(fileName))
                 return True
 
             # Save PDF
             elif fileName and extension == '.pdf':
                 self.savePDF(fileName)
+                add_permission(self.user, os.path.basename(fileName))
                 return True
 
             # File dialog canceled
@@ -372,6 +375,7 @@ class MainWindow(QMainWindow):
             self.centralWidget.saveFile(self.currentFile)
             self.statusBar().showMessage('File saved.')
             self.needsSave = False
+            add_permission(self.user, os.path.basename(fileName))
             return True
 
     # Opens the file dialog even if a file is already open. Returns false if canceled
@@ -412,7 +416,8 @@ class MainWindow(QMainWindow):
                 fileName, _ = QFileDialog.getOpenFileName(
                     self, 'Open File', '', 'Text Files (*.txt *.pdf)')
 
-                if fileName:
+                can_open = check_permission(self.user, os.path.basename(fileName))
+                if fileName and can_open:
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
                     self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
@@ -422,6 +427,10 @@ class MainWindow(QMainWindow):
                     self.centralWidget.textBox.moveCursor(QTextCursor.Right, QTextCursor.MoveAnchor)
                     self.setColorIcon(self.centralWidget.textBox.textColor())
                     self.centralWidget.textBox.moveCursor(QTextCursor.Left, QTextCursor.MoveAnchor)
+                elif fileName and not can_open:
+                    msg = QMessageBox()
+                    msg.setText(self.user + ' does not have permission to open ' + os.path.basename(fileName))
+                    msg.exec_()
 
             self.needsSave = False
 

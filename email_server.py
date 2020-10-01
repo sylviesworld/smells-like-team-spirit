@@ -1,3 +1,4 @@
+# from realpython.com tutorial
 import smtplib, ssl
 
 message = """\

@@ -136,11 +136,13 @@ class LoginWindow(QWidget):
     # for opening main window if no account is used
     def bypass(self):
         self.main_window.show()
+        self.main_window.user = self.user
         self.close()
 
     def __init__(self, user="None"):
         super().__init__()
         # from YouTube tutorial
+        self.user = "None"
         self.setWindowTitle('Login Window')
         self.resize(500, 120)
 
