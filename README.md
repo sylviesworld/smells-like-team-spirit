@@ -6,7 +6,10 @@
 From the _smells-like-team-spirit_ directory, run _main.py_:
 
     UNIX> python main.py
+    
+There is also a seperate UI being worked on to integrate as the main page in app.py. To run it type:
 
+    UNIX> py app.py
 
 ## Dependencies 
 All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
