@@ -7,9 +7,9 @@ From the _smells-like-team-spirit_ directory, run _main.py_:
 
     UNIX> python main.py
     
-There is also a seperate UI being worked on to integrate as the main page in app.py. To run it type:
+There is also a seperate UI being worked on to integrate as the main page in _[app.py](app.py)_. To run it type:
 
-    UNIX> py app.py
+    UNIX> python app.py
 
 ## Dependencies 
 All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
@@ -24,6 +24,12 @@ To automatically install these dependencies, run the following commands in the _
 ```
 UNIX> pip install -r requirements.txt
 ```
+
+## Known Issues
+- Creating an account with an invalid email will crash the program
+- Not all buttons are linked/functional in _[app.py](app.py)_
+- Icon sizes in toolbar differ between Windows and MacOS, creating small buttons on Windows (normal on Mac)
+
 
 ## Authors
 [Noah Burgin](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=assignee%3Anoah-22+is%3Aopen),
