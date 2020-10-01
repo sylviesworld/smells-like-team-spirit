@@ -25,6 +25,12 @@ To automatically install these dependencies, run the following commands in the _
 UNIX> pip install -r requirements.txt
 ```
 
+## Known Issues
+- Creating an account with an invalid email will crash the program
+- Not all buttons are linked/functional in _[app.py](app.py)_
+- Icon sizes in toolbar differ between Windows and MacOS, creating small buttons on Windows (normal on Mac)
+
+
 ## Authors
 [Noah Burgin](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=assignee%3Anoah-22+is%3Aopen),
 [Dylan Lomax](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3AMaze-Mind),
