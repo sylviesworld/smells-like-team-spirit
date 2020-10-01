@@ -275,7 +275,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>newNoteSlot()</slot>
   <slot>saveNoteSlot()</slot>
   <slot>saveAsNoteSlot()</slot>
   <slot>openNoteSlot(bool)</slot>
