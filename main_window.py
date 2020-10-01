@@ -32,6 +32,7 @@ class MainWindow(QMainWindow):
         self.centralWidget = AppWidget()
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.textBox.textChanged.connect(self.textEditedEvent)
+        self.centralWidget.textBox.cursorPositionChanged.connect(self.cursorMovedEvent)
         self.needsSave = False
 
         # font = QFont('Helvetica', 16)
@@ -206,6 +207,15 @@ class MainWindow(QMainWindow):
         format_toolbar.setIconSize(QSize(18, 18))
         self.addToolBar(format_toolbar)
 
+        self.centralWidget.textBox.setTextColor(Qt.black) # Set initial text color HTML
+        colorAction = QAction('Color', self)
+        colorAction.triggered.connect(self.colorPicker)
+        self.colorLabel = QLabel()
+        self.setColorIcon(Qt.black)
+        format_toolbar.addWidget(self.colorLabel)
+        format_toolbar.addAction(colorAction)
+        formatMenu.addAction(colorAction)
+
         bold_action = QAction(
             QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
         bold_action.setStatusTip("Set selected text to Bold (strong)")
@@ -234,15 +244,6 @@ class MainWindow(QMainWindow):
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
         formatMenu.addAction(underline_action)
-
-        self.currentColor = Qt.black
-        self.centralWidget.textBox.setTextColor(
-            Qt.black)  # Set inital text color HTML
-        colorAction = QAction(
-            QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Color', self)
-        colorAction.triggered.connect(self.colorPicker)
-        format_toolbar.addAction(colorAction)
-        formatMenu.addAction(colorAction)
 
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
@@ -295,16 +296,17 @@ class MainWindow(QMainWindow):
     # Opens the color dialog
     def colorPicker(self):
         cursor = self.centralWidget.textBox.textCursor()
-        color = QColorDialog.getColor(self.currentColor)
+        color = QColorDialog.getColor(self.centralWidget.textBox.textColor())
 
         if color.isValid():
-            if cursor.hasSelection():
-                cursor.insertHtml('<font color= "' + color.name() +
-                                  '">' + cursor.selectedText() + '</font>')
-            else:
-                self.centralWidget.textBox.setTextColor(color)
+            self.setColorIcon(color)
+            self.centralWidget.textBox.setTextColor(color)
 
-            self.currentColor = color
+    # Sers the color icon on the QToolBar
+    def setColorIcon(self, color):
+        pixelMap = QPixmap(64, 24)
+        pixelMap.fill(color)
+        self.colorLabel.setPixmap(pixelMap)
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
@@ -333,6 +335,12 @@ class MainWindow(QMainWindow):
         if "Edited" not in str(self.window_title):
             self.window_title = self.window_title + " -- Edited"
             self.setWindowTitle(self.window_title)
+
+    # Called when the QTextCursor in the AppWidget QTextEdit is moved
+    def cursorMovedEvent(self):
+        
+        # Update current text color under cursor for color button display
+        self.setColorIcon(self.centralWidget.textBox.textColor())
 
     # Opens the file dialog to save a new file or the working file. Returns false if canceled
     def saveEvent(self):
@@ -394,6 +402,8 @@ class MainWindow(QMainWindow):
             # New file
             if isNew:
                 self.centralWidget.textBox.clear()
+                self.centralWidget.textBox.setTextColor(Qt.black)
+                self.setColorIcon(Qt.black)
                 self.window_title = 'Notepad App - untitled.txt'
                 self.setWindowTitle(self.window_title)
 
@@ -407,6 +417,11 @@ class MainWindow(QMainWindow):
                     self.currentFile = fileName
                     self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
                     self.setWindowTitle(self.window_title)
+
+                    # Cursor must be moved to update QTextEdit.textColor member
+                    self.centralWidget.textBox.moveCursor(QTextCursor.Right, QTextCursor.MoveAnchor)
+                    self.setColorIcon(self.centralWidget.textBox.textColor())
+                    self.centralWidget.textBox.moveCursor(QTextCursor.Left, QTextCursor.MoveAnchor)
 
             self.needsSave = False
 
