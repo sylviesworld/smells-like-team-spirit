@@ -84,6 +84,9 @@ class LoginWindow(QWidget):
         for line in f:
             cur_user = line.split()
 
+            if not cur_user:
+                continue
+
             username = cur_user[0]
             password = cur_user[1]
 
