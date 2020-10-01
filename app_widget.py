@@ -25,11 +25,11 @@ class AppWidget(QWidget):
     # Creaes a new file or opens an existing and saves the QTextEdit text
     def saveFile(self, fileName):
         f = open(fileName, 'w')
-        f.write(self.textBox.toPlainText())
+        f.write(self.textBox.toHtml())
         f.close()
 
     # Opens file and reads the text to QTextEdit
     def openFile(self, fileName):
         f = open(fileName, 'r')
-        self.textBox.setPlainText(f.read())
+        self.textBox.setHtml(f.read())
         f.close()

@@ -19,7 +19,7 @@ PyQt5==5.15.1
 To automatically install these dependencies, run the following commands in the _smells-like-team-spirit_ directory:
 
 ```
-UNIX> cat requirements.txt | xargs pip install
+UNIX> pip install -r requirements.txt
 ```
 
 ## Authors
