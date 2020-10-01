@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>771</width>
-    <height>518</height>
+    <width>935</width>
+    <height>595</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,12 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QFrame" name="frame_2">
+       <property name="minimumSize">
+        <size>
+         <width>119</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>119</width>
@@ -110,9 +116,22 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTabWidget" name="tabWidget">
@@ -133,6 +152,11 @@
            <attribute name="title">
             <string>Tab 2</string>
            </attribute>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QTextEdit" name="textEdit_2"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -159,7 +183,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>771</width>
+     <width>935</width>
      <height>18</height>
     </rect>
    </property>
@@ -187,9 +211,9 @@
  <connections>
   <connection>
    <sender>commandLinkButton</sender>
-   <signal>clicked()</signal>
+   <signal>clicked(bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>newNoteSlot()</slot>
+   <slot>openNoteSlot(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
@@ -203,17 +227,17 @@
   </connection>
   <connection>
    <sender>commandLinkButton_2</sender>
-   <signal>clicked()</signal>
+   <signal>clicked(bool)</signal>
    <receiver>MainWindow</receiver>
-   <slot>openNoteSlot()</slot>
+   <slot>openNoteSlot(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>71</x>
      <y>128</y>
     </hint>
     <hint type="destinationlabel">
-     <x>3</x>
-     <y>194</y>
+     <x>1</x>
+     <y>193</y>
     </hint>
    </hints>
   </connection>
@@ -251,9 +275,8 @@
   </connection>
  </connections>
  <slots>
-  <slot>newNoteSlot()</slot>
-  <slot>openNoteSlot()</slot>
   <slot>saveNoteSlot()</slot>
   <slot>saveAsNoteSlot()</slot>
+  <slot>openNoteSlot(bool)</slot>
  </slots>
 </ui>

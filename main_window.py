@@ -311,7 +311,18 @@ class MainWindow(QMainWindow):
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
         if self.needsSave:
-            self.promptSaveMessage()
+            reply = QMessageBox.question(self, 'Window Close', 'Do you want to save changes to the current file?', 
+                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+            
+            if reply == QMessageBox.Yes:
+                self.saveMessageSuccess = self.saveEvent()
+                event.accept()
+
+            elif reply == QMessageBox.No:
+                event.accept()
+
+            else:
+                event.ignore()
 
     # Called when any key is pressed
     def keyPressEvent(self, e):
@@ -425,6 +436,7 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
         msg.buttonClicked.connect(self.saveMessageEvent)
         msg.exec_()
+        
 
     # Handles the save prompt button event when opening a new file
     def saveMessageEvent(self, button):
@@ -438,7 +450,7 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
         else:
-            return
+            return 
 
     # Opens the print dialog
 
