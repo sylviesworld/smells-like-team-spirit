@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import platform
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -16,6 +17,12 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+
+        if 'Darwin' in platform.system():
+            icon_size = 18
+
+        else:
+            icon_size = 36
 
         # Get screen resolution
         screenBounds = QDesktopWidget().screenGeometry(0)
@@ -153,7 +160,7 @@ class MainWindow(QMainWindow):
         # --------------------
         # Create edit toolbar
         edit_toolbar = QToolBar("Edit")
-        edit_toolbar.setIconSize(QSize(18, 18))
+        edit_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(edit_toolbar)
 
         cut_action = QAction(
@@ -180,7 +187,7 @@ class MainWindow(QMainWindow):
         # -------------------
         # Create font toolbar
         font_toolbar = QToolBar("Font")
-        font_toolbar.setIconSize(QSize(18, 18))
+        font_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(font_toolbar)
 
         self.fonts = QFontComboBox()
@@ -201,7 +208,7 @@ class MainWindow(QMainWindow):
         # ---------------------
         # Create format toolbar
         format_toolbar = QToolBar("Format")
-        format_toolbar.setIconSize(QSize(18, 18))
+        format_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(format_toolbar)
 
         self.colorLabel = QLabel()
@@ -249,7 +256,7 @@ class MainWindow(QMainWindow):
         # ------------------------
         # Create paragraph toolbar
         paragraph_toolbar = QToolBar("Paragraph")
-        paragraph_toolbar.setIconSize(QSize(18, 18))
+        paragraph_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(paragraph_toolbar)
 
         self.aln_left_action = QAction(
