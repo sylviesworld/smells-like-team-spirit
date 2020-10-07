@@ -13,23 +13,32 @@ filename = '.note_accounts'
 class SignupWindow(QWidget):
     # reads in all currently existing accounts, encrypts user/pass, writes new file
     def create_account(self):
+        username = self.lineEdit_newuser.text()
+        password = self.lineEdit_newpassword.text()
+        email = self.lineEdit_email.text()
+
+        # some basic error checking for creating new account, preserves .note_accounts formatting when invalid info is submitted
+        # only current restrictions are user/pass cannot be blank, and email must have something before '@' and contain '@'
+        a = email.find('@')
+        if username == '' or password == '' or email == '' or a <= 0:
+            msg = QMessageBox()
+            msg.setText('Please enter valid username/password and email.')
+            msg.exec_()
+            return
+
         f = open(filename, 'r+')
 
         all_file = f.read()
 
         f.seek(0)
-
-        username = self.lineEdit_newuser.text()
-        password = self.lineEdit_newpassword.text()
-        email = self.lineEdit_email.text()
         
         # does encryption on new username and password (see encrypt.py)
         encrypted_pair = encrypt_account(username, password)
 
-        # encrypts part of email before @ symbol, assumes gmail
+        # encrypts email name and address
         encrypted_email = encrypt_email(email)
 
-        f.write(all_file + encrypted_pair[0] + ' ' + encrypted_pair[1] + ' ' + encrypted_email + '\n\n')
+        f.write(all_file + encrypted_pair[0] + ' ' + encrypted_pair[1] + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n\n')
 
         f.close()
 

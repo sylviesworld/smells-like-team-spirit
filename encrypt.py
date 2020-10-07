@@ -49,13 +49,22 @@ def encrypt_account(raw_user, raw_pass):
 def encrypt_email(raw_email):
     all_pairs = get_encrypt()
 
-    # only worry about encrypting and saving part of email that comes before @, assume gmail
-    raw_email = raw_email[:-10]
+    # save the email "name" separate from the address to make cipher harder to brute force
+    a = raw_email.find('@')
+    email = raw_email[:a]
+    address = raw_email[a:]
 
     encrypted_email = ''
+    encrypted_address = ''
 
-    for c in raw_email:
+    for c in email:
         new_c = all_pairs[c]
         encrypted_email += new_c
+    
+    for c in address:
+        new_c = all_pairs[c]
+        encrypted_address += new_c
 
-    return encrypted_email
+    encrypted_pair = [encrypted_email, encrypted_address]
+    
+    return encrypted_pair
