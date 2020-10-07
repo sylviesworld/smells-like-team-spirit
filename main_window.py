@@ -154,6 +154,10 @@ class MainWindow(QMainWindow):
         colorButton.triggered.connect(self.colorPicker)
         formatMenu.addAction(colorButton)
 
+        imageButton = QAction('Insert Image...', self)
+        imageButton.triggered.connect(self.centralWidget.insertImage)
+        formatMenu.addAction(imageButton)
+
         # Begin toolbars
         # ==============
 
@@ -228,6 +232,7 @@ class MainWindow(QMainWindow):
         bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
             QFont.Bold if x else QFont.Normal))
         format_toolbar.addAction(bold_action)
+
         # formatMenu.addAction(bold_action)
 
         italic_action = QAction(
@@ -252,6 +257,11 @@ class MainWindow(QMainWindow):
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
         self.centralWidget.textBox.setFontPointSize(16)
+
+        imageAction = QAction('Image', self)
+        imageAction.setStatusTip('Insert an image')
+        imageAction.triggered.connect(self.centralWidget.insertImage)
+        format_toolbar.addAction(imageAction)
 
         # ------------------------
         # Create paragraph toolbar
