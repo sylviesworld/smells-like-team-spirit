@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QFileDialog
 from find_window import FindWindow
 
 class AppWidget(QWidget):
@@ -33,3 +34,11 @@ class AppWidget(QWidget):
         f = open(fileName, 'r')
         self.textBox.setHtml(f.read())
         f.close()
+
+    # Opens the image file dialog and inserts an image into the QTextEdit
+    def insertImage(self):
+        filePath, _ = QFileDialog.getOpenFileName(self, 'Select an Image', '', 'PNG (*.png);;JPEG (*.jpg *.jpeg)')
+
+        if filePath:
+            self.textBox.textCursor().insertImage(filePath)
+
