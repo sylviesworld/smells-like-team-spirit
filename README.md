@@ -26,11 +26,10 @@ UNIX> pip install -r requirements.txt
 ```
 
 Note: If `certifi` was not installed by running _Install Certificates.command_ when setting up Python, or by doing so manually, install the package before using this program.
-- `certifi` documentation:  [here](https://pypi.org/project/certifi/). 
+- `certifi` documentation:  [link](https://pypi.org/project/certifi/)
 - StackOverflow help for Mac, the most common culprits of this issuse: [link](https://stackoverflow.com/questions/42098126/mac-osx-python-ssl-sslerror-ssl-certificate-verify-failed-certificate-verify)
 
 ## Known Issues
-- Creating an account with an invalid email will crash the program
 - Not all buttons are linked/functional in _[app.py](app.py)_
 
 ## Authors
