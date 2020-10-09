@@ -9,11 +9,9 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from permissions import check_permission, add_permission
 
-# this class inherits from QMainWindow and will be used to set up the applications GUI
-
 
 class MainWindow(QMainWindow):
-    # FIXME add a docstring
+    """ This class inherits from QMainWindow and will be used to set up the applications GUI """
 
     def __init__(self):
         super().__init__()
@@ -23,6 +21,8 @@ class MainWindow(QMainWindow):
 
         else:
             icon_size = 36
+
+        self.setAcceptDrops(True)
 
         # Get screen resolution
         screenBounds = QDesktopWidget().screenGeometry(0)

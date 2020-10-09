@@ -1,7 +1,10 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QGridLayout,  QLabel, QLineEdit, QPushButton, QCheckBox
+from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
+                             QLabel, QLineEdit, QPushButton, QCheckBox)
 from PyQt5 import QtGui
 
 # The window for finding text in the QTextEdit
+
+
 class FindWindow(QWidget):
     def __init__(self, textEdit):
         super().__init__()
@@ -20,7 +23,7 @@ class FindWindow(QWidget):
 
         self.caseCheck = QCheckBox('Case Sensitive')
         layout.addWidget(self.caseCheck, 1, 0)
-        
+
         # Find is pressed repeatedly to find every occurance
         findButton = QPushButton('Find')
         findButton.clicked.connect(self.findText)
@@ -35,28 +38,28 @@ class FindWindow(QWidget):
     # Finds the text, moves the cursor, and selects. Moves to top of document if end is reached
     def findText(self):
         flags = QtGui.QTextDocument.FindFlags()
-        
+
         # Case sensitive flags if checkbox is checked
-        if self.caseCheck.isChecked() :
+        if self.caseCheck.isChecked():
             flags = flags | QtGui.QTextDocument.FindCaseSensitively
 
         searchText = self.findLineEdit.text().strip()
-        
+
         # Prompt user to search non-empty strings
         if searchText == '':
             self.findMessageBox('Please enter text to search.')
             return False
 
         r = self.textEdit.find(searchText, flags)
-            
+
         # Search is false if word not found or end of document is reached
         if not r:
             self.textEdit.moveCursor(QtGui.QTextCursor.Start)
             r = self.textEdit.find(searchText, flags)
 
-            if not r :
+            if not r:
                 self.findMessageBox('Text not found.')
-        
+
         return r
 
     # Displays find info to the user
@@ -67,7 +70,6 @@ class FindWindow(QWidget):
         msg.setWindowTitle('Find Info')
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
-    
+
     def createWindow(self):
         self.show()
-
