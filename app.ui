@@ -187,24 +187,6 @@
      <height>18</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuCopy">
-    <property name="title">
-     <string>Copy</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuPaste">
-    <property name="title">
-     <string>Paste</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuFont">
-    <property name="title">
-     <string>Font</string>
-    </property>
-   </widget>
-   <addaction name="menuCopy"/>
-   <addaction name="menuPaste"/>
-   <addaction name="menuFont"/>
   </widget>
  </widget>
  <resources/>

@@ -7,6 +7,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from find_window import FindWindow
+from login_window import LoginWindow
 
 qtcreator_file = "app.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
@@ -463,7 +464,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
+
+    login_window = LoginWindow()
+    login_window.show()
+
     w = MainWindow()
-    w.show()
+    login_window.main_window = w
+
+    #w.show()
     sys.exit(app.exec_())
