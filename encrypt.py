@@ -1,4 +1,4 @@
-# encrypt.py handles encryption of user/pass with simple homophonic substitution cipher
+# encrypt.py handles encryption of user/pass, email, and files with simple homophonic substitution cipher
 
 # dictionary object contains key/val pairs
 class dictionary(dict):
@@ -23,8 +23,8 @@ def get_encrypt():
 
     return encrypt_pairs
 
-# actually does the encryption, builds new encrypted string from original string
-def do_encryption(raw_user, raw_pass):
+# encrypts account username and password, builds new encrypted string from original string
+def encrypt_account(raw_user, raw_pass):
     all_pairs = get_encrypt()
     
     encrypted_user = ''
@@ -44,4 +44,18 @@ def do_encryption(raw_user, raw_pass):
     encrypted_pair = [encrypted_user, encrypted_pass]
 
     return encrypted_pair
-        
+
+# encrypts account email, builds new encrypted string from original string
+def encrypt_email(raw_email):
+    all_pairs = get_encrypt()
+
+    # only worry about encrypting and saving part of email that comes before @, assume gmail
+    raw_email = raw_email[:-10]
+
+    encrypted_email = ''
+
+    for c in raw_email:
+        new_c = all_pairs[c]
+        encrypted_email += new_c
+
+    return encrypted_email
