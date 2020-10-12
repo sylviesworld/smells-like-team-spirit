@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QFileDialog
 from find_window import FindWindow
 import os
 import uuid
+from shutil import copyfile
 
 IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.bmp']
 HTML_EXTENSIONS = ['.htm', '.html']
@@ -41,12 +42,18 @@ class AppWidget(QWidget):
         f.close()
 
     # Opens the image file dialog and inserts an image into the QTextEdit
-    def insertImage(self):
+    def insertImage(self, user):
         filePath, _ = QFileDialog.getOpenFileName(
             self, 'Select an Image', '', 'PNG (*.png);;JPEG (*.jpg *.jpeg)')
 
         if filePath:
-            self.textBox.textCursor().insertImage(filePath)
+            
+            # Create image directory
+            if not os.path.exists('users/' + user + '/images'):
+                os.makedirs('users/' + user + '/images')
+
+            dest = copyfile(filePath, 'users/' + user + '/images/' + os.path.basename(filePath))
+            self.textBox.textCursor().insertImage(dest)
 
 
 def hexuuid():

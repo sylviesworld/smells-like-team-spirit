@@ -15,7 +15,7 @@ def get_permissions(user):
         if not account:
             continue
         cur_user = account[0];
-        if cur_user == user or cur_user == 'None':
+        if cur_user == user or cur_user == 'guest':
             for permission in account[1:]:
                 account_permissions.append(permission)
 

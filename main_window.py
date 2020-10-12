@@ -260,7 +260,7 @@ class MainWindow(QMainWindow):
 
         imageAction = QAction('Image', self)
         imageAction.setStatusTip('Insert an image')
-        imageAction.triggered.connect(self.centralWidget.insertImage)
+        imageAction.triggered.connect(lambda: self.centralWidget.insertImage(self.user))
         format_toolbar.addAction(imageAction)
 
         # ------------------------
