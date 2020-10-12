@@ -42,17 +42,17 @@ class AppWidget(QWidget):
         f.close()
 
     # Opens the image file dialog and inserts an image into the QTextEdit
-    def insertImage(self, user):
+    def insertImage(self):
         filePath, _ = QFileDialog.getOpenFileName(
             self, 'Select an Image', '', 'PNG (*.png);;JPEG (*.jpg *.jpeg)')
 
         if filePath:
             
             # Create image directory
-            if not os.path.exists('users/' + user + '/images'):
-                os.makedirs('users/' + user + '/images')
+            if not os.path.exists('users/' + self.textBox.mainWindow.user + '/images'):
+                os.makedirs('users/' + self.textBox.mainWindow.user + '/images')
 
-            dest = copyfile(filePath, 'users/' + user + '/images/' + os.path.basename(filePath))
+            dest = copyfile(filePath, 'users/' + self.textBox.mainWindow.user + '/images/' + os.path.basename(filePath))
             self.textBox.textCursor().insertImage(dest)
 
 
@@ -85,8 +85,13 @@ class TextEdit(QTextEdit):
                 if u.isLocalFile() and file_ext in IMAGE_EXTENSIONS:
                     image = QImage(u.toLocalFile())
                     document.addResource(QTextDocument.ImageResource, u, image)
-                    cursor.insertImage(u.toLocalFile())
 
+                    # Create image directory
+                    if not os.path.exists('users/' + self.mainWindow.user + '/images'):
+                        os.makedirs('users/' + self.mainWindow.user + '/images')
+
+                    dest = copyfile(u.toLocalFile(), 'users/' + self.mainWindow.user + '/images/' + os.path.basename(u.toLocalFile()))
+                    cursor.insertImage(dest)
                 else:
                     break
 
