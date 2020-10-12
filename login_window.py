@@ -6,11 +6,14 @@ from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
 
-filename = '.note_accounts'
-
 # class containing functions that open and operate a separate window for creating an account
 
 class SignupWindow(QWidget):
+    # unfinished - for checking validity of account info when signing up
+    def legal_account(username, password, email):
+        a = email.find('@')
+        #if username == '' or password == '' or em
+
     # reads in all currently existing accounts, encrypts user/pass, writes new file
     def create_account(self):
         username = self.lineEdit_newuser.text()
@@ -25,10 +28,13 @@ class SignupWindow(QWidget):
             msg.setText('Please enter valid username/password and email.')
             msg.exec_()
             return
-
-        f = open(filename, 'r+')
-
-        all_file = f.read()
+        #elif username.find('`')
+        all_file = ''
+        try:
+            f = open('.note_accounts', 'r+')
+            all_file = f.read()
+        except IOError:
+            f = open('.note_accounts', 'w')
 
         f.seek(0)
         
@@ -38,7 +44,7 @@ class SignupWindow(QWidget):
         # encrypts email name and address
         encrypted_email = encrypt_email(email)
 
-        f.write(all_file + encrypted_pair[0] + ' ' + encrypted_pair[1] + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n\n')
+        f.write(all_file + encrypted_pair[0] + ' ' + encrypted_pair[1] + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n')
 
         f.close()
 
@@ -87,8 +93,11 @@ class LoginWindow(QWidget):
     
     # reads in accounts from file and checks if entered user/pass pair matches any existing
     def check_credentials(self):
-        f = open(filename, 'r')
-
+        try:
+            f = open('.note_accounts', 'r')
+        except IOError:
+            return 'False'
+        
         # check every account until a matching username is found or entire file is searched
         for line in f:
             cur_user = line.split()
@@ -110,8 +119,6 @@ class LoginWindow(QWidget):
 
             elif encrypted_pair[0] == username and encrypted_pair[1] != password:
                 return 'Wrong pass'
-
-            f.readline()  # reads whitespace between current account and next user/pass pair
 
         f.close()
 
