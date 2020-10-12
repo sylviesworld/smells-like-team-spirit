@@ -324,7 +324,7 @@ class MainWindow(QMainWindow):
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
 
-    # Sers the color icon on the QToolBar
+    # Sets the color icon on the QToolBar
     def setColorIcon(self, color):
         pixelMap = QPixmap(64, 24)
         pixelMap.fill(color)
@@ -454,8 +454,10 @@ class MainWindow(QMainWindow):
                         QTextCursor.Left, QTextCursor.MoveAnchor)
                 elif fileName and not can_open:
                     msg = QMessageBox()
-                    msg.setText(
-                        self.user + ' does not have permission to open ' + os.path.basename(fileName))
+                    if self.user != 'None':
+                        msg.setText(self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
+                    else:
+                        msg.setText('Sign into account to open private file: ' + os.path.basename(fileName))
                     msg.exec_()
 
             self.needsSave = False
