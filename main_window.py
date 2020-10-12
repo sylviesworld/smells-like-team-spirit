@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
         self.centralWidget.textBox.textChanged.connect(self.textEditedEvent)
         self.centralWidget.textBox.cursorPositionChanged.connect(
             self.cursorMovedEvent)
+        self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
 
         # Begin menu bars
@@ -260,7 +261,7 @@ class MainWindow(QMainWindow):
 
         imageAction = QAction('Image', self)
         imageAction.setStatusTip('Insert an image')
-        imageAction.triggered.connect(lambda: self.centralWidget.insertImage(self.user))
+        imageAction.triggered.connect(self.centralWidget.insertImage)
         format_toolbar.addAction(imageAction)
 
         # ------------------------
