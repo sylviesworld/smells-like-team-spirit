@@ -1,6 +1,7 @@
 # creation of windows is from PyQt5 tutorial on YouTube by Jie Jenn "PyQt5 Tutorial | Create a simple login form"
 
 import sys
+import os
 from encrypt import encrypt_account, encrypt_email
 from email_server import send_email
 from PyQt5.QtWidgets import (
@@ -50,6 +51,10 @@ class SignupWindow(QWidget):
 
         # sends a confirmation email to the email used to sign up
         send_email(email)
+
+        # Make directory for user
+        if not os.path.exists('users/' + username):
+            os.makedirs('users/' + username)
 
         self.close()
 
@@ -115,6 +120,11 @@ class LoginWindow(QWidget):
             # checks for account's existence as well as correct password for outputting appropriate message
             if encrypted_pair[0] == username and encrypted_pair[1] == password:
                 self.user = self.lineEdit_username.text()
+
+                # Create user directory
+                if not os.path.exists('users/' + self.user):
+                    os.makedirs('users/' + self.user)
+
                 return 'True'
 
             elif encrypted_pair[0] == username and encrypted_pair[1] != password:
@@ -156,12 +166,17 @@ class LoginWindow(QWidget):
     def bypass(self):
         self.main_window.show()
         self.main_window.user = self.user
+        
+        # Create guest directory
+        if not os.path.exists('users/guest'):
+            os.makedirs('users/guest')
+
         self.close()
 
-    def __init__(self, user="None"):
+    def __init__(self):
         super().__init__()
         # from YouTube tutorial
-        self.user = "None"
+        self.user = "guest"
         self.setWindowTitle('Login Window')
         self.resize(500, 120)
 
