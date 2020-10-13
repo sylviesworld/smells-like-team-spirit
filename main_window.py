@@ -189,6 +189,12 @@ class MainWindow(QMainWindow):
         paste_action.triggered.connect(self.centralWidget.textBox.paste)
         edit_toolbar.addAction(paste_action)
 
+        imageAction = QAction(
+            QIcon(os.path.join('images', 'icons8-add-image-80.png')), 'Image', self)
+        imageAction.setStatusTip('Insert an image')
+        imageAction.triggered.connect(self.centralWidget.insertImage)
+        edit_toolbar.addAction(imageAction)
+
         # -------------------
         # Create font toolbar
         font_toolbar = QToolBar("Font")
@@ -258,11 +264,6 @@ class MainWindow(QMainWindow):
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
         self.centralWidget.textBox.setFontPointSize(16)
-
-        imageAction = QAction('Image', self)
-        imageAction.setStatusTip('Insert an image')
-        imageAction.triggered.connect(self.centralWidget.insertImage)
-        format_toolbar.addAction(imageAction)
 
         # ------------------------
         # Create paragraph toolbar
@@ -456,9 +457,11 @@ class MainWindow(QMainWindow):
                 elif fileName and not can_open:
                     msg = QMessageBox()
                     if self.user != 'None':
-                        msg.setText(self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
+                        msg.setText(
+                            self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
                     else:
-                        msg.setText('Sign into account to open private file: ' + os.path.basename(fileName))
+                        msg.setText(
+                            'Sign into account to open private file: ' + os.path.basename(fileName))
                     msg.exec_()
 
             self.needsSave = False
