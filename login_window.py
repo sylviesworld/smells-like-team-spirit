@@ -34,6 +34,10 @@ class SignupWindow(QWidget):
         if not empty:
             for line in f:
                 account_info = line.split()
+                
+                if not account_info:
+                    continue
+
                 account_name = decrypt(account_info[0])
                 if account_name == username:
                     user_error.setText('Username already taken')
