@@ -13,7 +13,7 @@ There is also a seperate UI being worked on to integrate as the main page in _[a
 
 ## Preview
 
-![Note app screenshot](images/main_screenshot)
+![Note app screenshot](images/main_screenshot.png)
 
 ## Dependencies 
 All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
