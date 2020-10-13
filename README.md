@@ -11,6 +11,10 @@ There is also a seperate UI being worked on to integrate as the main page in _[a
 
     UNIX> python app.py
 
+## Preview
+
+![Note app screenshot](images/main_screenshot)
+
 ## Dependencies 
 All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
 
@@ -27,7 +31,7 @@ UNIX> pip install -r requirements.txt
 
 Note: If `certifi` was not installed by running _Install Certificates.command_ when setting up Python, or by doing so manually, install the package before using this program.
 - `certifi` documentation:  [link](https://pypi.org/project/certifi/)
-- StackOverflow help for Mac, the most common culprits of this issuse: [link](https://stackoverflow.com/questions/42098126/mac-osx-python-ssl-sslerror-ssl-certificate-verify-failed-certificate-verify)
+- StackOverflow help for Mac, the most common culprit of this issuse: [link](https://stackoverflow.com/questions/42098126/mac-osx-python-ssl-sslerror-ssl-certificate-verify-failed-certificate-verify)
 
 ## Known Issues
 - Not all buttons are linked/functional in _[app.py](app.py)_
