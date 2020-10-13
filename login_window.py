@@ -2,18 +2,73 @@
 
 import sys
 import os
-from encrypt import encrypt_account, encrypt_email
+from encrypt import encrypt, decrypt, encrypt_email
 from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
 
 # class containing functions that open and operate a separate window for creating an account
 
-class SignupWindow(QWidget):
-    # unfinished - for checking validity of account info when signing up
-    def legal_account(username, password, email):
-        a = email.find('@')
-        #if username == '' or password == '' or em
+class SignupWindow(QWidget): 
+    # for checking if signup info is valid, sets label text for each error
+    def legal_account(self, username, password, email):
+        illegal_chars = [' ', '`', '~', '[', ']', '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
+        legal = True
+        empty = False
+        
+        user_error = self.label_userError
+        password_error = self.label_passwordError
+        email_error = self.label_emailError
+
+        # reset error message to blank before checking each attempt to submit info
+        user_error.setText('')
+        password_error.setText('')
+        email_error.setText('')
+
+        # for checking if username is already taken
+        try:
+            f = open('.note_accounts', 'r')
+        except IOError:
+            empty = True
+
+        if not empty:
+            for line in f:
+                account_info = line.split()
+                account_name = decrypt(account_info[0])
+                if account_name == username:
+                    user_error.setText('Username already taken')
+                    legal = False
+                    break
+
+        # no field can be left blank
+        if username == '':
+            user_error.setText('Username cannot be blank')
+            legal = False
+        if password == '':
+            password_error.setText('Password cannot be blank')
+            legal = False
+        if email == '':
+            email_error.setText('Email cannnot be blank')
+            legal = False
+
+        # check each field against illegal characters
+        for c in illegal_chars:
+            if username.find(c) != -1:
+                user_error.setText('Username cannot contain "' + c + '"')
+                legal = False
+            if password.find(c) != -1:
+                password_error.setText('Password cannot contain "' + c + '"')
+                legal = False
+            if email.find(c) != -1:
+                email_error.setText('Email cannot contain "' + c + '"')
+                legal = False
+
+        # check email format
+        if email.find('@') <= 0 or (email.find('.com') == -1 and email.find('.gov') == -1 and email.find('.edu') == -1 and email.find('.net') == -1):
+            email_error.setText('Email must have format: user@address.xxx')
+            legal = False
+
+        return legal
 
     # reads in all currently existing accounts, encrypts user/pass, writes new file
     def create_account(self):
@@ -21,15 +76,9 @@ class SignupWindow(QWidget):
         password = self.lineEdit_newpassword.text()
         email = self.lineEdit_email.text()
 
-        # some basic error checking for creating new account, preserves .note_accounts formatting when invalid info is submitted
-        # only current restrictions are user/pass cannot be blank, and email must have something before '@' and contain '@'
-        a = email.find('@')
-        if username == '' or password == '' or email == '' or a <= 0:
-            msg = QMessageBox()
-            msg.setText('Please enter valid username/password and email.')
-            msg.exec_()
+        if not self.legal_account(username, password, email):
             return
-        #elif username.find('`')
+
         all_file = ''
         try:
             f = open('.note_accounts', 'r+')
@@ -40,12 +89,13 @@ class SignupWindow(QWidget):
         f.seek(0)
         
         # does encryption on new username and password (see encrypt.py)
-        encrypted_pair = encrypt_account(username, password)
+        e_user = encrypt(username)
+        e_pass = encrypt(password)
 
         # encrypts email name and address
         encrypted_email = encrypt_email(email)
 
-        f.write(all_file + encrypted_pair[0] + ' ' + encrypted_pair[1] + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n')
+        f.write(all_file + e_user + ' ' + e_pass + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n')
 
         f.close()
 
@@ -62,40 +112,47 @@ class SignupWindow(QWidget):
         super().__init__()
         # from YouTube tutorial
         self.setWindowTitle('Signup window')
-        self.resize(600, 240)
+        self.resize(800, 240)
 
         layout = QGridLayout()
 
         label_newuser = QLabel('<font size="4"> Username: </font>')
+        self.label_userError = QLabel('')
+        self.label_userError.setStyleSheet("color: red;")
         self.lineEdit_newuser = QLineEdit()
         self.lineEdit_newuser.setPlaceholderText('Please enter username')
         layout.addWidget(label_newuser, 0, 0)
         layout.addWidget(self.lineEdit_newuser, 0, 1)
+        layout.addWidget(self.label_userError, 1, 1)
 
         label_newpassword = QLabel('<font size="4"> Password: </font>')
+        self.label_passwordError = QLabel('')
+        self.label_passwordError.setStyleSheet("color: red;")
         self.lineEdit_newpassword = QLineEdit()
         self.lineEdit_newpassword.setEchoMode(QLineEdit.Password)
         self.lineEdit_newpassword.setPlaceholderText('Please enter password')
-        layout.addWidget(label_newpassword, 1, 0)
-        layout.addWidget(self.lineEdit_newpassword, 1, 1)
+        layout.addWidget(label_newpassword, 2, 0)
+        layout.addWidget(self.lineEdit_newpassword, 2, 1)
+        layout.addWidget(self.label_passwordError, 3, 1)
 
         label_email = QLabel('<font size="4"> Email: </font>')
+        self.label_emailError = QLabel('')
+        self.label_emailError.setStyleSheet("color: red;")
         self.lineEdit_email = QLineEdit()
         self.lineEdit_email.setPlaceholderText('Please enter email')
-        layout.addWidget(label_email, 2, 0)
-        layout.addWidget(self.lineEdit_email, 2, 1)
-
+        layout.addWidget(label_email, 4, 0)
+        layout.addWidget(self.lineEdit_email, 4, 1)
+        layout.addWidget(self.label_emailError, 5, 1)
+        
         button_create_account = QPushButton('Create account')
         button_create_account.clicked.connect(self.create_account)
-        layout.addWidget(button_create_account, 3, 1)
+        layout.addWidget(button_create_account, 6, 1)
 
         self.setLayout(layout)
 
 # class containing functions that open and operate first window when starting app, for logging in
 
-
 class LoginWindow(QWidget):
-    
     # reads in accounts from file and checks if entered user/pass pair matches any existing
     def check_credentials(self):
         try:
@@ -107,18 +164,11 @@ class LoginWindow(QWidget):
         for line in f:
             cur_user = line.split()
 
-            if not cur_user:
-                continue
-
-            username = cur_user[0]
-            password = cur_user[1]
-
-            # do encryption on entered user/pass to compare to encrypted accounts in file
-            encrypted_pair = encrypt_account(
-                self.lineEdit_username.text(), self.lineEdit_password.text())
+            username = decrypt(cur_user[0])
+            password = decrypt(cur_user[1])
 
             # checks for account's existence as well as correct password for outputting appropriate message
-            if encrypted_pair[0] == username and encrypted_pair[1] == password:
+            if self.lineEdit_username.text() == username and self.lineEdit_password.text() == password:
                 self.user = self.lineEdit_username.text()
 
                 # Create user directory
@@ -127,7 +177,7 @@ class LoginWindow(QWidget):
 
                 return 'True'
 
-            elif encrypted_pair[0] == username and encrypted_pair[1] != password:
+            elif self.lineEdit_username.text() == username and self.lineEdit_password.text() != password:
                 return 'Wrong pass'
 
         f.close()
@@ -142,8 +192,6 @@ class LoginWindow(QWidget):
 
         # opens note app and closes login window
         if result == 'True':
-            msg.setText('Success')
-            msg.exec_()
             self.main_window.show()
             self.main_window.user = self.user
             self.close()
@@ -178,7 +226,7 @@ class LoginWindow(QWidget):
         # from YouTube tutorial
         self.user = "guest"
         self.setWindowTitle('Login Window')
-        self.resize(500, 120)
+        self.resize(600, 120)
 
         layout = QGridLayout()
 
