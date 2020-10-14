@@ -131,6 +131,11 @@ class SaveWindow(QWidget):
                     if not self.confirmResponse:
                         return
 
+                # Run through Save As button; reset 
+                if self.oldFile != '':
+                    self.mainWindow.currentFile = self.oldFile
+                    self.oldFile = ''
+
                 self.savePDF(filePath)
                 add_permission(self.mainWindow.user, fileName + '.pdf')
 
