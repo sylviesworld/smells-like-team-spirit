@@ -8,7 +8,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from permissions import check_permission, add_permission
-
+from save_window import SaveWindow
 
 class MainWindow(QMainWindow):
     """ This class inherits from QMainWindow and will be used to set up the applications GUI """
@@ -47,6 +47,9 @@ class MainWindow(QMainWindow):
             self.cursorMovedEvent)
         self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
+        
+        # Create save window
+        self.saveWindow = None
 
         # Begin menu bars
         # ===============
@@ -335,18 +338,11 @@ class MainWindow(QMainWindow):
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
         if self.needsSave:
-            reply = QMessageBox.question(self, 'Window Close',
-                                         'Do you want to save changes to the current file?',
-                                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-
-            if reply == QMessageBox.Yes:
-                self.saveMessageSuccess = self.saveEvent()
-                event.accept()
-
-            elif reply == QMessageBox.No:
-                event.accept()
-
-            else:
+            self.promptSaveMessage()
+            if self.saveMessageCancel:
+                event.ignore()
+            elif self.needsSave:
+                self.saveWindow.closeOnSave = True
                 event.ignore()
 
     # Called when any key is pressed
@@ -367,53 +363,17 @@ class MainWindow(QMainWindow):
         # Update current text color under cursor for color button display
         self.setColorIcon(self.centralWidget.textBox.textColor())
 
-    # Opens the file dialog to save a new file or the working file. Returns false if canceled
+    # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
-        if self.currentFile == '':
-            fileName, _ = QFileDialog.getSaveFileName(
-                self, 'Save As', '', 'Text Files (*.txt);;PDF Files (*.pdf)')
+        if not self.saveWindow:
+            self.saveWindow = SaveWindow(self)
+            self.saveWindow.initSaveEvent()
 
-            path, extension = os.path.splitext(fileName)
-
-            # Save text file
-            if fileName and extension == '.txt':
-                self.centralWidget.saveFile(fileName)
-                self.currentFile = fileName
-                self.statusBar().showMessage('File saved.')
-                self.needsSave = False
-                self.window_title = f'Notepad App - {os.path.basename(fileName)}'
-                self.setWindowTitle(self.window_title)
-                add_permission(self.user, os.path.basename(fileName))
-                return True
-
-            # Save PDF
-            elif fileName and extension == '.pdf':
-                self.savePDF(fileName)
-                add_permission(self.user, os.path.basename(fileName))
-                return True
-
-            # File dialog canceled
-            return False
-
-        else:
-            self.centralWidget.saveFile(self.currentFile)
-            self.statusBar().showMessage('File saved.')
-            self.needsSave = False
-            add_permission(self.user, os.path.basename(self.currentFile))
-            return True
-
-    # Opens the file dialog even if a file is already open. Returns false if canceled
+    # Opens the file dialog even if a file is already open.
     def saveAsEvent(self):
-
-        oldFile = self.currentFile
-        self.currentFile = ''
-
-        # File dialog canceled, reset to original file name
-        if self.saveEvent():
-            self.currentFile = oldFile
-            return False
-
-        return True
+        if not self.saveWindow:
+            self.saveWindow = SaveWindow(self)
+            self.saveWindow.saveAsEvent()
 
     # Opens a file (isNew defines if the file is a new, empty file)
     def openEvent(self, isNew: bool):
@@ -467,7 +427,6 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
     # Creates the save message prompt window
-
     def promptSaveMessage(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Question)
@@ -481,6 +440,8 @@ class MainWindow(QMainWindow):
     # Handles the save prompt button event when opening a new file
     def saveMessageEvent(self, button):
 
+        self.saveMessageCancel = False
+
         # Save the file and store the result
         if button.text() == '&Yes':
             self.saveMessageSuccess = self.saveEvent()
@@ -490,10 +451,9 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
         else:
-            return
+            self.saveMessageCancel = True
 
     # Opens the print dialog
-
     def printEvent(self):
         printer = QPrinter(QPrinter.HighResolution)
         dialogue = QPrintDialog(printer, self)
@@ -501,10 +461,3 @@ class MainWindow(QMainWindow):
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
-    # Saves the file as a PDF
-    def savePDF(self, fileName):
-        printer = QPrinter(QPrinter.HighResolution)
-        printer.setPageSize(QPrinter.A4)
-        printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setOutputFileName(fileName)
-        self.centralWidget.textBox.document().print_(printer)

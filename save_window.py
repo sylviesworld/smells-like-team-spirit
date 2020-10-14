@@ -1,18 +1,22 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
-                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox, QPrinter)
-from PyQt5 import QtGui
+                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox)
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtPrintSupport import QPrinter
+from permissions import check_permission, add_permission
+import os
 
 # The window for saving a file
-
 class SaveWindow(QWidget):
     def __init__(self, mainWindow):
         super().__init__()
 
         self.setWindowTitle('Save As')
         self.resize(600, 400)
+        self.oldFile = ''
 
-        # Get AppWidget through constructor
+        # Get MainWindow through constructor
         self.mainWindow = mainWindow
+        self.closeOnSave = False
         self.textEdit = mainWindow.centralWidget.textBox
         layout = QGridLayout()
 
@@ -25,25 +29,28 @@ class SaveWindow(QWidget):
         self.typeComboBox = QComboBox()
         self.typeComboBox.addItem('Text Files (*.txt)')
         self.typeComboBox.addItem('PDF Files (*.pdf)')
+        layout.addWidget(typeLabel, 1, 0)
+        layout.addWidget(self.typeComboBox, 1, 1)
 
         saveButton = QPushButton('Save')
         saveButton.clicked.connect(self.saveEvent)
-        layout.addWidget(saveButton, 1, 1)
+        layout.addWidget(saveButton, 2, 0)
 
         cancelButton = QPushButton('Cancel')
-        cancelButton.clicked.connect(self.close)
+        cancelButton.clicked.connect(self.closeWindow)
         layout.addWidget(cancelButton, 2, 1)
 
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(layout)
 
     # Displays confirm save message to the user
-    def confirmMessageBox(self, text):
+    def confirmMessageBox(self, fileName):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
-        msg.setText(text)
+        msg.setText(fileName + ' already exists.\nDo you want to replace it?')
         msg.setWindowTitle('Confirm Save As')
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msg.buttonClicked.connect(self.saveMessageEvent)
+        msg.buttonClicked.connect(self.confirmMessageEvent)
         msg.exec_()
 
     # Displays generic save message to the user
@@ -59,48 +66,105 @@ class SaveWindow(QWidget):
     def confirmMessageEvent(self, button):
 
         if button.text() == '&Yes':
-            #self.saveMessageSuccess = self.saveEvent()
+            self.confirmResponse = True
 
         # Skip saving the file
         elif button.text() == '&No':
-            #self.needsSave = False
+            self.confirmResponse = False
 
         else:
-            return
+            self.confirmResponse = False
 
-    def createWindow(self):
-        self.show()
+    # Closes the save window 
+    def closeWindow(self):
 
+        # Restore old file from Save As event if window closed
+        if self.oldFile != '':
+            self.mainWindow.currentFile = self.oldFile
+            self.oldFile = ''
+
+        self.close()
+
+    def closeEvent(self, event):
+        self.mainWindow.saveWindow = None
+
+    # Called when the user clicks the 'Save' button
     def saveEvent(self):
-        if self.currentFile == '':
 
-            fileName, extension = os.path.splitext(self.fnLabel.text())
+        # Save as new file
+        if self.mainWindow.currentFile == '':
+
+            # File name cannot be blank
+            if self.fnLineEdit.text().strip() == '':
+
+                self.saveMessageBox('Please enter a file name.')
+                return
+
+            fileName, extension = os.path.splitext(self.fnLineEdit.text().strip())
             filePath = 'users/' + self.mainWindow.user + '/' + fileName
 
             # Save text file
             if self.typeComboBox.currentIndex() == 0:
                 filePath += '.txt'
+                    
+                # Check if file already exists
+                if os.path.exists(filePath):
+                    self.confirmMessageBox(fileName + '.txt')
+                    if not self.confirmResponse:
+                        return
+
                 self.saveFile(filePath)
                 self.mainWindow.currentFile = filePath
                 self.mainWindow.statusBar().showMessage('File saved.')
                 self.mainWindow.needsSave = False
-                self.mainWindow.window_title = 'Notepad App - {os.path.basename(filePath)}'
+                self.mainWindow.window_title = f'Notepad App - {os.path.basename(filePath)}'
                 self.mainWindow.setWindowTitle(self.mainWindow.window_title)
-                self.mainWindow.add_permission(self.mainWindow.user, fileName + '.txt')
+                add_permission(self.mainWindow.user, fileName + '.txt')
 
             # Save PDF
             else:
                 filePath += '.pdf'
-                self.savePDF(filePath)
-                self.mainWindow.add_permission(self.user, fileName + '.pdf')
 
+                # Check if file already exists
+                if os.path.exists(filePath):
+                    self.confirmMessageBox(fileName + '.pdf')
+                    if not self.confirmResponse:
+                        return
+
+                self.savePDF(filePath)
+                add_permission(self.mainWindow.user, fileName + '.pdf')
+
+            # Close save window
+            self.close()
+
+        # Save working file
         else:
             self.saveFile(self.mainWindow.currentFile)
             self.mainWindow.statusBar().showMessage('File saved.')
             self.mainWindow.needsSave = False
-            self.mainWindow.add_permission(self.mainWindow.user, os.path.basename(self.mainWindow.currentFile))
+            self.mainWindow.window_title = f'Notepad App - {os.path.basename(self.mainWindow.currentFile)}'
+            self.mainWindow.setWindowTitle(self.mainWindow.window_title)
+            add_permission(self.mainWindow.user, os.path.basename(self.mainWindow.currentFile))
 
-    # Creaes a new file or opens an existing and saves the QTextEdit text
+        # Close the application after save if needed
+        if self.closeOnSave:
+            QtCore.QCoreApplication.exit(0)
+
+    # Called when the user clicks the 'Save As' button
+    def saveAsEvent(self):
+        self.oldFile = self.mainWindow.currentFile
+        self.mainWindow.currentFile = ''
+        self.show()
+
+    # Decides whether to open the save window or not when the user saves
+    def initSaveEvent(self):
+        if self.mainWindow.currentFile == '':
+            self.show()
+        else:
+            self.saveEvent()
+            self.close()
+
+    # Creates a new file or opens an existing one and saves the QTextEdit text
     def saveFile(self, filePath):
         f = open(filePath, 'w')
         f.write(self.textEdit.toHtml())
@@ -111,6 +175,6 @@ class SaveWindow(QWidget):
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setOutputFileName(fileName)
-        self.centralWidget.textBox.document().print_(printer)
+        printer.setOutputFileName(filePath)
+        self.mainWindow.centralWidget.textBox.document().print_(printer)
 
