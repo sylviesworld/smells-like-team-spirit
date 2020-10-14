@@ -12,18 +12,20 @@ from login_window import LoginWindow
 qtcreator_file = "app.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
-         # Get screen resolution
+        # Get screen resolution
         screenBounds = QDesktopWidget().screenGeometry(0)
 
         self.window_title = 'Notepad App - untitled.txt'
         self.setWindowTitle(self.window_title)
-        self.setGeometry(0, 0, round(screenBounds.width()/2), round(screenBounds.height()/2))
+        self.setGeometry(0, 0, round(screenBounds.width() / 2),
+                         round(screenBounds.height() / 2))
 
         # Center the screen
         rect = self.frameGeometry()
@@ -37,7 +39,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.findWindow = FindWindow(self.textEdit)
 
         self.commandLinkButton.clicked.connect(lambda: self.openNoteSlot(True))
-        self.commandLinkButton_2.clicked.connect(lambda: self.openNoteSlot(False))
+        self.commandLinkButton_2.clicked.connect(
+            lambda: self.openNoteSlot(False))
         self.commandLinkButton_3.clicked.connect(self.saveNoteSlot)
         self.commandLinkButton_4.clicked.connect(self.saveAsNoteSlot)
 
@@ -341,19 +344,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     f = open(fileName, 'r')
                     self.textBox.setPlainText(f.read())
                     f.close()
-                    #self.textEdit.openFile(fileName)
+                    # self.textEdit.openFile(fileName)
                     self.currentFile = fileName
                     self.setWindowTitle(
-                        'Notepad App - ' + os.path.basename(fileName) + ' -- Last Modified - ' + time.ctime(os.path.getmtime(fileName)))
+                        'Notepad App - ' +
+                        os.path.basename(fileName) + ' -- Last Modified - '
+                        + time.ctime(os.path.getmtime(fileName)))
 
             self.needsSave = False
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
         if self.needsSave:
-            reply = QMessageBox.question(self, 'Window Close', 'Do you want to save changes to the current file?', 
-                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-            
+            reply = QMessageBox.question(self, 'Window Close',
+                                         'Do you want to save changes to the current file?',
+                                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+
             if reply == QMessageBox.Yes:
                 self.saveMessageSuccess = self.saveEvent()
                 event.accept()
@@ -401,21 +407,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.needsSave = False
 
     # Opens the print dialog
-    def printEvent(self) :
+    def printEvent(self):
         printer = QPrinter(QPrinter.HighResolution)
         dialogue = QPrintDialog(printer, self)
-        
-        if dialogue.exec_() == QPrintDialog.Accepted :
+
+        if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
     # Saves the file as a PDF
-    def savePDF(self, fileName) :
+    def savePDF(self, fileName):
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setOutputFileName(fileName)
         self.centralWidget.textBox.document().print_(printer)
-
 
     def saveNoteSlot(self):
         if self.currentFile == '':
@@ -449,7 +454,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             return True
 
     def saveAsNoteSlot(self):
-        
+
         oldFile = self.currentFile
         self.currentFile = ''
 
@@ -459,7 +464,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             return False
 
         return True
-
 
 
 if __name__ == '__main__':

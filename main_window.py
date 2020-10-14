@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import platform
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,11 +9,20 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from permissions import check_permission, add_permission
 
-#this class inherits from QMainWindow and will be used to set up the applications GUI
+
 class MainWindow(QMainWindow):
+    """ This class inherits from QMainWindow and will be used to set up the applications GUI """
 
     def __init__(self):
         super().__init__()
+
+        if 'Darwin' in platform.system():
+            icon_size = 18
+
+        else:
+            icon_size = 36
+
+        self.setAcceptDrops(True)
 
         # Get screen resolution
         screenBounds = QDesktopWidget().screenGeometry(0)
@@ -33,12 +43,13 @@ class MainWindow(QMainWindow):
         self.centralWidget = AppWidget()
         self.setCentralWidget(self.centralWidget)
         self.centralWidget.textBox.textChanged.connect(self.textEditedEvent)
-        self.centralWidget.textBox.cursorPositionChanged.connect(self.cursorMovedEvent)
+        self.centralWidget.textBox.cursorPositionChanged.connect(
+            self.cursorMovedEvent)
+        self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
 
-        # font = QFont('Helvetica', 16)
-        # self.centralWidget.textBox.setFont(font)
-        # self.centralWidget.textBox.setFontPointSize(16)
+        # Begin menu bars
+        # ===============
 
         # Define menu bar
         menuBar = self.menuBar()
@@ -47,12 +58,10 @@ class MainWindow(QMainWindow):
         self.status = QStatusBar()
         self.setStatusBar(self.status)
 
-        # Create menu bars
+        # --------------------
+        # Create File menu bar
         fileMenu = menuBar.addMenu('File')
 
-        formatMenu = menuBar.addMenu('Format')
-
-        # File menu bar
         newButton = QAction('New', self)
         newButton.setShortcut('Ctrl+N')
         newButton.triggered.connect(lambda: self.openEvent(True))
@@ -87,7 +96,8 @@ class MainWindow(QMainWindow):
         printButton.triggered.connect(self.printEvent)
         fileMenu.addAction(printButton)
 
-        # Edit menu bar
+        # -------------------
+        # Create Edit menu bar
         editMenu = menuBar.addMenu('Edit')
 
         undoButton = QAction('Undo', self)
@@ -108,37 +118,16 @@ class MainWindow(QMainWindow):
         editMenu.addAction(cutButton)
 
         copyButton = QAction('Copy', self)
-        copyButton.setStatusTip('Copy Selected Text to Clipboard')
         copyButton.setShortcut(QKeySequence.Copy)
         copyButton.triggered.connect(self.centralWidget.textBox.copy)
         editMenu.addAction(copyButton)
 
-        # Duplicate paste edit menu button
-        # pasteButton = QAction('Paste', self)
-        # pasteButton.setShortcut(QKeySequence.Paste)
-        # pasteButton.triggered.connect(self.centralWidget.textBox.paste)
-        # editMenu.addAction(pasteButton)
-
-        # Format menu button
-        # fontButton = QAction('Font', self)
-        # fontButton.triggered.connect(self.fontChoice)
-        # formatMenu.addAction(fontButton)
-
-        # Create toolbars
-        # file_toolbar = QToolBar("File")
-        # file_toolbar.setIconSize(QSize(18, 18))
-        # self.addToolBar(file_toolbar)
-
         paste_action = QAction('Paste', self)
         paste_action.setShortcut(QKeySequence.Paste)
-        paste_action.setStatusTip('Paste From Clipboard')
         paste_action.triggered.connect(self.centralWidget.textBox.paste)
         editMenu.addAction(paste_action)
 
-        selectButton = QAction('Select All', self)
-        selectButton.setShortcut(QKeySequence.SelectAll)
-        selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
-        editMenu.addAction(selectButton)
+        editMenu.addSeparator()
 
         findButton = QAction('Find', self)
         findButton.setShortcut(QKeySequence.Find)
@@ -146,14 +135,37 @@ class MainWindow(QMainWindow):
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
 
-        # Format menu button
-        fontButton = QAction('Font (System Dialogue)', self)
+        selectButton = QAction('Select All', self)
+        selectButton.setShortcut(QKeySequence.SelectAll)
+        selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
+        editMenu.addAction(selectButton)
+
+        # ----------------------
+        # Create Format menu bar
+        formatMenu = menuBar.addMenu('Format')
+
+        fontButton = QAction('Fonts...', self)
+        fontButton.setShortcut('Ctrl+T')
         fontButton.triggered.connect(self.fontChoice)
         formatMenu.addAction(fontButton)
 
+        self.centralWidget.textBox.setTextColor(
+            Qt.black)  # Set initial text color HTML
+        colorButton = QAction('Font Color...', self)
+        colorButton.triggered.connect(self.colorPicker)
+        formatMenu.addAction(colorButton)
+
+        imageButton = QAction('Insert Image...', self)
+        imageButton.triggered.connect(self.centralWidget.insertImage)
+        formatMenu.addAction(imageButton)
+
+        # Begin toolbars
+        # ==============
+
+        # --------------------
         # Create edit toolbar
         edit_toolbar = QToolBar("Edit")
-        edit_toolbar.setIconSize(QSize(18, 18))
+        edit_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(edit_toolbar)
 
         cut_action = QAction(
@@ -177,16 +189,17 @@ class MainWindow(QMainWindow):
         paste_action.triggered.connect(self.centralWidget.textBox.paste)
         edit_toolbar.addAction(paste_action)
 
+        imageAction = QAction(
+            QIcon(os.path.join('images', 'icons8-add-image-80.png')), 'Image', self)
+        imageAction.setStatusTip('Insert an image')
+        imageAction.triggered.connect(self.centralWidget.insertImage)
+        edit_toolbar.addAction(imageAction)
+
+        # -------------------
         # Create font toolbar
         font_toolbar = QToolBar("Font")
-        font_toolbar.setIconSize(QSize(18, 18))
+        font_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(font_toolbar)
-
-        # font_choice_action = QAction('Font', self)
-        # font_choice_action.setStatusTip(
-        #     'Open System Dialogue for Font Choice')
-        # font_choice_action.triggered.connect(self.fontChoice)
-        # font_toolbar.addAction(font_choice_action)
 
         self.fonts = QFontComboBox()
         self.fonts.currentFontChanged.connect(
@@ -203,19 +216,20 @@ class MainWindow(QMainWindow):
             lambda s: self.centralWidget.textBox.setFontPointSize(float(s)))
         font_toolbar.addWidget(self.fontsize)
 
+        # ---------------------
         # Create format toolbar
         format_toolbar = QToolBar("Format")
-        format_toolbar.setIconSize(QSize(18, 18))
+        format_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(format_toolbar)
 
-        self.centralWidget.textBox.setTextColor(Qt.black) # Set initial text color HTML
-        colorAction = QAction('Color', self)
-        colorAction.triggered.connect(self.colorPicker)
         self.colorLabel = QLabel()
         self.setColorIcon(Qt.black)
         format_toolbar.addWidget(self.colorLabel)
+
+        colorAction = QAction(
+            QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Font Color', self)
+        colorAction.triggered.connect(self.colorPicker)
         format_toolbar.addAction(colorAction)
-        formatMenu.addAction(colorAction)
 
         bold_action = QAction(
             QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
@@ -225,7 +239,8 @@ class MainWindow(QMainWindow):
         bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
             QFont.Bold if x else QFont.Normal))
         format_toolbar.addAction(bold_action)
-        formatMenu.addAction(bold_action)
+
+        # formatMenu.addAction(bold_action)
 
         italic_action = QAction(
             QIcon(os.path.join('images', 'icons8-italic-80.png')), "Italic", self)
@@ -234,7 +249,7 @@ class MainWindow(QMainWindow):
         italic_action.setCheckable(True)
         italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
         format_toolbar.addAction(italic_action)
-        formatMenu.addAction(italic_action)
+        # formatMenu.addAction(italic_action)
 
         underline_action = QAction(
             QIcon(os.path.join('images', 'icons8-underline-80.png')), "Underline", self)
@@ -244,21 +259,22 @@ class MainWindow(QMainWindow):
         underline_action.toggled.connect(
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
-        formatMenu.addAction(underline_action)
+        # formatMenu.addAction(underline_action)
 
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
         self.centralWidget.textBox.setFontPointSize(16)
 
+        # ------------------------
         # Create paragraph toolbar
         paragraph_toolbar = QToolBar("Paragraph")
-        paragraph_toolbar.setIconSize(QSize(18, 18))
+        paragraph_toolbar.setIconSize(QSize(icon_size, icon_size))
         self.addToolBar(paragraph_toolbar)
 
         self.aln_left_action = QAction(
             QIcon(os.path.join('images', 'icons8-align-left-80.png')), "Align Left", self)
         self.aln_left_action.setStatusTip("Align Text Left")
-        self.aln_left_action.setChecked(True)
+        self.aln_left_action.setCheckable(True)
         self.aln_left_action.triggered.connect(
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignLeft))
         paragraph_toolbar.addAction(self.aln_left_action)
@@ -266,7 +282,7 @@ class MainWindow(QMainWindow):
         self.aln_center_action = QAction(
             QIcon(os.path.join('images', 'icons8-align-center-80.png')), "Center", self)
         self.aln_center_action.setStatusTip("Center Text")
-        self.aln_center_action.setChecked(True)
+        self.aln_center_action.setCheckable(True)
         self.aln_center_action.triggered.connect(
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignCenter))
         paragraph_toolbar.addAction(self.aln_center_action)
@@ -274,7 +290,7 @@ class MainWindow(QMainWindow):
         self.aln_right_action = QAction(QIcon(os.path.join(
             'images', 'icons8-align-right-80.png')), "Align Right", self)
         self.aln_right_action.setStatusTip("Align Text Right")
-        self.aln_right_action.setChecked(True)
+        self.aln_right_action.setCheckable(True)
         self.aln_right_action.triggered.connect(
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignRight))
         paragraph_toolbar.addAction(self.aln_right_action)
@@ -282,10 +298,17 @@ class MainWindow(QMainWindow):
         self.aln_justify_action = QAction(
             QIcon(os.path.join('images', 'icons8-align-justify-80.png')), "Justify", self)
         self.aln_justify_action.setStatusTip("Justify Text")
-        self.aln_justify_action.setChecked(True)
+        self.aln_justify_action.setCheckable(True)
         self.aln_justify_action.triggered.connect(
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignJustify))
         paragraph_toolbar.addAction(self.aln_justify_action)
+
+        format_group = QActionGroup(self)
+        format_group.setExclusive(True)
+        format_group.addAction(self.aln_left_action)
+        format_group.addAction(self.aln_center_action)
+        format_group.addAction(self.aln_right_action)
+        format_group.addAction(self.aln_justify_action)
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
@@ -303,7 +326,7 @@ class MainWindow(QMainWindow):
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
 
-    # Sers the color icon on the QToolBar
+    # Sets the color icon on the QToolBar
     def setColorIcon(self, color):
         pixelMap = QPixmap(64, 24)
         pixelMap.fill(color)
@@ -312,9 +335,10 @@ class MainWindow(QMainWindow):
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
         if self.needsSave:
-            reply = QMessageBox.question(self, 'Window Close', 'Do you want to save changes to the current file?', 
-                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-            
+            reply = QMessageBox.question(self, 'Window Close',
+                                         'Do you want to save changes to the current file?',
+                                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+
             if reply == QMessageBox.Yes:
                 self.saveMessageSuccess = self.saveEvent()
                 event.accept()
@@ -339,7 +363,7 @@ class MainWindow(QMainWindow):
 
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
-        
+
         # Update current text color under cursor for color button display
         self.setColorIcon(self.centralWidget.textBox.textColor())
 
@@ -416,7 +440,8 @@ class MainWindow(QMainWindow):
                 fileName, _ = QFileDialog.getOpenFileName(
                     self, 'Open File', '', 'Text Files (*.txt *.pdf)')
 
-                can_open = check_permission(self.user, os.path.basename(fileName))
+                can_open = check_permission(
+                    self.user, os.path.basename(fileName))
                 if fileName and can_open:
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
@@ -424,12 +449,19 @@ class MainWindow(QMainWindow):
                     self.setWindowTitle(self.window_title)
 
                     # Cursor must be moved to update QTextEdit.textColor member
-                    self.centralWidget.textBox.moveCursor(QTextCursor.Right, QTextCursor.MoveAnchor)
+                    self.centralWidget.textBox.moveCursor(
+                        QTextCursor.Right, QTextCursor.MoveAnchor)
                     self.setColorIcon(self.centralWidget.textBox.textColor())
-                    self.centralWidget.textBox.moveCursor(QTextCursor.Left, QTextCursor.MoveAnchor)
+                    self.centralWidget.textBox.moveCursor(
+                        QTextCursor.Left, QTextCursor.MoveAnchor)
                 elif fileName and not can_open:
                     msg = QMessageBox()
-                    msg.setText(self.user + ' does not have permission to open ' + os.path.basename(fileName))
+                    if self.user != 'None':
+                        msg.setText(
+                            self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
+                    else:
+                        msg.setText(
+                            'Sign into account to open private file: ' + os.path.basename(fileName))
                     msg.exec_()
 
             self.needsSave = False
@@ -445,7 +477,6 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
         msg.buttonClicked.connect(self.saveMessageEvent)
         msg.exec_()
-        
 
     # Handles the save prompt button event when opening a new file
     def saveMessageEvent(self, button):
@@ -459,7 +490,7 @@ class MainWindow(QMainWindow):
             self.needsSave = False
 
         else:
-            return 
+            return
 
     # Opens the print dialog
 
