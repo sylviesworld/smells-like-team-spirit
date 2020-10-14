@@ -193,25 +193,25 @@
  <connections>
   <connection>
    <sender>commandLinkButton</sender>
-   <signal>clicked(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>openNoteSlot(bool)</slot>
+   <slot>openNoteSlot()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>3</x>
-     <y>160</y>
+     <x>1</x>
+     <y>161</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>commandLinkButton_2</sender>
-   <signal>clicked(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>openNoteSlot(bool)</slot>
+   <slot>openNoteSlot()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>71</x>
@@ -259,6 +259,7 @@
  <slots>
   <slot>saveNoteSlot()</slot>
   <slot>saveAsNoteSlot()</slot>
-  <slot>openNoteSlot(bool)</slot>
+  <slot>openNoteSlot()</slot>
+  <slot>newNoteSlot()</slot>
  </slots>
 </ui>
