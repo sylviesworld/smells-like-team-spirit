@@ -15,6 +15,8 @@ There is also a seperate UI being worked on to integrate as the main page in _[a
 
 ![Note app screenshot](images/main_screenshot)
 
+Icons courtesy of [icons8.com](https://icons8.com/)
+
 ## Dependencies 
 All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
 
@@ -41,3 +43,4 @@ Note: If `certifi` was not installed by running _Install Certificates.command_ w
 [Dylan Lomax](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3AMaze-Mind),
 [Nick Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Ancreech1),
 [Zach Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Azach7creech)
+
