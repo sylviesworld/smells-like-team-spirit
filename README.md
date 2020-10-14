@@ -13,7 +13,7 @@ There is also a seperate UI being worked on to integrate as the main page in _[a
 
 ## Preview
 
-![Note app screenshot](images/main_screenshot)
+![Note app screenshot](images/main_screenshot.png)
 
 Icons courtesy of [icons8.com](https://icons8.com/)
 
