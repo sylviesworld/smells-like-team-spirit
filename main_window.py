@@ -10,6 +10,7 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 
+
 class MainWindow(QMainWindow):
     """ This class inherits from QMainWindow and will be used to set up the applications GUI """
 
@@ -21,6 +22,8 @@ class MainWindow(QMainWindow):
 
         else:
             icon_size = 36
+
+        self.Edited = False
 
         self.setAcceptDrops(True)
 
@@ -47,7 +50,7 @@ class MainWindow(QMainWindow):
             self.cursorMovedEvent)
         self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
-        
+
         # Create save window
         self.saveWindow = None
 
@@ -353,9 +356,11 @@ class MainWindow(QMainWindow):
     def textEditedEvent(self):
         self.needsSave = True
         self.statusBar().clearMessage()
-        if "Edited" not in str(self.window_title):
+
+        if not self.Edited:
             self.window_title = self.window_title + " -- Edited"
             self.setWindowTitle(self.window_title)
+            self.Edited = True
 
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
@@ -365,12 +370,19 @@ class MainWindow(QMainWindow):
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
+
+        if self.Edited:
+            self.window_title = self.window_title[:-10]
+            self.setWindowTitle(self.window_title)
+            self.Edited = False
+
         if not self.saveWindow:
             self.saveWindow = SaveWindow(self)
             self.saveWindow.initSaveEvent()
 
     # Opens the file dialog even if a file is already open.
     def saveAsEvent(self):
+
         if not self.saveWindow:
             self.saveWindow = SaveWindow(self)
             self.saveWindow.saveAsEvent()
@@ -379,6 +391,8 @@ class MainWindow(QMainWindow):
     def openEvent(self, isNew: bool):
 
         self.saveMessageSuccess = False
+
+        self.Edited = False
 
         # Prompt the user to save the working file
         if self.needsSave:
@@ -460,4 +474,3 @@ class MainWindow(QMainWindow):
 
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
-
