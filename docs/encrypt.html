@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>encrypt.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>encrypt.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>encrypt.py handles encryption and decryption of user/pass, email, and files with simple homophonic substitution cipher</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>dictionary object contains key/val pairs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">dictionary</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>reads in encryption key from .encrypt and stores pairs in dictionary
+each letter and symbol corresponds to a random other character</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_encrypt</span><span class="p">():</span>
+    <span class="n">encrypt_pairs</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">()</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.encrypt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pair</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">encrypt_pairs</span><span class="p">[</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">encrypt_pairs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>works exactly like get_encrypt but reads in the key/val pairs backward for decrypting</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_decrypt</span><span class="p">():</span>
+    <span class="n">decrypt_pairs</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">()</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.encrypt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pair</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">decrypt_pairs</span><span class="p">[</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">decrypt_pairs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>encrypts account email, builds new encrypted string from original string</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">encrypt_email</span><span class="p">(</span><span class="n">raw_email</span><span class="p">):</span>
+    <span class="n">all_pairs</span> <span class="o">=</span> <span class="n">get_encrypt</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>save the email &ldquo;name&rdquo; separate from the address to make cipher harder to brute force</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">a</span> <span class="o">=</span> <span class="n">raw_email</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">raw_email</span><span class="p">[:</span><span class="n">a</span><span class="p">]</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">raw_email</span><span class="p">[</span><span class="n">a</span><span class="p">:]</span>
+
+    <span class="n">encrypted_email</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">encrypted_address</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+        <span class="n">new_c</span> <span class="o">=</span> <span class="n">all_pairs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">encrypted_email</span> <span class="o">+=</span> <span class="n">new_c</span>
+    
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">address</span><span class="p">:</span>
+        <span class="n">new_c</span> <span class="o">=</span> <span class="n">all_pairs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">encrypted_address</span> <span class="o">+=</span> <span class="n">new_c</span>
+
+    <span class="n">encrypted_pair</span> <span class="o">=</span> <span class="p">[</span><span class="n">encrypted_email</span><span class="p">,</span> <span class="n">encrypted_address</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">encrypted_pair</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>encrypts the given string</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">all_pairs</span> <span class="o">=</span> <span class="n">get_encrypt</span><span class="p">()</span>
+
+    <span class="n">encrypted_s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">new_c</span> <span class="o">=</span> <span class="n">all_pairs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">encrypted_s</span> <span class="o">+=</span> <span class="n">new_c</span>
+
+    <span class="k">return</span> <span class="n">encrypted_s</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>decrypts the given string</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">all_pairs</span> <span class="o">=</span> <span class="n">get_decrypt</span><span class="p">()</span>
+
+    <span class="n">decrypted_s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">new_c</span> <span class="o">=</span> <span class="n">all_pairs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">decrypted_s</span> <span class="o">+=</span> <span class="n">new_c</span>
+
+    <span class="k">return</span> <span class="n">decrypted_s</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
