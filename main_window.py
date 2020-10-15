@@ -17,6 +17,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Global Variables
+        # ================
+
         if 'Darwin' in platform.system():
             icon_size = 18
 
@@ -246,8 +249,6 @@ class MainWindow(QMainWindow):
             QFont.Bold if x else QFont.Normal))
         format_toolbar.addAction(bold_action)
 
-        # formatMenu.addAction(bold_action)
-
         italic_action = QAction(
             QIcon(os.path.join('images', 'icons8-italic-80.png')), "Italic", self)
         italic_action.setStatusTip("Set selected text to Italic (emphasis)")
@@ -316,11 +317,12 @@ class MainWindow(QMainWindow):
         format_group.addAction(self.aln_right_action)
         format_group.addAction(self.aln_justify_action)
 
+    # Classes
+    # =======
+
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
         if valid:
-            # self.styleChoice.setFont(font)
-            # self.setFont(font)
             self.centralWidget.textBox.setFont(font)
 
     # Opens the color dialog
