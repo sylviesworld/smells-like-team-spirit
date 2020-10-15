@@ -22,6 +22,8 @@ class MainWindow(QMainWindow):
         else:
             icon_size = 36
 
+        self.Edited = False
+
         self.setAcceptDrops(True)
 
         # Get screen resolution
@@ -357,9 +359,11 @@ class MainWindow(QMainWindow):
     def textEditedEvent(self):
         self.needsSave = True
         self.statusBar().clearMessage()
-        if "Edited" not in str(self.window_title):
+
+        if not self.Edited:
             self.window_title = self.window_title + " -- Edited"
             self.setWindowTitle(self.window_title)
+            self.Edited = True
 
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
@@ -369,6 +373,12 @@ class MainWindow(QMainWindow):
 
     # Opens the file dialog to save a new file or the working file. Returns false if canceled
     def saveEvent(self):
+
+        if self.Edited:
+            self.window_title = self.window_title[:-10]
+            self.setWindowTitle(self.window_title)
+            self.Edited = False
+
         if self.currentFile == '':
             fileName, _ = QFileDialog.getSaveFileName(
                 self, 'Save As', '', 'Text Files (*.txt);;PDF Files (*.pdf)')
@@ -384,12 +394,14 @@ class MainWindow(QMainWindow):
                 self.window_title = f'Notepad App - {os.path.basename(fileName)}'
                 self.setWindowTitle(self.window_title)
                 add_permission(self.user, os.path.basename(fileName))
+                #self.statusBar().setStatusTip('Saved')
                 return True
 
             # Save PDF
             elif fileName and extension == '.pdf':
                 self.savePDF(fileName)
                 add_permission(self.user, os.path.basename(fileName))
+                #self.statusBar().setStatusTip('Saved')
                 return True
 
             # File dialog canceled
@@ -400,6 +412,7 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage('File saved.')
             self.needsSave = False
             add_permission(self.user, os.path.basename(self.currentFile))
+            #self.statusBar().setStatusTip('Saved')
             return True
 
     # Opens the file dialog even if a file is already open. Returns false if canceled
@@ -417,6 +430,8 @@ class MainWindow(QMainWindow):
 
     # Opens a file (isNew defines if the file is a new, empty file)
     def openEvent(self, isNew: bool):
+
+        self.Edited = False
 
         self.saveMessageSuccess = False
 
@@ -445,7 +460,8 @@ class MainWindow(QMainWindow):
                 if fileName and can_open:
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
-                    self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                    self.window_title = f"Notepad App - {os.path.basename(fileName)} -- Last Modified - "\
+                        f"{time.ctime(os.path.getmtime(fileName))}"
                     self.setWindowTitle(self.window_title)
 
                     # Cursor must be moved to update QTextEdit.textColor member
