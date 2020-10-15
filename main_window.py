@@ -394,14 +394,12 @@ class MainWindow(QMainWindow):
                 self.window_title = f'Notepad App - {os.path.basename(fileName)}'
                 self.setWindowTitle(self.window_title)
                 add_permission(self.user, os.path.basename(fileName))
-                #self.statusBar().setStatusTip('Saved')
                 return True
 
             # Save PDF
             elif fileName and extension == '.pdf':
                 self.savePDF(fileName)
                 add_permission(self.user, os.path.basename(fileName))
-                #self.statusBar().setStatusTip('Saved')
                 return True
 
             # File dialog canceled
@@ -412,7 +410,6 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage('File saved.')
             self.needsSave = False
             add_permission(self.user, os.path.basename(self.currentFile))
-            #self.statusBar().setStatusTip('Saved')
             return True
 
     # Opens the file dialog even if a file is already open. Returns false if canceled
