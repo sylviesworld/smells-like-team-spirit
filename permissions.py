@@ -1,5 +1,11 @@
 import os
-from encrypt import dictionary
+
+class dictionary(dict):
+    def __init__(self):
+        self = dict()
+
+    def add(self, key, value):
+        self[key] = value
 
 def get_permissions(user):
     account_permissions = []
