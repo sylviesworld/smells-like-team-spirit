@@ -10,7 +10,7 @@ class FindWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle('Find')
-        self.resize(600, 400)
+        self.resize(600, 100)
 
         # Get QTextEdit through constructor
         self.textEdit = textEdit
@@ -46,7 +46,7 @@ class FindWindow(QWidget):
         searchText = self.findLineEdit.text().strip()
 
         # Prompt user to search non-empty strings
-        if searchText == '':
+        if not searchText:
             self.findMessageBox('Please enter text to search.')
             return False
 
