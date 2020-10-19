@@ -225,6 +225,14 @@ class MainWindow(QMainWindow):
             lambda s: self.centralWidget.textBox.setFontPointSize(float(s)))
         font_toolbar.addWidget(self.fontsize)
 
+        FONT_COLORS = ["Black", "Red", "Green",
+                       "Blue", "Yellow", "Gray", "Magenta"]
+
+        self.fontcolor = QComboBox()
+        self.fontcolor.addItems(FONT_COLORS)
+        self.fontcolor.currentIndexChanged.connect(self.TextColor)
+        font_toolbar.addWidget(self.fontcolor)
+
         # ---------------------
         # Create format toolbar
         format_toolbar = QToolBar("Format")
@@ -334,6 +342,47 @@ class MainWindow(QMainWindow):
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
 
+    # Sets color of text
+    def TextColor(self, i):
+
+        if i == 0:
+            self.setColorIcon(Qt.black)
+            self.centralWidget.textBox.setTextColor(Qt.black)
+            return
+
+        if i == 1:
+            self.setColorIcon(Qt.red)
+            self.centralWidget.textBox.setTextColor(Qt.red)
+            return
+
+        if i == 2:
+            self.setColorIcon(Qt.green)
+            self.centralWidget.textBox.setTextColor(Qt.green)
+            return
+
+        if i == 3:
+            self.setColorIcon(Qt.blue)
+            self.centralWidget.textBox.setTextColor(Qt.blue)
+            return
+
+        if i == 4:
+            self.setColorIcon(Qt.yellow)
+            self.centralWidget.textBox.setTextColor(Qt.yellow)
+            return
+
+        if i == 5:
+            self.setColorIcon(Qt.gray)
+            self.centralWidget.textBox.setTextColor(Qt.gray)
+            return
+
+        if i == 6:
+            self.setColorIcon(Qt.magenta)
+            self.centralWidget.textBox.setTextColor(Qt.magenta)
+            return
+
+        else:
+            return
+
     # Sets the color icon on the QToolBar
     def setColorIcon(self, color):
         pixelMap = QPixmap(64, 24)
@@ -421,7 +470,8 @@ class MainWindow(QMainWindow):
                 if fileName and can_open:
                     self.centralWidget.openFile(fileName)
                     self.currentFile = fileName
-                    self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                    self.window_title = f"Notepad App - {os.path.basename(fileName)}"\
+                        f" -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
                     self.setWindowTitle(self.window_title)
 
                     # Cursor must be moved to update QTextEdit.textColor member
