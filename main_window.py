@@ -204,6 +204,12 @@ class MainWindow(QMainWindow):
         imageAction.triggered.connect(self.centralWidget.insertImage)
         edit_toolbar.addAction(imageAction)
 
+        searchSelectedActn = QAction('Search Selection', self)
+        searchSelectedActn.setStatusTip(
+            'Search Document for the Currently Selected Text')
+        searchSelectedActn.triggered.connect(self.SearchSelection)
+        edit_toolbar.addAction(searchSelectedActn)
+
         # -------------------
         # Create font toolbar
         font_toolbar = QToolBar("Font")
@@ -341,6 +347,25 @@ class MainWindow(QMainWindow):
         if color.isValid():
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
+
+    def SearchSelection(self):
+        cursor = self.centralWidget.textBox.textCursor()
+        textSelected = cursor.selectedText()
+        flags = QTextDocument.FindFlags()
+        r = self.centralWidget.textBox.find(textSelected, flags)
+
+        if not r:
+            self.centralWidget.textBox.moveCursor(QTextCursor.Start)
+            r = self.centralWidget.textBox.find(textSelected, flags)
+
+            if not r:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Information)
+                msg.setText('Text Not Found.')
+                msg.setWindowTitle('Error')
+                msg.exec_()
+
+        return r
 
     # Sets color of text
     def TextColor(self, i):
