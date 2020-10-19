@@ -2,7 +2,7 @@
 
 import sys
 import os
-from encrypt import encrypt, decrypt, encrypt_email
+from encrypt import encrypt, decrypt
 from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
@@ -38,8 +38,7 @@ class SignupWindow(QWidget):
                 if not account_info:
                     continue
 
-                account_name = decrypt(account_info[0])
-                if account_name == username:
+                if decrypt(username, account_info[0]):
                     user_error.setText('Username already taken')
                     legal = False
                     break
@@ -92,14 +91,12 @@ class SignupWindow(QWidget):
 
         f.seek(0)
         
-        # does encryption on new username and password (see encrypt.py)
+        # does encryption on new username, password, and email
         e_user = encrypt(username)
         e_pass = encrypt(password)
+        e_email = encrypt(email)
 
-        # encrypts email name and address
-        encrypted_email = encrypt_email(email)
-
-        f.write(all_file + e_user + ' ' + e_pass + ' ' + encrypted_email[0] + ' ' + encrypted_email[1] + '\n')
+        f.write(all_file + e_user + ' ' + e_pass + ' ' + e_email + '\n')
 
         f.close()
 
@@ -168,11 +165,11 @@ class LoginWindow(QWidget):
         for line in f:
             cur_user = line.split()
 
-            username = decrypt(cur_user[0])
-            password = decrypt(cur_user[1])
+            username = decrypt(self.lineEdit_username.text(), cur_user[0])
+            password = decrypt(self.lineEdit_password.text(), cur_user[1])
 
             # checks for account's existence as well as correct password for outputting appropriate message
-            if self.lineEdit_username.text() == username and self.lineEdit_password.text() == password:
+            if username and password:
                 self.user = self.lineEdit_username.text()
 
                 # Create user directory
@@ -181,7 +178,7 @@ class LoginWindow(QWidget):
 
                 return 'True'
 
-            elif self.lineEdit_username.text() == username and self.lineEdit_password.text() != password:
+            elif username and not password:
                 return 'Wrong pass'
 
         f.close()
