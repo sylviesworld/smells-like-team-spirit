@@ -7,9 +7,8 @@ from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
 
+
 # class containing functions that open and operate a separate window for creating an account
-
-
 class SignupWindow(QWidget):
     # for checking if signup info is valid, sets label text for each error
     def legal_account(self, username, password, email):
