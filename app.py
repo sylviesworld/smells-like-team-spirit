@@ -363,7 +363,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                          QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
 
             if reply == QMessageBox.Yes:
-                self.saveMessageSuccess = self.saveEvent()
+                self.saveMessageSuccess = self.saveNoteSlot()
                 event.accept()
 
             elif reply == QMessageBox.No:
@@ -497,7 +497,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Save the file and store the result
         if button.text() == '&Yes':
-            self.saveMessageSuccess = self.saveEvent()
+            self.saveMessageSuccess = self.saveNoteSlot()
 
         # Skip saving the file
         elif button.text() == '&No':
