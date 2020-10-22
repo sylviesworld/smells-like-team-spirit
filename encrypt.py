@@ -1,14 +1,11 @@
 import bcrypt
 
+
+# encrypt string s
 def encrypt(s):
-    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(s.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    hashed = bcrypt.hashpw(s.encode('utf8'), salt)
-      
-    return hashed.decode('utf8')
 
+# decrypt string s
 def decrypt(s, hashed):
-    return bcrypt.checkpw(s.encode('utf8'), hashed.encode('utf8'))
-
-
-
+    return bcrypt.checkpw(s.encode('utf-8'), hashed.encode('utf-8'))

@@ -7,15 +7,16 @@ from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
 
-# class containing functions that open and operate a separate window for creating an account
 
-class SignupWindow(QWidget): 
+# class containing functions that open and operate a separate window for creating an account
+class SignupWindow(QWidget):
     # for checking if signup info is valid, sets label text for each error
     def legal_account(self, username, password, email):
-        illegal_chars = [' ', '`', '~', '[', ']', '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
+        illegal_chars = [' ', '`', '~', '[', ']',
+                         '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
         legal = True
         empty = False
-        
+
         user_error = self.label_userError
         password_error = self.label_passwordError
         email_error = self.label_emailError
@@ -34,7 +35,7 @@ class SignupWindow(QWidget):
         if not empty:
             for line in f:
                 account_info = line.split()
-                
+
                 if not account_info:
                     continue
 
@@ -90,7 +91,7 @@ class SignupWindow(QWidget):
             f = open('.note_accounts', 'w')
 
         f.seek(0)
-        
+
         # does encryption on new username, password, and email
         e_user = encrypt(username)
         e_pass = encrypt(password)
@@ -144,7 +145,7 @@ class SignupWindow(QWidget):
         layout.addWidget(label_email, 4, 0)
         layout.addWidget(self.lineEdit_email, 4, 1)
         layout.addWidget(self.label_emailError, 5, 1)
-        
+
         button_create_account = QPushButton('Create account')
         button_create_account.clicked.connect(self.create_account)
         layout.addWidget(button_create_account, 6, 1)
@@ -153,6 +154,7 @@ class SignupWindow(QWidget):
 
 # class containing functions that open and operate first window when starting app, for logging in
 
+
 class LoginWindow(QWidget):
     # reads in accounts from file and checks if entered user/pass pair matches any existing
     def check_credentials(self):
@@ -160,7 +162,7 @@ class LoginWindow(QWidget):
             f = open('.note_accounts', 'r')
         except IOError:
             return 'False'
-        
+
         # check every account until a matching username is found or entire file is searched
         for line in f:
             cur_user = line.split()
@@ -210,12 +212,12 @@ class LoginWindow(QWidget):
     def create_account_window(self):
         self.dialog = SignupWindow()
         self.dialog.show()
-    
+
     # for opening main window if no account is used
     def bypass(self):
         self.main_window.show()
         self.main_window.user = self.user
-        
+
         # Create guest directory
         if not os.path.exists('users/guest'):
             os.makedirs('users/guest')

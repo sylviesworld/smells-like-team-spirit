@@ -47,12 +47,14 @@ class AppWidget(QWidget):
             self, 'Select an Image', '', 'PNG (*.png);;JPEG (*.jpg *.jpeg)')
 
         if filePath:
-            
+
             # Create image directory
             if not os.path.exists('users/' + self.textBox.mainWindow.user + '/images'):
-                os.makedirs('users/' + self.textBox.mainWindow.user + '/images')
+                os.makedirs(
+                    'users/' + self.textBox.mainWindow.user + '/images')
 
-            dest = copyfile(filePath, 'users/' + self.textBox.mainWindow.user + '/images/' + os.path.basename(filePath))
+            dest = copyfile(filePath, 'users/' + self.textBox.mainWindow.user +
+                            '/images/' + os.path.basename(filePath))
             self.textBox.textCursor().insertImage(dest)
 
 
@@ -65,6 +67,8 @@ def splitext(p):
 
 
 class TextEdit(QTextEdit):
+
+    #AutoBulletList()
 
     def canInsertFromMimeData(self, source):
 
@@ -88,9 +92,11 @@ class TextEdit(QTextEdit):
 
                     # Create image directory
                     if not os.path.exists('users/' + self.mainWindow.user + '/images'):
-                        os.makedirs('users/' + self.mainWindow.user + '/images')
+                        os.makedirs(
+                            'users/' + self.mainWindow.user + '/images')
 
-                    dest = copyfile(u.toLocalFile(), 'users/' + self.mainWindow.user + '/images/' + os.path.basename(u.toLocalFile()))
+                    dest = copyfile(u.toLocalFile(
+                    ), 'users/' + self.mainWindow.user + '/images/' + os.path.basename(u.toLocalFile()))
                     cursor.insertImage(dest)
                 else:
                     break

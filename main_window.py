@@ -144,6 +144,11 @@ class MainWindow(QMainWindow):
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
 
+        searchSelectedActn = QAction('Find Using Selection', self)
+        searchSelectedActn.setShortcut('Ctrl+E')
+        searchSelectedActn.triggered.connect(self.SearchSelection)
+        editMenu.addAction(searchSelectedActn)
+
         selectButton = QAction('Select All', self)
         selectButton.setShortcut(QKeySequence.SelectAll)
         selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
@@ -204,11 +209,12 @@ class MainWindow(QMainWindow):
         imageAction.triggered.connect(self.centralWidget.insertImage)
         edit_toolbar.addAction(imageAction)
 
-        searchSelectedActn = QAction('Search Selection', self)
-        searchSelectedActn.setStatusTip(
-            'Search Document for the Currently Selected Text')
-        searchSelectedActn.triggered.connect(self.SearchSelection)
-        edit_toolbar.addAction(searchSelectedActn)
+        findAction = QAction(
+            QIcon(os.path.join('images', 'icons8-search-80.png')), 'Find', self)
+        findAction.setShortcut(QKeySequence.Find)
+        findAction.triggered.connect(
+            self.centralWidget.findWindow.createWindow)
+        edit_toolbar.addAction(findAction)
 
         # -------------------
         # Create font toolbar
@@ -280,7 +286,18 @@ class MainWindow(QMainWindow):
         underline_action.toggled.connect(
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
-        # formatMenu.addAction(underline_action)
+
+        bullet_action = QAction(
+            QIcon(os.path.join('images', 'icons8-bulleted-list-80.png')), "Bulleted List", self)
+        bullet_action.setStatusTip('Add a Bullet List')
+        bullet_action.triggered.connect(self.BulletList)
+        format_toolbar.addAction(bullet_action)
+
+        numbered_action = QAction(
+            QIcon(os.path.join('images', 'icons8-numbered-list-80.png')), "Numbered List", self)
+        numbered_action.setStatusTip('Add a Numbered List')
+        numbered_action.triggered.connect(self.NumberedList)
+        format_toolbar.addAction(numbered_action)
 
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
@@ -333,6 +350,26 @@ class MainWindow(QMainWindow):
 
     # Classes
     # =======
+
+    def BulletList(self):
+        textSelected = self.centralWidget.textBox.textCursor().selectedText()
+
+        if textSelected == '':
+            self.centralWidget.textBox.insertHtml("<ul><li>.</li></ul>")
+
+        else:
+            self.centralWidget.textBox.insertHtml(
+                "<ul><li>" + textSelected + "</li></ul>")
+
+    def NumberedList(self):
+        textSelected = self.centralWidget.textBox.textCursor().selectedText()
+
+        if textSelected == '':
+            self.centralWidget.textBox.insertHtml("<ol><li>.</li></ol>")
+
+        else:
+            self.centralWidget.textBox.insertHtml(
+                "<ol><li>" + textSelected + "</li></ol>")
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
