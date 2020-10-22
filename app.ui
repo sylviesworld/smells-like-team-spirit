@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>935</width>
-    <height>595</height>
+    <width>880</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -23,7 +23,7 @@
       <widget class="QFrame" name="frame_2">
        <property name="minimumSize">
         <size>
-         <width>119</width>
+         <width>150</width>
          <height>0</height>
         </size>
        </property>
@@ -39,7 +39,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
@@ -110,8 +110,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>45</width>
+            <height>260</height>
            </size>
           </property>
          </spacer>
@@ -123,44 +123,38 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
-            <height>20</height>
+            <width>78</width>
+            <height>17</height>
            </size>
           </property>
          </spacer>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QTabWidget" name="tabWidget">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Tab 1</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <widget class="QTextEdit" name="textEdit"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_2">
-           <attribute name="title">
-            <string>Tab 2</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0">
-             <widget class="QTextEdit" name="textEdit_2"/>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Tab 1</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QTextEdit" name="textEdit"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Tab 2</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QTextEdit" name="textEdit_2"/>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -183,7 +177,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>935</width>
+     <width>880</width>
      <height>18</height>
     </rect>
    </property>
@@ -192,18 +186,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>commandLinkButton</sender>
+   <sender>commandLinkButton_4</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>openNoteSlot()</slot>
+   <slot>saveAsNoteSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>80</y>
+     <x>82</x>
+     <y>231</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1</x>
-     <y>161</y>
+     <x>4</x>
+     <y>261</y>
     </hint>
    </hints>
   </connection>
@@ -224,6 +218,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>commandLinkButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openNoteSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>commandLinkButton_3</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -236,22 +246,6 @@
     <hint type="destinationlabel">
      <x>3</x>
      <y>229</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>commandLinkButton_4</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveAsNoteSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>82</x>
-     <y>231</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>4</x>
-     <y>261</y>
     </hint>
    </hints>
   </connection>
