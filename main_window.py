@@ -144,6 +144,11 @@ class MainWindow(QMainWindow):
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
 
+        searchSelectedActn = QAction('Find Using Selection', self)
+        searchSelectedActn.setShortcut('Ctrl+E')
+        searchSelectedActn.triggered.connect(self.SearchSelection)
+        editMenu.addAction(searchSelectedActn)
+
         selectButton = QAction('Select All', self)
         selectButton.setShortcut(QKeySequence.SelectAll)
         selectButton.triggered.connect(self.centralWidget.textBox.selectAll)
@@ -204,11 +209,12 @@ class MainWindow(QMainWindow):
         imageAction.triggered.connect(self.centralWidget.insertImage)
         edit_toolbar.addAction(imageAction)
 
-        searchSelectedActn = QAction('Search Selection', self)
-        searchSelectedActn.setStatusTip(
-            'Search Document for the Currently Selected Text')
-        searchSelectedActn.triggered.connect(self.SearchSelection)
-        edit_toolbar.addAction(searchSelectedActn)
+        findAction = QAction(
+            QIcon(os.path.join('images', 'icons8-search-80.png')), 'Find', self)
+        findAction.setShortcut(QKeySequence.Find)
+        findAction.triggered.connect(
+            self.centralWidget.findWindow.createWindow)
+        edit_toolbar.addAction(findAction)
 
         # -------------------
         # Create font toolbar
