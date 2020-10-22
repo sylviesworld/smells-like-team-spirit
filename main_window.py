@@ -286,7 +286,16 @@ class MainWindow(QMainWindow):
         underline_action.toggled.connect(
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
-        # formatMenu.addAction(underline_action)
+
+        bullet_action = QAction("Insert Bullet List", self)
+        bullet_action.setStatusTip('Add a Bullet List')
+        bullet_action.triggered.connect(self.BulletList)
+        format_toolbar.addAction(bullet_action)
+
+        numbered_action = QAction("Insert Numbered List", self)
+        numbered_action.setStatusTip('Add a Numbered List')
+        numbered_action.triggered.connect(self.NumberedList)
+        format_toolbar.addAction(numbered_action)
 
         font = QFont('Helvetica', 16)
         self.centralWidget.textBox.setFont(font)
@@ -339,6 +348,26 @@ class MainWindow(QMainWindow):
 
     # Classes
     # =======
+
+    def BulletList(self):
+        textSelected = self.centralWidget.textBox.textCursor().selectedText()
+
+        if textSelected == '':
+            self.centralWidget.textBox.insertHtml("<ul><li>.</li></ul>")
+
+        else:
+            self.centralWidget.textBox.insertHtml(
+                "<ul><li>" + textSelected + "</li></ul>")
+
+    def NumberedList(self):
+        textSelected = self.centralWidget.textBox.textCursor().selectedText()
+
+        if textSelected == '':
+            self.centralWidget.textBox.insertHtml("<ol><li>.</li></ol>")
+
+        else:
+            self.centralWidget.textBox.insertHtml(
+                "<ol><li>" + textSelected + "</li></ol>")
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
