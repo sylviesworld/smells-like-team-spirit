@@ -287,12 +287,14 @@ class MainWindow(QMainWindow):
             self.centralWidget.textBox.setFontUnderline)
         format_toolbar.addAction(underline_action)
 
-        bullet_action = QAction("Insert Bullet List", self)
+        bullet_action = QAction(
+            QIcon(os.path.join('images', 'icons8-bulleted-list-80.png')), "Bulleted List", self)
         bullet_action.setStatusTip('Add a Bullet List')
         bullet_action.triggered.connect(self.BulletList)
         format_toolbar.addAction(bullet_action)
 
-        numbered_action = QAction("Insert Numbered List", self)
+        numbered_action = QAction(
+            QIcon(os.path.join('images', 'icons8-numbered-list-80.png')), "Numbered List", self)
         numbered_action.setStatusTip('Add a Numbered List')
         numbered_action.triggered.connect(self.NumberedList)
         format_toolbar.addAction(numbered_action)
