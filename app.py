@@ -6,6 +6,7 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from find_window import FindWindow
 from login_window import LoginWindow
 from shutil import copyfile
+from permissions import check_permission, add_permission
 import os
 import time
 import uuid
@@ -56,19 +57,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         #new note button
         self.newNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton')
-        self.newNoteButton.clicked.connect(lambda: self.newNoteSlot)
+        #self.newNoteButton.triggered.connect(lambda: self.openNoteSlot(True))
 
         #open note button
         self.openNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_2')
-        self.openNoteButton.clicked.connect(lambda: self.openNoteSlot)
+        #self.openNoteButton.clicked.connect(lambda: self.openNoteSlot)
             
         #save note button
         self.saveNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_3')
-        self.saveNoteButton.clicked.connect(self.saveNoteSlot)
+        #self.saveNoteButton.clicked.connect(self.saveNoteSlot)
 
         #save as button
         self.saveAsButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_4')
-        self.saveAsButton.clicked.connect(self.saveAsNoteSlot)
+        #self.saveAsButton.clicked.connect(self.saveAsNoteSlot)
 
         # Begin menu bars
         # ===============
@@ -435,36 +436,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         return True
 
-    # Opens a file (isNew defines if the file is a new, empty file)
-    def openNoteSlot(self):
-
-        self.saveMessageSuccess = False
-
-        # Prompt the user to save the working file
-        if self.needsSave:
-            self.promptSaveMessage()
-
-        # Open file if no save was needed or save was successful
-        if not self.needsSave or self.saveMessageSuccess:
-
-            # Open file dialog
-            fileName, _ = QFileDialog.getOpenFileName(
-                self, 'Open File', '', 'Text Files (*.txt *.pdf)')
-
-            if fileName:
-                f = open(fileName, 'r')
-                self.textBox_1.setPlainText(f.read())
-                f.close()
-                self.openFile(fileName)
-                self.currentFile = fileName
-                self.setWindowTitle(
-                    'Notepad App - ' +
-                    os.path.basename(fileName) + ' -- Last Modified - '
-                    + time.ctime(os.path.getmtime(fileName)))
-
-            self.needsSave = False
-
     def newNoteSlot(self):
+        self.openNoteSlot(True)
+
+     # Opens a file (isNew defines if the file is a new, empty file)
+    def openNoteSlot(self, isNew=False):
+        print(isNew)
 
         self.saveMessageSuccess = False
 
@@ -474,13 +451,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Open file if no save was needed or save was successful
         if not self.needsSave or self.saveMessageSuccess:
+
+            # New file
+            if isNew:
                 self.textBox_1.clear()
                 self.textBox_1.setTextColor(Qt.black)
                 self.setColorIcon(Qt.black)
-                self.setWindowTitle('Notepad App - untitled.txt')
+                self.window_title = 'Notepad App - untitled.txt'
+                self.setWindowTitle(self.window_title)
 
-        self.needsSave = False
+            # Open file dialog
+            else:
+                fileName, _ = QFileDialog.getOpenFileName(
+                    self, 'Open File', '', 'Text Files (*.txt *.pdf)')
 
+                can_open = check_permission(
+                    self.user, os.path.basename(fileName))
+                if fileName and can_open:
+                    self.openFile(fileName)
+                    self.currentFile = fileName
+                    self.window_title = f"'Notepad App - {os.path.basename(fileName)} -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                    self.setWindowTitle(self.window_title)
+
+                    # Cursor must be moved to update QTextEdit.textColor member
+                    self.textBox_1.moveCursor(
+                        QTextCursor.Right, QTextCursor.MoveAnchor)
+                    self.setColorIcon(self.textBox_1.textColor())
+                    self.textBox_1.moveCursor(
+                        QTextCursor.Left, QTextCursor.MoveAnchor)
+                elif fileName and not can_open:
+                    msg = QMessageBox()
+                    if self.user != 'None':
+                        msg.setText(
+                            self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
+                    else:
+                        msg.setText(
+                            'Sign into account to open private file: ' + os.path.basename(fileName))
+                    msg.exec_()
+
+            self.needsSave = False
+            
     # Creates the save message prompt window
     def promptSaveMessage(self):
         msg = QMessageBox()
@@ -502,6 +512,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Skip saving the file
         elif button.text() == '&No':
             self.needsSave = False
+
+        else:
+            return
 
     # Opens the print dialog
     def printEvent(self):
@@ -557,3 +570,51 @@ if __name__ == '__main__':
     login_window.main_window = w
 
     sys.exit(app.exec_())
+
+'''
+    # Opens a file (isNew defines if the file is a new, empty file)
+    def openNoteSlot(self):
+
+        self.saveMessageSuccess = False
+
+        # Prompt the user to save the working file
+        if self.needsSave:
+            self.promptSaveMessage()
+
+        # Open file if no save was needed or save was successful
+        if not self.needsSave or self.saveMessageSuccess:
+
+            # Open file dialog
+            fileName, _ = QFileDialog.getOpenFileName(
+                self, 'Open File', '', 'Text Files (*.txt *.pdf)')
+
+            if fileName:
+                f = open(fileName, 'r')
+                self.textBox_1.setPlainText(f.read())
+                f.close()
+                self.openFile(fileName)
+                self.currentFile = fileName
+                self.setWindowTitle(
+                    'Notepad App - ' +
+                    os.path.basename(fileName) + ' -- Last Modified - '
+                    + time.ctime(os.path.getmtime(fileName)))
+
+            self.needsSave = False
+
+    def newNoteSlot(self):
+
+        self.saveMessageSuccess = False
+
+        # Prompt the user to save the working file
+        if self.needsSave:
+            self.promptSaveMessage()
+
+        # Open file if no save was needed or save was successful
+        if not self.needsSave or self.saveMessageSuccess:
+                self.textBox_1.clear()
+                self.textBox_1.setTextColor(Qt.black)
+                self.setColorIcon(Qt.black)
+                self.setWindowTitle('Notepad App - untitled.txt')
+
+        self.needsSave = False
+        '''

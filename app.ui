@@ -221,7 +221,7 @@
    <sender>commandLinkButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>openNoteSlot()</slot>
+   <slot>newNoteSlot()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
@@ -255,5 +255,6 @@
   <slot>saveAsNoteSlot()</slot>
   <slot>openNoteSlot()</slot>
   <slot>newNoteSlot()</slot>
+  <slot>openNoteSlot(bool)</slot>
  </slots>
 </ui>
