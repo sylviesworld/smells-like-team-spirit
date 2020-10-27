@@ -1,10 +1,12 @@
 # from realpython.com tutorial
-import smtplib, ssl
+import smtplib
+import ssl
 
 message = """\
-Subject: SLTS App Signup
+Subject: Note App Signup
 
 Thank you for signing up!"""
+
 
 def send_email(user):
     sender = "sltsapp20@gmail.com"
