@@ -1,4 +1,5 @@
-# creation of windows is from PyQt5 tutorial on YouTube by Jie Jenn "PyQt5 Tutorial | Create a simple login form"
+# creation of windows is from PyQt5 tutorial on YouTube by Jie Jenn "PyQt5
+# Tutorial | Create a simple login form"
 
 import sys
 import os
@@ -8,7 +9,8 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
 
 
-# class containing functions that open and operate a separate window for creating an account
+# class containing functions that open and operate a separate window for
+# creating an account
 class SignupWindow(QWidget):
     # for checking if signup info is valid, sets label text for each error
     def legal_account(self, username, password, email):
@@ -21,7 +23,8 @@ class SignupWindow(QWidget):
         password_error = self.label_passwordError
         email_error = self.label_emailError
 
-        # reset error message to blank before checking each attempt to submit info
+        # reset error message to blank before checking each attempt to submit
+        # info
         user_error.setText('')
         password_error.setText('')
         email_error.setText('')
@@ -68,13 +71,15 @@ class SignupWindow(QWidget):
                 legal = False
 
         # check email format
-        if email.find('@') <= 0 or (email.find('.com') == -1 and email.find('.gov') == -1 and email.find('.edu') == -1 and email.find('.net') == -1):
+        if email.find('@') <= 0 or (email.find('.com') == -1 and email.find('.gov') ==
+                                    -1 and email.find('.edu') == -1 and email.find('.net') == -1):
             email_error.setText('Email must have format: user@address.xxx')
             legal = False
 
         return legal
 
-    # reads in all currently existing accounts, encrypts user/pass, writes new file
+    # reads in all currently existing accounts, encrypts user/pass, writes new
+    # file
     def create_account(self):
         username = self.lineEdit_newuser.text()
         password = self.lineEdit_newpassword.text()
@@ -100,6 +105,13 @@ class SignupWindow(QWidget):
         f.write(all_file + e_user + ' ' + e_pass + ' ' + e_email + '\n')
 
         f.close()
+
+        msg = QMessageBox()
+        msg.setText(
+            f'<center>Welcome, {username}</center>\n<center>Thanks for signing up!</center>')
+        msg.setWindowTitle('Welcome!')
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
 
         # sends a confirmation email to the email used to sign up
         send_email(email)
@@ -152,25 +164,28 @@ class SignupWindow(QWidget):
 
         self.setLayout(layout)
 
-# class containing functions that open and operate first window when starting app, for logging in
 
-
+# class containing functions that open and operate first window when
+# starting app, for logging in
 class LoginWindow(QWidget):
-    # reads in accounts from file and checks if entered user/pass pair matches any existing
+    # reads in accounts from file and checks if entered user/pass pair matches
+    # any existing
     def check_credentials(self):
         try:
             f = open('.note_accounts', 'r')
         except IOError:
             return 'False'
 
-        # check every account until a matching username is found or entire file is searched
+        # check every account until a matching username is found or entire file
+        # is searched
         for line in f:
             cur_user = line.split()
 
             username = decrypt(self.lineEdit_username.text(), cur_user[0])
             password = decrypt(self.lineEdit_password.text(), cur_user[1])
 
-            # checks for account's existence as well as correct password for outputting appropriate message
+            # checks for account's existence as well as correct password for
+            # outputting appropriate message
             if username and password:
                 self.user = self.lineEdit_username.text()
 
