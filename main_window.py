@@ -9,6 +9,7 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
+from open_window import OpenWindow
 
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
@@ -59,8 +60,9 @@ class MainWindow(QMainWindow):
         self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
 
-        # Create save window
+        # Create save window and open window
         self.saveWindow = None
+        self.openWindow = None
 
         # Begin menu bars
         # ===============
@@ -508,56 +510,27 @@ class MainWindow(QMainWindow):
     # Opens a file (isNew defines if the file is a new, empty file)
     def openEvent(self, isNew: bool):
 
-        self.saveMessageSuccess = False
-
-        self.Edited = False
-
-        # Prompt the user to save the working file
-        if self.needsSave:
-            self.promptSaveMessage()
-
-        # Open file if no save was needed or save was successful
-        if not self.needsSave or self.saveMessageSuccess:
-
             # New file
             if isNew:
-                self.centralWidget.textBox.clear()
-                self.centralWidget.textBox.setTextColor(Qt.black)
-                self.setColorIcon(Qt.black)
-                self.window_title = 'Notepad App - untitled.txt'
-                self.setWindowTitle(self.window_title)
+                
+                # Prompt save message
+                if self.needsSave:
+                    self.promptSaveMessage()
 
-            # Open file dialog
-            else:
-                fileName, _ = QFileDialog.getOpenFileName(
-                    self, 'Open File', '', 'Text Files (*.txt *.pdf)')
-
-                can_open = check_permission(
-                    self.user, os.path.basename(fileName))
-                if fileName and can_open:
-                    self.centralWidget.openFile(fileName)
-                    self.currentFile = fileName
-                    self.window_title = f"Notepad App - {os.path.basename(fileName)}"\
-                        f" -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                if not self.needsSave or self.saveMessageSuccess:
+                    self.currentFile = ''
+                    self.centralWidget.textBox.clear()
+                    self.centralWidget.textBox.setTextColor(Qt.black)
+                    self.setColorIcon(Qt.black)
+                    self.window_title = 'Notepad App - untitled.txt'
                     self.setWindowTitle(self.window_title)
+                    self.needsSave = False
+                    self.Edited = False
 
-                    # Cursor must be moved to update QTextEdit.textColor member
-                    self.centralWidget.textBox.moveCursor(
-                        QTextCursor.Right, QTextCursor.MoveAnchor)
-                    self.setColorIcon(self.centralWidget.textBox.textColor())
-                    self.centralWidget.textBox.moveCursor(
-                        QTextCursor.Left, QTextCursor.MoveAnchor)
-                elif fileName and not can_open:
-                    msg = QMessageBox()
-                    if self.user != 'None':
-                        msg.setText(
-                            self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
-                    else:
-                        msg.setText(
-                            'Sign into account to open private file: ' + os.path.basename(fileName))
-                    msg.exec_()
-
-            self.needsSave = False
+            # Open file
+            elif not self.openWindow:
+                self.openWindow = OpenWindow(self)
+                self.openWindow.show()
 
     # Creates the save message prompt window
     def promptSaveMessage(self):
