@@ -119,7 +119,7 @@ class SaveWindow(QWidget):
                 self.mainWindow.needsSave = False
                 self.mainWindow.window_title = f'Notepad App - {os.path.basename(filePath)}'
                 self.mainWindow.setWindowTitle(self.mainWindow.window_title)
-                add_permission(self.mainWindow.user, fileName + '.txt')
+                add_permission(self.mainWindow.user, filePath)
 
             # Save PDF
             else:
@@ -137,7 +137,7 @@ class SaveWindow(QWidget):
                     self.oldFile = ''
 
                 self.savePDF(filePath)
-                add_permission(self.mainWindow.user, fileName + '.pdf')
+                add_permission(self.mainWindow.user, filePath)
 
             # Close save window
             self.close()

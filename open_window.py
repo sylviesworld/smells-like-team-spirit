@@ -48,14 +48,12 @@ class OpenWindow(QWidget):
         
         indexItem = self.fileModel.index(self.fileTree.currentIndex().row(), 0, self.fileTree.currentIndex().parent())
         filePath = self.fileModel.filePath(indexItem)
-
         # Cannot open directories
         if self.fileModel.isDir(self.fileTree.currentIndex()):
             return
 
         # Open file dialog
-        can_open = check_permission(
-            self.mainWindow.user, os.path.basename(filePath))
+        can_open = check_permission(self.mainWindow.user, filePath)
         if can_open:
                 
             self.mainWindow.saveMessageSuccess = False
