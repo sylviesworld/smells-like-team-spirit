@@ -11,6 +11,11 @@ from permissions import check_permission, add_permission
 from save_window import SaveWindow
 
 
+FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
+FONT_SIZES.extend(range(12, 30, 2))
+FONT_SIZES.extend([36, 48, 72])
+
+
 class MainWindow(QMainWindow):
     """ This class inherits from QMainWindow and will be used to set up the applications GUI """
 
@@ -211,6 +216,7 @@ class MainWindow(QMainWindow):
 
         findAction = QAction(
             QIcon(os.path.join('images', 'icons8-search-80.png')), 'Find', self)
+        findAction.setStatusTip('Open Find Text Window')
         findAction.setShortcut(QKeySequence.Find)
         findAction.triggered.connect(
             self.centralWidget.findWindow.createWindow)
@@ -227,12 +233,9 @@ class MainWindow(QMainWindow):
             self.centralWidget.textBox.setCurrentFont)
         font_toolbar.addWidget(self.fonts)
 
-        FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
-        FONT_SIZES.extend(range(12, 30, 2))
-        FONT_SIZES.extend([36, 48, 72])
-
         self.fontsize = QComboBox()
         self.fontsize.addItems([str(s) for s in FONT_SIZES])
+        self.fontsize.setCurrentIndex(FONT_SIZES.index(16))
         self.fontsize.currentIndexChanged[str].connect(
             lambda s: self.centralWidget.textBox.setFontPointSize(float(s)))
         font_toolbar.addWidget(self.fontsize)
@@ -242,6 +245,7 @@ class MainWindow(QMainWindow):
 
         self.fontcolor = QComboBox()
         self.fontcolor.addItems(FONT_COLORS)
+        self.fontcolor.setCurrentIndex(FONT_COLORS.index("Black"))
         self.fontcolor.currentIndexChanged.connect(self.TextColor)
         font_toolbar.addWidget(self.fontcolor)
 
@@ -257,6 +261,7 @@ class MainWindow(QMainWindow):
 
         colorAction = QAction(
             QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Font Color', self)
+        colorAction.setStatusTip('Select Font Color')
         colorAction.triggered.connect(self.colorPicker)
         format_toolbar.addAction(colorAction)
 
@@ -355,7 +360,7 @@ class MainWindow(QMainWindow):
         textSelected = self.centralWidget.textBox.textCursor().selectedText()
 
         if textSelected == '':
-            self.centralWidget.textBox.insertHtml("<ul><li>.</li></ul>")
+            self.centralWidget.textBox.insertHtml("<ul><li>_</li></ul>")
 
         else:
             self.centralWidget.textBox.insertHtml(
@@ -365,7 +370,7 @@ class MainWindow(QMainWindow):
         textSelected = self.centralWidget.textBox.textCursor().selectedText()
 
         if textSelected == '':
-            self.centralWidget.textBox.insertHtml("<ol><li>.</li></ol>")
+            self.centralWidget.textBox.insertHtml("<ol><li>_</li></ol>")
 
         else:
             self.centralWidget.textBox.insertHtml(
