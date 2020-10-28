@@ -267,32 +267,32 @@ class MainWindow(QMainWindow):
         colorAction.triggered.connect(self.colorPicker)
         format_toolbar.addAction(colorAction)
 
-        bold_action = QAction(
+        self.bold_action = QAction(
             QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
-        bold_action.setStatusTip("Set selected text to Bold (strong)")
-        bold_action.setShortcut(QKeySequence.Bold)
-        bold_action.setCheckable(True)
-        bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
+        self.bold_action.setStatusTip("Set selected text to Bold (strong)")
+        self.bold_action.setShortcut(QKeySequence.Bold)
+        self.bold_action.setCheckable(True)
+        self.bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
             QFont.Bold if x else QFont.Normal))
-        format_toolbar.addAction(bold_action)
+        format_toolbar.addAction(self.bold_action)
 
-        italic_action = QAction(
+        self.italic_action = QAction(
             QIcon(os.path.join('images', 'icons8-italic-80.png')), "Italic", self)
-        italic_action.setStatusTip("Set selected text to Italic (emphasis)")
-        italic_action.setShortcut(QKeySequence.Italic)
-        italic_action.setCheckable(True)
-        italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
-        format_toolbar.addAction(italic_action)
+        self.italic_action.setStatusTip("Set selected text to Italic (emphasis)")
+        self.italic_action.setShortcut(QKeySequence.Italic)
+        self.italic_action.setCheckable(True)
+        self.italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
+        format_toolbar.addAction(self.italic_action)
         # formatMenu.addAction(italic_action)
 
-        underline_action = QAction(
+        self.underline_action = QAction(
             QIcon(os.path.join('images', 'icons8-underline-80.png')), "Underline", self)
-        underline_action.setStatusTip("Set selected text to Underline")
-        underline_action.setShortcut(QKeySequence.Underline)
-        underline_action.setCheckable(True)
-        underline_action.toggled.connect(
+        self.underline_action.setStatusTip("Set selected text to Underline")
+        self.underline_action.setShortcut(QKeySequence.Underline)
+        self.underline_action.setCheckable(True)
+        self.underline_action.toggled.connect(
             self.centralWidget.textBox.setFontUnderline)
-        format_toolbar.addAction(underline_action)
+        format_toolbar.addAction(self.underline_action)
 
         bullet_action = QAction(
             QIcon(os.path.join('images', 'icons8-bulleted-list-80.png')), "Bulleted List", self)
@@ -348,6 +348,7 @@ class MainWindow(QMainWindow):
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignJustify))
         paragraph_toolbar.addAction(self.aln_justify_action)
 
+        self.aln_left_action.setChecked(True)
         format_group = QActionGroup(self)
         format_group.setExclusive(True)
         format_group.addAction(self.aln_left_action)
@@ -485,8 +486,22 @@ class MainWindow(QMainWindow):
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
 
-        # Update current text color under cursor for color button display
-        self.setColorIcon(self.centralWidget.textBox.textColor())
+        # Do not update formatting while the user is selecting text
+        if not self.centralWidget.textBox.textCursor().hasSelection():
+
+            # Update current text color under cursor for color button display
+            self.setColorIcon(self.centralWidget.textBox.textColor())
+
+            # Update the current font formatting (bold, italics, underline, etc.)
+            self.bold_action.setChecked(self.centralWidget.textBox.fontWeight() == QFont.Bold)
+            self.italic_action.setChecked(self.centralWidget.textBox.fontItalic())
+            self.underline_action.setChecked(self.centralWidget.textBox.fontUnderline())
+            self.aln_right_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignRight)
+            self.aln_left_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignLeft)
+            self.aln_center_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignCenter)
+            self.aln_justify_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignJustify)
+            self.fonts.setCurrentFont(self.centralWidget.textBox.currentFont())
+            self.fontsize.setCurrentIndex(FONT_SIZES.index(self.centralWidget.textBox.fontPointSize()))
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
