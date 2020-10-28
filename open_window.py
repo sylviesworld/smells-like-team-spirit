@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QTreeView, Q
 from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtGui import QTextCursor
 from permissions import check_permission, add_permission
+from encrypt_file import decrypt_file
 
 # The window for opening a file
 class OpenWindow(QWidget):
@@ -91,7 +92,6 @@ class OpenWindow(QWidget):
 
     # Opens file and reads the text to QTextEdit
     def openFile(self, filePath):
-        f = open(filePath, 'r')
-        self.textEdit.setHtml(f.read())
+        f = open(filePath, 'rb')
+        self.textEdit.setHtml(decrypt_file(f.read()))
         f.close()
-
