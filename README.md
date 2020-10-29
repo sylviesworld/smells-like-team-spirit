@@ -31,7 +31,7 @@ All dependencies for this project can be found in _[requirements.txt](requiremen
 UNIX> cat requirements.txt
 cryptography==3.2.1
 PyQt5==5.15.1
-python_bcrypt==0.3.2
+bcrypt==3.2.0
 ```
 
 To automatically install these dependencies, run the following commands in the _smells-like-team-spirit_ directory:
