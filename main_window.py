@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         editMenu.addSeparator()
 
         findButton = QAction('Find', self)
-        findButton.setShortcut(QKeySequence.Find)
+        #findButton.setShortcut(QKeySequence.Find)
         findButton.triggered.connect(
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
@@ -267,6 +267,17 @@ class MainWindow(QMainWindow):
         colorAction.triggered.connect(self.colorPicker)
         format_toolbar.addAction(colorAction)
 
+        self.highlightLabel = QLabel()
+        self.setHighlightIcon(Qt.white)
+        self.centralWidget.textBox.setTextBackgroundColor(Qt.white)
+        format_toolbar.addWidget(self.highlightLabel)
+
+        highlightAction = QAction(
+            QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Highlight', self)
+        highlightAction.setStatusTip('Select Highlight Color')
+        highlightAction.triggered.connect(self.highlightPicker)
+        format_toolbar.addAction(highlightAction)
+
         self.bold_action = QAction(
             QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
         self.bold_action.setStatusTip("Set selected text to Bold (strong)")
@@ -386,12 +397,19 @@ class MainWindow(QMainWindow):
 
     # Opens the color dialog
     def colorPicker(self):
-        cursor = self.centralWidget.textBox.textCursor()
         color = QColorDialog.getColor(self.centralWidget.textBox.textColor())
 
         if color.isValid():
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
+
+    # Opens the highlight color dialog
+    def highlightPicker(self):
+        color = QColorDialog.getColor(self.centralWidget.textBox.textBackgroundColor())
+
+        if color.isValid():
+            self.setHighlightIcon(color)
+            self.centralWidget.textBox.setTextBackgroundColor(color)
 
     def SearchSelection(self):
         cursor = self.centralWidget.textBox.textCursor()
@@ -455,9 +473,21 @@ class MainWindow(QMainWindow):
 
     # Sets the color icon on the QToolBar
     def setColorIcon(self, color):
-        pixelMap = QPixmap(64, 24)
-        pixelMap.fill(color)
+        pixelMap = QPixmap(48, 24)
+        pixelMap.fill(Qt.black)
+        painter = QPainter(pixelMap)
+        painter.fillRect(4, 4, 40, 16, color)
+        painter.end()
         self.colorLabel.setPixmap(pixelMap)
+
+    # Sets the highlight color icon on the QToolBar
+    def setHighlightIcon(self, color):
+        pixelMap = QPixmap(48, 24)
+        pixelMap.fill(Qt.black)
+        painter = QPainter(pixelMap)
+        painter.fillRect(4, 4, 40, 16, color)
+        painter.end()
+        self.highlightLabel.setPixmap(pixelMap)
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
@@ -478,6 +508,10 @@ class MainWindow(QMainWindow):
         self.needsSave = True
         self.statusBar().clearMessage()
 
+        # Update current text color and highlight under cursor for color button displays
+        self.setColorIcon(self.centralWidget.textBox.textColor())
+        self.setHighlightIcon(self.centralWidget.textBox.textBackgroundColor())
+
         if not self.Edited:
             self.window_title = self.window_title + " -- Edited"
             self.setWindowTitle(self.window_title)
@@ -489,8 +523,9 @@ class MainWindow(QMainWindow):
         # Do not update formatting while the user is selecting text
         if not self.centralWidget.textBox.textCursor().hasSelection():
 
-            # Update current text color under cursor for color button display
+            # Update current text color and highlight under cursor for color button displays
             self.setColorIcon(self.centralWidget.textBox.textColor())
+            self.setHighlightIcon(self.centralWidget.textBox.textBackgroundColor())
 
             # Update the current font formatting (bold, italics, underline, etc.)
             self.bold_action.setChecked(self.centralWidget.textBox.fontWeight() == QFont.Bold)

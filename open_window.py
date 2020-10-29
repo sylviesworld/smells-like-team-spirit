@@ -73,6 +73,7 @@ class OpenWindow(QWidget):
                 self.textEdit.moveCursor(
                     QTextCursor.Right, QTextCursor.MoveAnchor)
                 self.mainWindow.setColorIcon(self.textEdit.textColor())
+                self.mainWindow.setHighlightIcon(self.textEdit.textBackgroundColor())
                 self.textEdit.moveCursor(
                     QTextCursor.Left, QTextCursor.MoveAnchor)
 
