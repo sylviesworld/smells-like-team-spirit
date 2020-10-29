@@ -273,8 +273,8 @@ class MainWindow(QMainWindow):
         format_toolbar.addWidget(self.highlightLabel)
 
         highlightAction = QAction(
-            QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Highlight', self)
-        highlightAction.setStatusTip('Select Highlight Color')
+            QIcon(os.path.join('images', 'icons8-marker-pen-80.png')), 'Text Highlight Color', self)
+        highlightAction.setStatusTip('Select Text Highlighting Color')
         highlightAction.triggered.connect(self.highlightPicker)
         format_toolbar.addAction(highlightAction)
 
@@ -547,8 +547,10 @@ class MainWindow(QMainWindow):
             self.aln_justify_action.setChecked(
                 self.centralWidget.textBox.alignment() == Qt.AlignJustify)
             self.fonts.setCurrentFont(self.centralWidget.textBox.currentFont())
-            self.fontsize.setCurrentIndex(FONT_SIZES.index(
-                self.centralWidget.textBox.fontPointSize()))
+
+            if self.centralWidget.textBox.fontPointSize() in FONT_SIZES:
+                self.fontsize.setCurrentIndex(FONT_SIZES.index(
+                    self.centralWidget.textBox.fontPointSize()))
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
