@@ -4,6 +4,7 @@ __pycache__/*
 .note_accounts
 .permissions
 .encrypt
+.key
 users/*
 .html
 
