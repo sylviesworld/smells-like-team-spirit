@@ -28,19 +28,7 @@ class AppWidget(QWidget):
 
         # Set main layout to app widget
         self.setLayout(self.mainLayout)
-
-    # Creaes a new file or opens an existing and saves the QTextEdit text
-    def saveFile(self, fileName):
-        f = open(fileName, 'w')
-        f.write(self.textBox.toHtml())
-        f.close()
-
-    # Opens file and reads the text to QTextEdit
-    def openFile(self, fileName):
-        f = open(fileName, 'r')
-        self.textBox.setHtml(f.read())
-        f.close()
-
+    
     # Opens the image file dialog and inserts an image into the QTextEdit
     def insertImage(self):
         filePath, _ = QFileDialog.getOpenFileName(

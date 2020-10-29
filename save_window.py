@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtPrintSupport import QPrinter
 from permissions import check_permission, add_permission
+from encrypt_file import encrypt_file
 import os
 
 # The window for saving a file
@@ -119,7 +120,7 @@ class SaveWindow(QWidget):
                 self.mainWindow.needsSave = False
                 self.mainWindow.window_title = f'Notepad App - {os.path.basename(filePath)}'
                 self.mainWindow.setWindowTitle(self.mainWindow.window_title)
-                add_permission(self.mainWindow.user, fileName + '.txt')
+                add_permission(self.mainWindow.user, filePath)
 
             # Save PDF
             else:
@@ -137,7 +138,7 @@ class SaveWindow(QWidget):
                     self.oldFile = ''
 
                 self.savePDF(filePath)
-                add_permission(self.mainWindow.user, fileName + '.pdf')
+                add_permission(self.mainWindow.user, filePath)
 
             # Close save window
             self.close()
@@ -149,7 +150,7 @@ class SaveWindow(QWidget):
             self.mainWindow.needsSave = False
             self.mainWindow.window_title = f'Notepad App - {os.path.basename(self.mainWindow.currentFile)}'
             self.mainWindow.setWindowTitle(self.mainWindow.window_title)
-            add_permission(self.mainWindow.user, os.path.basename(self.mainWindow.currentFile))
+            add_permission(self.mainWindow.user, self.mainWindow.currentFile)
 
         # Close the application after save if needed
         if self.closeOnSave:
@@ -171,8 +172,9 @@ class SaveWindow(QWidget):
 
     # Creates a new file or opens an existing one and saves the QTextEdit text
     def saveFile(self, filePath):
-        f = open(filePath, 'w')
-        f.write(self.textEdit.toHtml())
+        f = open(filePath, 'wb')
+        encrypted = encrypt_file(self.textEdit.toHtml())
+        f.write(encrypted)
         f.close()
 
     # Saves the file as a PDF

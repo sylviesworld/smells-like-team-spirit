@@ -30,42 +30,45 @@ def get_permissions(user):
     return account_permissions
 
 # check all files that this account can access, compare to given filename
-def check_permission(account, filename):
+def check_permission(account, fullpath):
     permissions = get_permissions(account)
 
-    fix_file = ''
+    short = fullpath.find('users')
+    shortpath = fullpath[short:]
 
-    for c in filename:
+    fix_path = ''
+
+    for c in shortpath:
         if c == ' ':
             new_c = '_'
-            fix_file += new_c
+            fix_path += new_c
         else:
-            fix_file += c
+            fix_path += c
 
-    for cur_file in permissions:
-        if cur_file == fix_file:
+    for cur_path in permissions:
+        if cur_path == fix_path:
             return True
 
     return False
 
-def add_permission(account, filename):
+def add_permission(account, filepath):
     # get all filenames this account can access
     permissions = get_permissions(account)
     
-    fix_file = ''
+    fix_path = ''
 
-    for c in filename:
+    for c in filepath:
         if c == ' ':
             new_c = '_'
-            fix_file += new_c
+            fix_path += new_c
         else:
-            fix_file += c
+            fix_path += c
 
 
     # if account doesn't already have access to file, add it to account's permissions
-    if fix_file not in permissions:
+    if fix_path not in permissions:
         found_user = False
-        permissions.append(fix_file)
+        permissions.append(fix_path)
         
         accounts = []
 
@@ -96,6 +99,6 @@ def add_permission(account, filename):
 
         # if this account had no permissions, just add them and this permission to the end of the file
         if not found_user:
-            f.write(account + ' ' + fix_file + '\n')
+            f.write(account + ' ' + fix_path + '\n')
 
         f.close()

@@ -9,6 +9,7 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
+from open_window import OpenWindow
 
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
@@ -59,8 +60,9 @@ class MainWindow(QMainWindow):
         self.centralWidget.textBox.mainWindow = self
         self.needsSave = False
 
-        # Create save window
+        # Create save window and open window
         self.saveWindow = None
+        self.openWindow = None
 
         # Begin menu bars
         # ===============
@@ -144,7 +146,7 @@ class MainWindow(QMainWindow):
         editMenu.addSeparator()
 
         findButton = QAction('Find', self)
-        findButton.setShortcut(QKeySequence.Find)
+        #findButton.setShortcut(QKeySequence.Find)
         findButton.triggered.connect(
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
@@ -265,32 +267,43 @@ class MainWindow(QMainWindow):
         colorAction.triggered.connect(self.colorPicker)
         format_toolbar.addAction(colorAction)
 
-        bold_action = QAction(
-            QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
-        bold_action.setStatusTip("Set selected text to Bold (strong)")
-        bold_action.setShortcut(QKeySequence.Bold)
-        bold_action.setCheckable(True)
-        bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
-            QFont.Bold if x else QFont.Normal))
-        format_toolbar.addAction(bold_action)
+        self.highlightLabel = QLabel()
+        self.setHighlightIcon(Qt.white)
+        self.centralWidget.textBox.setTextBackgroundColor(Qt.white)
+        format_toolbar.addWidget(self.highlightLabel)
 
-        italic_action = QAction(
+        highlightAction = QAction(
+            QIcon(os.path.join('images', 'icons8-text-color-80.png')), 'Highlight', self)
+        highlightAction.setStatusTip('Select Highlight Color')
+        highlightAction.triggered.connect(self.highlightPicker)
+        format_toolbar.addAction(highlightAction)
+
+        self.bold_action = QAction(
+            QIcon(os.path.join('images', 'icons8-bold-80.png')), "Bold", self)
+        self.bold_action.setStatusTip("Set selected text to Bold (strong)")
+        self.bold_action.setShortcut(QKeySequence.Bold)
+        self.bold_action.setCheckable(True)
+        self.bold_action.toggled.connect(lambda x: self.centralWidget.textBox.setFontWeight(
+            QFont.Bold if x else QFont.Normal))
+        format_toolbar.addAction(self.bold_action)
+
+        self.italic_action = QAction(
             QIcon(os.path.join('images', 'icons8-italic-80.png')), "Italic", self)
-        italic_action.setStatusTip("Set selected text to Italic (emphasis)")
-        italic_action.setShortcut(QKeySequence.Italic)
-        italic_action.setCheckable(True)
-        italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
-        format_toolbar.addAction(italic_action)
+        self.italic_action.setStatusTip("Set selected text to Italic (emphasis)")
+        self.italic_action.setShortcut(QKeySequence.Italic)
+        self.italic_action.setCheckable(True)
+        self.italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
+        format_toolbar.addAction(self.italic_action)
         # formatMenu.addAction(italic_action)
 
-        underline_action = QAction(
+        self.underline_action = QAction(
             QIcon(os.path.join('images', 'icons8-underline-80.png')), "Underline", self)
-        underline_action.setStatusTip("Set selected text to Underline")
-        underline_action.setShortcut(QKeySequence.Underline)
-        underline_action.setCheckable(True)
-        underline_action.toggled.connect(
+        self.underline_action.setStatusTip("Set selected text to Underline")
+        self.underline_action.setShortcut(QKeySequence.Underline)
+        self.underline_action.setCheckable(True)
+        self.underline_action.toggled.connect(
             self.centralWidget.textBox.setFontUnderline)
-        format_toolbar.addAction(underline_action)
+        format_toolbar.addAction(self.underline_action)
 
         bullet_action = QAction(
             QIcon(os.path.join('images', 'icons8-bulleted-list-80.png')), "Bulleted List", self)
@@ -346,6 +359,7 @@ class MainWindow(QMainWindow):
             lambda: self.centralWidget.textBox.setAlignment(Qt.AlignJustify))
         paragraph_toolbar.addAction(self.aln_justify_action)
 
+        self.aln_left_action.setChecked(True)
         format_group = QActionGroup(self)
         format_group.setExclusive(True)
         format_group.addAction(self.aln_left_action)
@@ -383,12 +397,19 @@ class MainWindow(QMainWindow):
 
     # Opens the color dialog
     def colorPicker(self):
-        cursor = self.centralWidget.textBox.textCursor()
         color = QColorDialog.getColor(self.centralWidget.textBox.textColor())
 
         if color.isValid():
             self.setColorIcon(color)
             self.centralWidget.textBox.setTextColor(color)
+
+    # Opens the highlight color dialog
+    def highlightPicker(self):
+        color = QColorDialog.getColor(self.centralWidget.textBox.textBackgroundColor())
+
+        if color.isValid():
+            self.setHighlightIcon(color)
+            self.centralWidget.textBox.setTextBackgroundColor(color)
 
     def SearchSelection(self):
         cursor = self.centralWidget.textBox.textCursor()
@@ -452,9 +473,21 @@ class MainWindow(QMainWindow):
 
     # Sets the color icon on the QToolBar
     def setColorIcon(self, color):
-        pixelMap = QPixmap(64, 24)
-        pixelMap.fill(color)
+        pixelMap = QPixmap(48, 24)
+        pixelMap.fill(Qt.black)
+        painter = QPainter(pixelMap)
+        painter.fillRect(4, 4, 40, 16, color)
+        painter.end()
         self.colorLabel.setPixmap(pixelMap)
+
+    # Sets the highlight color icon on the QToolBar
+    def setHighlightIcon(self, color):
+        pixelMap = QPixmap(48, 24)
+        pixelMap.fill(Qt.black)
+        painter = QPainter(pixelMap)
+        painter.fillRect(4, 4, 40, 16, color)
+        painter.end()
+        self.highlightLabel.setPixmap(pixelMap)
 
     # Called when the QMainWindow is closed
     def closeEvent(self, event):
@@ -475,6 +508,10 @@ class MainWindow(QMainWindow):
         self.needsSave = True
         self.statusBar().clearMessage()
 
+        # Update current text color and highlight under cursor for color button displays
+        self.setColorIcon(self.centralWidget.textBox.textColor())
+        self.setHighlightIcon(self.centralWidget.textBox.textBackgroundColor())
+
         if not self.Edited:
             self.window_title = self.window_title + " -- Edited"
             self.setWindowTitle(self.window_title)
@@ -483,8 +520,23 @@ class MainWindow(QMainWindow):
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
 
-        # Update current text color under cursor for color button display
-        self.setColorIcon(self.centralWidget.textBox.textColor())
+        # Do not update formatting while the user is selecting text
+        if not self.centralWidget.textBox.textCursor().hasSelection():
+
+            # Update current text color and highlight under cursor for color button displays
+            self.setColorIcon(self.centralWidget.textBox.textColor())
+            self.setHighlightIcon(self.centralWidget.textBox.textBackgroundColor())
+
+            # Update the current font formatting (bold, italics, underline, etc.)
+            self.bold_action.setChecked(self.centralWidget.textBox.fontWeight() == QFont.Bold)
+            self.italic_action.setChecked(self.centralWidget.textBox.fontItalic())
+            self.underline_action.setChecked(self.centralWidget.textBox.fontUnderline())
+            self.aln_right_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignRight)
+            self.aln_left_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignLeft)
+            self.aln_center_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignCenter)
+            self.aln_justify_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignJustify)
+            self.fonts.setCurrentFont(self.centralWidget.textBox.currentFont())
+            self.fontsize.setCurrentIndex(FONT_SIZES.index(self.centralWidget.textBox.fontPointSize()))
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
@@ -508,56 +560,27 @@ class MainWindow(QMainWindow):
     # Opens a file (isNew defines if the file is a new, empty file)
     def openEvent(self, isNew: bool):
 
-        self.saveMessageSuccess = False
-
-        self.Edited = False
-
-        # Prompt the user to save the working file
-        if self.needsSave:
-            self.promptSaveMessage()
-
-        # Open file if no save was needed or save was successful
-        if not self.needsSave or self.saveMessageSuccess:
-
             # New file
             if isNew:
-                self.centralWidget.textBox.clear()
-                self.centralWidget.textBox.setTextColor(Qt.black)
-                self.setColorIcon(Qt.black)
-                self.window_title = 'Notepad App - untitled.txt'
-                self.setWindowTitle(self.window_title)
+                
+                # Prompt save message
+                if self.needsSave:
+                    self.promptSaveMessage()
 
-            # Open file dialog
-            else:
-                fileName, _ = QFileDialog.getOpenFileName(
-                    self, 'Open File', '', 'Text Files (*.txt *.pdf)')
-
-                can_open = check_permission(
-                    self.user, os.path.basename(fileName))
-                if fileName and can_open:
-                    self.centralWidget.openFile(fileName)
-                    self.currentFile = fileName
-                    self.window_title = f"Notepad App - {os.path.basename(fileName)}"\
-                        f" -- Last Modified - {time.ctime(os.path.getmtime(fileName))}"
+                if not self.needsSave or self.saveMessageSuccess:
+                    self.currentFile = ''
+                    self.centralWidget.textBox.clear()
+                    self.centralWidget.textBox.setTextColor(Qt.black)
+                    self.setColorIcon(Qt.black)
+                    self.window_title = 'Notepad App - untitled.txt'
                     self.setWindowTitle(self.window_title)
+                    self.needsSave = False
+                    self.Edited = False
 
-                    # Cursor must be moved to update QTextEdit.textColor member
-                    self.centralWidget.textBox.moveCursor(
-                        QTextCursor.Right, QTextCursor.MoveAnchor)
-                    self.setColorIcon(self.centralWidget.textBox.textColor())
-                    self.centralWidget.textBox.moveCursor(
-                        QTextCursor.Left, QTextCursor.MoveAnchor)
-                elif fileName and not can_open:
-                    msg = QMessageBox()
-                    if self.user != 'None':
-                        msg.setText(
-                            self.user + ' does not have permission to open file: ' + os.path.basename(fileName))
-                    else:
-                        msg.setText(
-                            'Sign into account to open private file: ' + os.path.basename(fileName))
-                    msg.exec_()
-
-            self.needsSave = False
+            # Open file
+            elif not self.openWindow:
+                self.openWindow = OpenWindow(self)
+                self.openWindow.show()
 
     # Creates the save message prompt window
     def promptSaveMessage(self):

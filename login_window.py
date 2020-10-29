@@ -3,7 +3,7 @@
 
 import sys
 import os
-from encrypt import encrypt, decrypt
+from encrypt_account import encrypt, decrypt
 from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
