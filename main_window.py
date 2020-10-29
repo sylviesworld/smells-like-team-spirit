@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         editMenu.addSeparator()
 
         findButton = QAction('Find', self)
-        #findButton.setShortcut(QKeySequence.Find)
+        # findButton.setShortcut(QKeySequence.Find)
         findButton.triggered.connect(
             self.centralWidget.findWindow.createWindow)
         editMenu.addAction(findButton)
@@ -289,10 +289,12 @@ class MainWindow(QMainWindow):
 
         self.italic_action = QAction(
             QIcon(os.path.join('images', 'icons8-italic-80.png')), "Italic", self)
-        self.italic_action.setStatusTip("Set selected text to Italic (emphasis)")
+        self.italic_action.setStatusTip(
+            "Set selected text to Italic (emphasis)")
         self.italic_action.setShortcut(QKeySequence.Italic)
         self.italic_action.setCheckable(True)
-        self.italic_action.toggled.connect(self.centralWidget.textBox.setFontItalic)
+        self.italic_action.toggled.connect(
+            self.centralWidget.textBox.setFontItalic)
         format_toolbar.addAction(self.italic_action)
         # formatMenu.addAction(italic_action)
 
@@ -405,7 +407,8 @@ class MainWindow(QMainWindow):
 
     # Opens the highlight color dialog
     def highlightPicker(self):
-        color = QColorDialog.getColor(self.centralWidget.textBox.textBackgroundColor())
+        color = QColorDialog.getColor(
+            self.centralWidget.textBox.textBackgroundColor())
 
         if color.isValid():
             self.setHighlightIcon(color)
@@ -525,18 +528,27 @@ class MainWindow(QMainWindow):
 
             # Update current text color and highlight under cursor for color button displays
             self.setColorIcon(self.centralWidget.textBox.textColor())
-            self.setHighlightIcon(self.centralWidget.textBox.textBackgroundColor())
+            self.setHighlightIcon(
+                self.centralWidget.textBox.textBackgroundColor())
 
             # Update the current font formatting (bold, italics, underline, etc.)
-            self.bold_action.setChecked(self.centralWidget.textBox.fontWeight() == QFont.Bold)
-            self.italic_action.setChecked(self.centralWidget.textBox.fontItalic())
-            self.underline_action.setChecked(self.centralWidget.textBox.fontUnderline())
-            self.aln_right_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignRight)
-            self.aln_left_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignLeft)
-            self.aln_center_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignCenter)
-            self.aln_justify_action.setChecked(self.centralWidget.textBox.alignment() == Qt.AlignJustify)
+            self.bold_action.setChecked(
+                self.centralWidget.textBox.fontWeight() == QFont.Bold)
+            self.italic_action.setChecked(
+                self.centralWidget.textBox.fontItalic())
+            self.underline_action.setChecked(
+                self.centralWidget.textBox.fontUnderline())
+            self.aln_right_action.setChecked(
+                self.centralWidget.textBox.alignment() == Qt.AlignRight)
+            self.aln_left_action.setChecked(
+                self.centralWidget.textBox.alignment() == Qt.AlignLeft)
+            self.aln_center_action.setChecked(
+                self.centralWidget.textBox.alignment() == Qt.AlignCenter)
+            self.aln_justify_action.setChecked(
+                self.centralWidget.textBox.alignment() == Qt.AlignJustify)
             self.fonts.setCurrentFont(self.centralWidget.textBox.currentFont())
-            self.fontsize.setCurrentIndex(FONT_SIZES.index(self.centralWidget.textBox.fontPointSize()))
+            self.fontsize.setCurrentIndex(FONT_SIZES.index(
+                self.centralWidget.textBox.fontPointSize()))
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
@@ -560,27 +572,27 @@ class MainWindow(QMainWindow):
     # Opens a file (isNew defines if the file is a new, empty file)
     def openEvent(self, isNew: bool):
 
-            # New file
-            if isNew:
-                
-                # Prompt save message
-                if self.needsSave:
-                    self.promptSaveMessage()
+        # New file
+        if isNew:
 
-                if not self.needsSave or self.saveMessageSuccess:
-                    self.currentFile = ''
-                    self.centralWidget.textBox.clear()
-                    self.centralWidget.textBox.setTextColor(Qt.black)
-                    self.setColorIcon(Qt.black)
-                    self.window_title = 'Notepad App - untitled.txt'
-                    self.setWindowTitle(self.window_title)
-                    self.needsSave = False
-                    self.Edited = False
+            # Prompt save message
+            if self.needsSave:
+                self.promptSaveMessage()
 
-            # Open file
-            elif not self.openWindow:
-                self.openWindow = OpenWindow(self)
-                self.openWindow.show()
+            if not self.needsSave or self.saveMessageSuccess:
+                self.currentFile = ''
+                self.centralWidget.textBox.clear()
+                self.centralWidget.textBox.setTextColor(Qt.black)
+                self.setColorIcon(Qt.black)
+                self.window_title = 'Notepad App - untitled.txt'
+                self.setWindowTitle(self.window_title)
+                self.needsSave = False
+                self.Edited = False
+
+        # Open file
+        elif not self.openWindow:
+            self.openWindow = OpenWindow(self)
+            self.openWindow.show()
 
     # Creates the save message prompt window
     def promptSaveMessage(self):

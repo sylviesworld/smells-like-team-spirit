@@ -1,5 +1,6 @@
 import os
 
+
 class dictionary(dict):
     def __init__(self):
         self = dict()
@@ -7,11 +8,12 @@ class dictionary(dict):
     def add(self, key, value):
         self[key] = value
 
+
 def get_permissions(user):
     account_permissions = []
 
     try:
-        f = open('.permissions', 'r')       
+        f = open('.permissions', 'r')
     except IOError:
         return account_permissions
 
@@ -20,7 +22,7 @@ def get_permissions(user):
         account = line.split()
         if not account:
             continue
-        cur_user = account[0];
+        cur_user = account[0]
         if cur_user == user or cur_user == 'guest':
             for permission in account[1:]:
                 account_permissions.append(permission)
@@ -28,6 +30,7 @@ def get_permissions(user):
     f.close()
 
     return account_permissions
+
 
 # check all files that this account can access, compare to given filename
 def check_permission(account, fullpath):
@@ -51,10 +54,11 @@ def check_permission(account, fullpath):
 
     return False
 
+
 def add_permission(account, filepath):
     # get all filenames this account can access
     permissions = get_permissions(account)
-    
+
     fix_path = ''
 
     for c in filepath:
@@ -64,12 +68,11 @@ def add_permission(account, filepath):
         else:
             fix_path += c
 
-
     # if account doesn't already have access to file, add it to account's permissions
     if fix_path not in permissions:
         found_user = False
         permissions.append(fix_path)
-        
+
         accounts = []
 
         # if .permissions doesn't exist, create it
