@@ -1,3 +1,10 @@
 __pycache__/*
 *.swp
 .DS_Store
+.note_accounts
+.permissions
+.encrypt
+.key
+users/*
+.html
+

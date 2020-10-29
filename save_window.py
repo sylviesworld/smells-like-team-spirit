@@ -6,6 +6,7 @@ from permissions import check_permission, add_permission
 from encrypt_file import encrypt_file
 import os
 
+
 # The window for saving a file
 class SaveWindow(QWidget):
     def __init__(self, mainWindow):
@@ -76,7 +77,7 @@ class SaveWindow(QWidget):
         else:
             self.confirmResponse = False
 
-    # Closes the save window 
+    # Closes the save window
     def closeWindow(self):
 
         # Restore old file from Save As event if window closed
@@ -101,13 +102,14 @@ class SaveWindow(QWidget):
                 self.saveMessageBox('Please enter a file name.')
                 return
 
-            fileName, extension = os.path.splitext(self.fnLineEdit.text().strip())
+            fileName, extension = os.path.splitext(
+                self.fnLineEdit.text().strip())
             filePath = 'users/' + self.mainWindow.user + '/' + fileName
 
             # Save text file
             if self.typeComboBox.currentIndex() == 0:
                 filePath += '.txt'
-                    
+
                 # Check if file already exists
                 if os.path.exists(filePath):
                     self.confirmMessageBox(fileName + '.txt')
@@ -132,7 +134,7 @@ class SaveWindow(QWidget):
                     if not self.confirmResponse:
                         return
 
-                # Run through Save As button; reset 
+                # Run through Save As button; reset
                 if self.oldFile != '':
                     self.mainWindow.currentFile = self.oldFile
                     self.oldFile = ''
@@ -184,4 +186,3 @@ class SaveWindow(QWidget):
         printer.setOutputFormat(QPrinter.PdfFormat)
         printer.setOutputFileName(filePath)
         self.mainWindow.centralWidget.textBox.document().print_(printer)
-

@@ -6,6 +6,7 @@ from PyQt5.QtGui import QTextCursor
 from permissions import check_permission, add_permission
 from encrypt_file import decrypt_file
 
+
 # The window for opening a file
 class OpenWindow(QWidget):
     def __init__(self, mainWindow):
@@ -21,15 +22,16 @@ class OpenWindow(QWidget):
 
         self.fileModel = QFileSystemModel()
         self.fileModel.setRootPath(QDir.currentPath() + '/users/')
-        
+
         self.fileTree = QTreeView()
         self.fileTree.setModel(self.fileModel)
-        self.fileTree.setRootIndex(self.fileModel.index(QDir.currentPath() + '/users/'))
+        self.fileTree.setRootIndex(
+            self.fileModel.index(QDir.currentPath() + '/users/'))
         self.fileTree.setColumnWidth(0, 500)
         self.fileTree.doubleClicked.connect(self.openEvent)
 
         self.layout.addWidget(self.fileTree, 0, 0)
-    
+
         openButton = QPushButton('Open')
         openButton.clicked.connect(self.openEvent)
         self.layout.addWidget(openButton, 1, 0)
@@ -46,8 +48,9 @@ class OpenWindow(QWidget):
 
     # Opens the file selected in the QTreeView
     def openEvent(self):
-        
-        indexItem = self.fileModel.index(self.fileTree.currentIndex().row(), 0, self.fileTree.currentIndex().parent())
+
+        indexItem = self.fileModel.index(self.fileTree.currentIndex(
+        ).row(), 0, self.fileTree.currentIndex().parent())
         filePath = self.fileModel.filePath(indexItem)
         # Cannot open directories
         if self.fileModel.isDir(self.fileTree.currentIndex()):
@@ -56,7 +59,7 @@ class OpenWindow(QWidget):
         # Open file dialog
         can_open = check_permission(self.mainWindow.user, filePath)
         if can_open:
-                
+
             self.mainWindow.saveMessageSuccess = False
 
             # Prompt the user to save the working file
@@ -73,7 +76,8 @@ class OpenWindow(QWidget):
                 self.textEdit.moveCursor(
                     QTextCursor.Right, QTextCursor.MoveAnchor)
                 self.mainWindow.setColorIcon(self.textEdit.textColor())
-                self.mainWindow.setHighlightIcon(self.textEdit.textBackgroundColor())
+                self.mainWindow.setHighlightIcon(
+                    self.textEdit.textBackgroundColor())
                 self.textEdit.moveCursor(
                     QTextCursor.Left, QTextCursor.MoveAnchor)
 
