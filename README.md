@@ -1,4 +1,11 @@
 # Note taking app
+
+## Description
+An everyday note taking app that supports user profiles and ecrypts all data (files and login information).
+Rich text formatting supported to help you take the best, most effective, notes possible.
+
+Happy note taking!
+
 ### Group name: smells-like-team-spirit
 - [CS-340 Course website](http://web.eecs.utk.edu/courses/fall2020/cosc340/)
 
@@ -22,6 +29,7 @@ All dependencies for this project can be found in _[requirements.txt](requiremen
 
 ```
 UNIX> cat requirements.txt
+cryptography==3.2.1
 PyQt5==5.15.1
 python_bcrypt==0.3.2
 ```
