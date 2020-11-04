@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
-                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox)
+                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox, QFileSystemModel, QTreeView)
 from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import QDir
 from PyQt5.QtPrintSupport import QPrinter
 from permissions import check_permission, add_permission
 from encrypt_file import encrypt_file
@@ -13,7 +14,7 @@ class SaveWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle('Save As')
-        self.resize(600, 400)
+        self.resize(1600, 800)
         self.oldFile = ''
 
         # Get MainWindow through constructor
@@ -22,25 +23,37 @@ class SaveWindow(QWidget):
         self.textEdit = mainWindow.centralWidget.textBox
         layout = QGridLayout()
 
+        self.fileModel = QFileSystemModel()
+        self.fileModel.setRootPath(QDir.currentPath() + '/users/')
+
+        self.fileTree = QTreeView()
+        self.fileTree.setModel(self.fileModel)
+        self.fileTree.setRootIndex(
+            self.fileModel.index(QDir.currentPath() + '/users/'))
+        self.fileTree.setColumnWidth(0, 500)
+        self.fileTree.doubleClicked.connect(self.saveEvent)
+
+        layout.addWidget(self.fileTree, 0, 0)
+
         fnLabel = QLabel('File name: ')
         self.fnLineEdit = QLineEdit()
-        layout.addWidget(fnLabel, 0, 0)
-        layout.addWidget(self.fnLineEdit, 0, 1)
+        layout.addWidget(fnLabel, 1, 0)
+        layout.addWidget(self.fnLineEdit, 1, 1)
 
         typeLabel = QLabel('Save as type: ')
         self.typeComboBox = QComboBox()
         self.typeComboBox.addItem('Text Files (*.txt)')
         self.typeComboBox.addItem('PDF Files (*.pdf)')
-        layout.addWidget(typeLabel, 1, 0)
-        layout.addWidget(self.typeComboBox, 1, 1)
+        layout.addWidget(typeLabel, 2, 0)
+        layout.addWidget(self.typeComboBox, 2, 1)
 
         saveButton = QPushButton('Save')
         saveButton.clicked.connect(self.saveEvent)
-        layout.addWidget(saveButton, 2, 0)
+        layout.addWidget(saveButton, 3, 0)
 
         cancelButton = QPushButton('Cancel')
         cancelButton.clicked.connect(self.closeWindow)
-        layout.addWidget(cancelButton, 2, 1)
+        layout.addWidget(cancelButton, 3, 1)
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(layout)
