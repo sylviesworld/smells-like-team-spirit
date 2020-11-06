@@ -13,8 +13,11 @@ from open_window import OpenWindow
 
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
-FONT_SIZES.extend(range(12, 30, 2))
+FONT_SIZES.extend(range(12, 29, 2))
 FONT_SIZES.extend([36, 48, 72])
+
+
+FONT_COLORS = ["Black", "Red", "Green", "Blue", "Yellow", "Gray", "Magenta"]
 
 
 class MainWindow(QMainWindow):
@@ -242,9 +245,6 @@ class MainWindow(QMainWindow):
             lambda s: self.centralWidget.textBox.setFontPointSize(float(s)))
         font_toolbar.addWidget(self.fontsize)
 
-        FONT_COLORS = ["Black", "Red", "Green",
-                       "Blue", "Yellow", "Gray", "Magenta"]
-
         self.fontcolor = QComboBox()
         self.fontcolor.addItems(FONT_COLORS)
         self.fontcolor.setCurrentIndex(FONT_COLORS.index("Black"))
@@ -376,21 +376,23 @@ class MainWindow(QMainWindow):
         textSelected = self.centralWidget.textBox.textCursor().selectedText()
 
         if textSelected == '':
-            self.centralWidget.textBox.insertHtml("<ul><li>_</li></ul>")
+            self.centralWidget.textBox.insertHtml(
+                ListStrManip.make_bullet_format(self, '_'))
 
         else:
             self.centralWidget.textBox.insertHtml(
-                "<ul><li>" + textSelected + "</li></ul>")
+                ListStrManip.make_bullet_format(self, textSelected))
 
     def NumberedList(self):
         textSelected = self.centralWidget.textBox.textCursor().selectedText()
 
         if textSelected == '':
-            self.centralWidget.textBox.insertHtml("<ol><li>_</li></ol>")
+            self.centralWidget.textBox.insertHtml(
+                ListStrManip.make_numbered_format(self, '_'))
 
         else:
             self.centralWidget.textBox.insertHtml(
-                "<ol><li>" + textSelected + "</li></ol>")
+                ListStrManip.make_numbered_format(self, textSelected))
 
     def fontChoice(self):
         font, valid = QFontDialog.getFont()
@@ -556,7 +558,7 @@ class MainWindow(QMainWindow):
     def saveEvent(self):
 
         if self.Edited:
-            self.window_title = self.window_title[:-10]
+            self.window_title = CutStr.snip10(self, self.window_title)
             self.setWindowTitle(self.window_title)
             self.Edited = False
 
@@ -630,3 +632,16 @@ class MainWindow(QMainWindow):
 
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
+
+
+class ListStrManip:
+    def make_bullet_format(self, str):
+        return "<ul><li>" + str + "</li></ul>"
+
+    def make_numbered_format(self, str):
+        return "<ol><li>" + str + "</li></ol>"
+
+
+class CutStr:
+    def snip10(self, str):
+        return str[:-10]
