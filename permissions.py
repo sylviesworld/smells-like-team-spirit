@@ -1,4 +1,5 @@
 import os
+from encrypt_file import encrypt_file, decrypt_file
 
 
 class dictionary(dict):
@@ -13,12 +14,14 @@ def get_permissions(user):
     account_permissions = []
 
     try:
-        f = open('.permissions', 'r')
+        f = open('.permissions', 'rb')
     except IOError:
         return account_permissions
 
+    decrypted = decrypt_file(f.read())
+
     # check every line in .permissions
-    for line in f:
+    for line in decrypted.splitlines():
         account = line.split()
         if not account:
             continue
@@ -77,10 +80,10 @@ def add_permission(account, filepath):
 
         # if .permissions doesn't exist, create it
         try:
-            f = open('.permissions', 'r+')
-            accounts = f.read().splitlines()
+            f = open('.permissions', 'rb+')
+            accounts = decrypt_file(f.read()).splitlines()
         except IOError:
-            f = open('.permissions', 'w')
+            f = open('.permissions', 'wb')
 
         f.seek(0)
 
@@ -89,19 +92,30 @@ def add_permission(account, filepath):
             permission_list = cur_account.split()
             if not permission_list:
                 continue
-            f.write(permission_list[0] + ' ')
+            byte = (permission_list[0] + ' ').encode('utf-8')
+            f.write(byte)
             # if this account in the list is the current account, add permissions from permissions instead of permission_list
             if permission_list[0] == account:
                 found_user = True
                 for add in permissions:
-                    f.write(add + ' ')
+                    byte = (add + ' ').encode('utf-8')
+                    f.write(byte)
             else:
                 for permission in permission_list[1:]:
-                    f.write(permission + ' ')
-            f.write('\n')
+                    byte = (permission + ' ').encode('utf-8')
+                    f.write(byte)
+            f.write('\n'.encode('utf-8'))
 
         # if this account had no permissions, just add them and this permission to the end of the file
         if not found_user:
-            f.write(account + ' ' + fix_path + '\n')
+            byte = (account + ' ' + fix_path + '\n').encode('utf-8')
+            f.write(byte)
 
+        f.close()
+
+        f = open('.permissions', 'rb+')
+
+        encrypted = encrypt_file(f.read().decode('utf-8'))
+        f.seek(0)
+        f.write(encrypted)
         f.close()
