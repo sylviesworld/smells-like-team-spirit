@@ -1,6 +1,5 @@
 from main_window import *
 import unittest
-import os
 
 
 class Test_TextAln(unittest.TestCase):
