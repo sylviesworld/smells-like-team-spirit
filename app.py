@@ -63,6 +63,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Create save window and open window
         self.saveWindow = None
         self.openWindow = None
+        self.saveMessageCancel = False
 
         #create find window
         self.findWindow = FindWindow(self.textBox_1)

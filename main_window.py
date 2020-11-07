@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         # Create save window and open window
         self.saveWindow = None
         self.openWindow = None
+        self.saveMessageCancel = False
 
         # Begin menu bars
         # ===============
