@@ -1,6 +1,6 @@
 import os
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QTreeView, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QFormLayout, QSizePolicy, QTreeView, QPushButton, QMessageBox
 from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtGui import QTextCursor
 from permissions import check_permission, add_permission
@@ -16,7 +16,7 @@ class OpenWindow(QWidget):
         self.textEdit = mainWindow.centralWidget.textBox
         self.setWindowTitle('Open File')
         self.resize(1600, 800)
-        self.layout = QGridLayout()
+        self.layout = QFormLayout()
 
         self.openPath = ''
 
@@ -29,16 +29,19 @@ class OpenWindow(QWidget):
             self.fileModel.index(QDir.currentPath() + '/users/'))
         self.fileTree.setColumnWidth(0, 500)
         self.fileTree.doubleClicked.connect(self.openEvent)
+        self.layout.addRow(self.fileTree)
 
-        self.layout.addWidget(self.fileTree, 0, 0)
-
+        gridLayout = QGridLayout()
         openButton = QPushButton('Open')
         openButton.clicked.connect(self.openEvent)
-        self.layout.addWidget(openButton, 1, 0)
+        openButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(openButton, 0, 0)
 
         cancelButton = QPushButton('Cancel')
         cancelButton.clicked.connect(self.close)
-        self.layout.addWidget(cancelButton, 1, 1)
+        cancelButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(cancelButton, 0, 1)
+        self.layout.addRow(gridLayout)
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(self.layout)

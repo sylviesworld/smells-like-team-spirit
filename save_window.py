@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
-                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox, QFileSystemModel, QTreeView)
+from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout, QFormLayout,
+                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox, QFileSystemModel, QTreeView, QSizePolicy)
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import QDir
 from PyQt5.QtPrintSupport import QPrinter
 from permissions import check_permission, add_permission
 from encrypt_file import encrypt_file
 import os
+import re
 
 
 # The window for saving a file
@@ -21,7 +22,7 @@ class SaveWindow(QWidget):
         self.mainWindow = mainWindow
         self.closeOnSave = False
         self.textEdit = mainWindow.centralWidget.textBox
-        layout = QGridLayout()
+        layout = QFormLayout()
 
         self.fileModel = QFileSystemModel()
         self.fileModel.setRootPath(QDir.currentPath() + '/users/')
@@ -32,31 +33,38 @@ class SaveWindow(QWidget):
             self.fileModel.index(QDir.currentPath() + '/users/'))
         self.fileTree.setColumnWidth(0, 500)
         self.fileTree.doubleClicked.connect(self.saveEvent)
+        self.fileTree.selectionModel().currentChanged.connect(self.selectionChanged)
+        layout.addRow(self.fileTree)
 
-        layout.addWidget(self.fileTree, 0, 0)
-
-        fnLabel = QLabel('File name: ')
         self.fnLineEdit = QLineEdit()
-        layout.addWidget(fnLabel, 1, 0)
-        layout.addWidget(self.fnLineEdit, 1, 1)
-
-        typeLabel = QLabel('Save as type: ')
+        layout.addRow('File name: ', self.fnLineEdit)
+    
         self.typeComboBox = QComboBox()
         self.typeComboBox.addItem('Text Files (*.txt)')
         self.typeComboBox.addItem('PDF Files (*.pdf)')
-        layout.addWidget(typeLabel, 2, 0)
-        layout.addWidget(self.typeComboBox, 2, 1)
+        layout.addRow('Save as type: ', self.typeComboBox)
 
+        gridLayout = QGridLayout()
         saveButton = QPushButton('Save')
         saveButton.clicked.connect(self.saveEvent)
-        layout.addWidget(saveButton, 3, 0)
+        saveButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(saveButton, 0, 0)
 
         cancelButton = QPushButton('Cancel')
         cancelButton.clicked.connect(self.closeWindow)
-        layout.addWidget(cancelButton, 3, 1)
+        cancelButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(cancelButton, 0, 1)
+        layout.addRow(gridLayout)
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(layout)
+
+    # Signal event when the user makes a selection in the QTreeView
+    def selectionChanged(self, current, previous):
+        removePath = QDir.currentPath() + '/users/'
+        redata = re.compile(re.escape(removePath), re.IGNORECASE)
+        subPath = redata.sub('', self.fileModel.filePath(current))
+        self.fnLineEdit.setText(subPath)
 
     # Displays confirm save message to the user
     def confirmMessageBox(self, fileName):
