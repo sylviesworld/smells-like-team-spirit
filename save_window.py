@@ -1,10 +1,12 @@
-from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
-                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox)
+from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout, QFormLayout,
+                             QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox, QFileSystemModel, QTreeView, QSizePolicy)
 from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import QDir
 from PyQt5.QtPrintSupport import QPrinter
 from permissions import check_permission, add_permission
 from encrypt_file import encrypt_file
 import os
+import re
 
 
 # The window for saving a file
@@ -13,37 +15,63 @@ class SaveWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle('Save As')
-        self.resize(600, 400)
+        self.resize(1600, 800)
         self.oldFile = ''
 
         # Get MainWindow through constructor
         self.mainWindow = mainWindow
         self.closeOnSave = False
         self.textEdit = mainWindow.centralWidget.textBox
-        layout = QGridLayout()
+        layout = QFormLayout()
 
-        fnLabel = QLabel('File name: ')
+        self.fileModel = QFileSystemModel()
+        self.fileModel.setRootPath(QDir.currentPath() + '/users/' + self.mainWindow.user)
+        filters = ['*.txt']
+        self.fileModel.setNameFilters(filters)
+
+        self.fileTree = QTreeView()
+        self.fileTree.setModel(self.fileModel)
+        self.fileTree.setRootIndex(
+            self.fileModel.index(QDir.currentPath() + '/users/' + self.mainWindow.user))
+        self.fileTree.setColumnWidth(0, 500)
+        self.fileTree.doubleClicked.connect(self.doubleClickEvent)
+        self.fileTree.clicked.connect(self.selectionChanged)
+        layout.addRow(self.fileTree)
+
         self.fnLineEdit = QLineEdit()
-        layout.addWidget(fnLabel, 0, 0)
-        layout.addWidget(self.fnLineEdit, 0, 1)
-
-        typeLabel = QLabel('Save as type: ')
+        layout.addRow('File name: ', self.fnLineEdit)
+    
         self.typeComboBox = QComboBox()
         self.typeComboBox.addItem('Text Files (*.txt)')
         self.typeComboBox.addItem('PDF Files (*.pdf)')
-        layout.addWidget(typeLabel, 1, 0)
-        layout.addWidget(self.typeComboBox, 1, 1)
+        layout.addRow('Save as type: ', self.typeComboBox)
 
+        gridLayout = QGridLayout()
         saveButton = QPushButton('Save')
         saveButton.clicked.connect(self.saveEvent)
-        layout.addWidget(saveButton, 2, 0)
+        saveButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(saveButton, 0, 0)
 
         cancelButton = QPushButton('Cancel')
         cancelButton.clicked.connect(self.closeWindow)
-        layout.addWidget(cancelButton, 2, 1)
+        cancelButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(cancelButton, 0, 1)
+        layout.addRow(gridLayout)
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(layout)
+
+    # Signal event when the user makes a selection in the QTreeView
+    def selectionChanged(self):
+        current = self.fileTree.currentIndex()
+        removePath = QDir.currentPath() + '/users/' + self.mainWindow.user + '/'
+        redata = re.compile(re.escape(removePath), re.IGNORECASE)
+        subPath = redata.sub('', self.fileModel.filePath(current))
+        
+        if os.path.isdir(self.fileModel.filePath(current)):
+            subPath += '/'
+
+        self.fnLineEdit.setText(subPath)
 
     # Displays confirm save message to the user
     def confirmMessageBox(self, fileName):
@@ -53,6 +81,7 @@ class SaveWindow(QWidget):
         msg.setWindowTitle('Confirm Save As')
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msg.buttonClicked.connect(self.confirmMessageEvent)
+        self.confirmResponse = False
         msg.exec_()
 
     # Displays generic save message to the user
@@ -87,8 +116,20 @@ class SaveWindow(QWidget):
 
         self.close()
 
+    # Overrides the QWidget show event
+    def showEvent(self, event):
+        filePath = self.oldFile.replace('users/' + self.mainWindow.user + '/', '')
+        self.fnLineEdit.setText(filePath)
+
+    # Overrides the QWidget close event
     def closeEvent(self, event):
         self.mainWindow.saveWindow = None
+
+    # Handles double clicking the QTreeView folders/files
+    def doubleClickEvent(self):
+        if self.fileModel.isDir(self.fileTree.currentIndex()):
+            return
+        self.saveEvent()
 
     # Called when the user clicks the 'Save' button
     def saveEvent(self):
@@ -96,15 +137,14 @@ class SaveWindow(QWidget):
         # Save as new file
         if self.mainWindow.currentFile == '':
 
-            # File name cannot be blank
-            if self.fnLineEdit.text().strip() == '':
+            fileName, extension = os.path.splitext(os.path.basename(self.fnLineEdit.text().strip()))
+            subPath = self.fnLineEdit.text().strip().replace(fileName + extension, '')
+            filePath = 'users/' + self.mainWindow.user + '/' + subPath + fileName
 
+            # File name cannot be blank
+            if self.fnLineEdit.text().strip() == '' or fileName.strip() == '':
                 self.saveMessageBox('Please enter a file name.')
                 return
-
-            fileName, extension = os.path.splitext(
-                self.fnLineEdit.text().strip())
-            filePath = 'users/' + self.mainWindow.user + '/' + fileName
 
             # Save text file
             if self.typeComboBox.currentIndex() == 0:
@@ -116,7 +156,11 @@ class SaveWindow(QWidget):
                     if not self.confirmResponse:
                         return
 
-                self.saveFile(filePath)
+                # Attempt to save file
+                if not self.saveFile(filePath):
+                    self.saveMessageBox('Invalid file path.')
+                    return
+
                 self.mainWindow.currentFile = filePath
                 self.mainWindow.statusBar().showMessage('File saved.')
                 self.mainWindow.needsSave = False
@@ -138,8 +182,12 @@ class SaveWindow(QWidget):
                 if self.oldFile != '':
                     self.mainWindow.currentFile = self.oldFile
                     self.oldFile = ''
+                
+                # Attempt to save file
+                if not self.savePDF(filePath):
+                    self.saveMessageBox('Invalid file path.')
+                    return
 
-                self.savePDF(filePath)
                 add_permission(self.mainWindow.user, filePath)
 
             # Close save window
@@ -174,15 +222,25 @@ class SaveWindow(QWidget):
 
     # Creates a new file or opens an existing one and saves the QTextEdit text
     def saveFile(self, filePath):
-        f = open(filePath, 'wb')
-        encrypted = encrypt_file(self.textEdit.toHtml())
-        f.write(encrypted)
-        f.close()
+
+        try:
+            f = open(filePath, 'wb')
+            encrypted = encrypt_file(self.textEdit.toHtml())
+            f.write(encrypted)
+            f.close()
+            return True
+        except:
+            return False
+
 
     # Saves the file as a PDF
     def savePDF(self, filePath):
-        printer = QPrinter(QPrinter.HighResolution)
-        printer.setPageSize(QPrinter.A4)
-        printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setOutputFileName(filePath)
-        self.mainWindow.centralWidget.textBox.document().print_(printer)
+        try:
+            printer = QPrinter(QPrinter.HighResolution)
+            printer.setPageSize(QPrinter.A4)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(filePath)
+            self.mainWindow.centralWidget.textBox.document().print_(printer)
+            return True
+        except:
+            return False
