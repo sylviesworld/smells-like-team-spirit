@@ -1,4 +1,4 @@
-import os
+import os, re
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QFormLayout, QSizePolicy, QTreeView, QPushButton, QMessageBox
 from PyQt5.QtCore import QDir, Qt
@@ -22,6 +22,8 @@ class OpenWindow(QWidget):
 
         self.fileModel = QFileSystemModel()
         self.fileModel.setRootPath(QDir.currentPath() + '/users/')
+        filters = ['*.txt']
+        self.fileModel.setNameFilters(filters)
 
         self.fileTree = QTreeView()
         self.fileTree.setModel(self.fileModel)
@@ -55,6 +57,10 @@ class OpenWindow(QWidget):
         indexItem = self.fileModel.index(self.fileTree.currentIndex(
         ).row(), 0, self.fileTree.currentIndex().parent())
         filePath = self.fileModel.filePath(indexItem)
+        removePath = QDir.currentPath() + '/'
+        redata = re.compile(re.escape(removePath), re.IGNORECASE)
+        filePath = redata.sub('', filePath)
+
         # Cannot open directories
         if self.fileModel.isDir(self.fileTree.currentIndex()):
             return
