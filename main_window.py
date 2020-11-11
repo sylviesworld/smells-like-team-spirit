@@ -196,6 +196,10 @@ class MainWindow(QMainWindow):
         accountButton = QAction('Change password', self)
         accountButton.triggered.connect(self.change_password)
         accountMenu.addAction(accountButton)
+
+        addUserButton = QAction('Add User', self)
+        addUserButton.triggered.connect(self.addUserEvent)
+        accountMenu.addAction(addUserButton)
         
         # Begin toolbars
         # ==============
@@ -577,7 +581,7 @@ class MainWindow(QMainWindow):
     def addUserEvent(self):
         
         # Save file before adding user
-        if self.needsSave:
+        if self.needsSave or self.currentFile == '':
             self.addUserAfterSave = True
             self.saveEvent()
             return
