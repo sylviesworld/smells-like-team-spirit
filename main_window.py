@@ -10,7 +10,9 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 from open_window import OpenWindow
-
+from account_windows import ChangePasswordWindow
+from permission_window import PermissionWindow
+from group_window import GroupWindow
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
 FONT_SIZES.extend(range(12, 29, 2))
@@ -67,6 +69,11 @@ class MainWindow(QMainWindow):
         self.saveWindow = None
         self.openWindow = None
         self.saveMessageCancel = False
+
+        # Create permission window and group window
+        self.permissionWindow = None
+        self.addUserAfterSave = False
+        self.groupWindow = None
 
         # Begin menu bars
         # ===============
@@ -184,6 +191,18 @@ class MainWindow(QMainWindow):
         imageButton.triggered.connect(self.centralWidget.insertImage)
         formatMenu.addAction(imageButton)
 
+        # -----------------------
+        # Create Account menu bar
+        accountMenu = menuBar.addMenu('Account')
+
+        accountButton = QAction('Change password', self)
+        accountButton.triggered.connect(self.change_password)
+        accountMenu.addAction(accountButton)
+
+        addUserButton = QAction('Add User', self)
+        addUserButton.triggered.connect(self.addUserEvent)
+        accountMenu.addAction(addUserButton)
+        
         # Begin toolbars
         # ==============
 
@@ -227,6 +246,16 @@ class MainWindow(QMainWindow):
         findAction.triggered.connect(
             self.centralWidget.findWindow.createWindow)
         edit_toolbar.addAction(findAction)
+
+        addUserAction = QAction('Add User', self)
+        addUserAction.setStatusTip('Give Another User Access to This File')
+        addUserAction.triggered.connect(self.addUserEvent)
+        edit_toolbar.addAction(addUserAction)
+
+        createGroupAction = QAction('Create Group', self)
+        createGroupAction.setStatusTip('Create a New Note Group Folder')
+        createGroupAction.triggered.connect(self.createGroupEvent)
+        edit_toolbar.addAction(createGroupAction)
 
         # -------------------
         # Create font toolbar
@@ -555,13 +584,27 @@ class MainWindow(QMainWindow):
                 self.fontsize.setCurrentIndex(FONT_SIZES.index(
                     self.centralWidget.textBox.fontPointSize()))
 
+    # Opens the window to add a user to the current file
+    def addUserEvent(self):
+        
+        # Save file before adding user
+        if self.needsSave or self.currentFile == '':
+            self.addUserAfterSave = True
+            self.saveEvent()
+            return
+
+        if not self.permissionWindow:
+            self.permissionWindow = PermissionWindow(self)
+            self.permissionWindow.show()
+
+    # Opens the window to create a new note group
+    def createGroupEvent(self):
+        if not self.groupWindow:
+            self.groupWindow = GroupWindow(self)
+            self.groupWindow.show()
+
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
-
-        if self.Edited:
-            self.window_title = CutStr.snip10(self, self.window_title)
-            self.setWindowTitle(self.window_title)
-            self.Edited = False
 
         if not self.saveWindow:
             self.saveWindow = SaveWindow(self)
@@ -634,6 +677,16 @@ class MainWindow(QMainWindow):
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
+    def change_password(self):
+        if self.user == 'guest':
+            msg = QMessageBox()
+            msg.setText('You must be signed in to an account to change your password.')
+            msg.exec_()
+            return
+
+        self.password_window = ChangePasswordWindow()
+        self.password_window.user = self.user
+        self.password_window.show()
 
 class ListStrManip:
     def make_bullet_format(self, str):
