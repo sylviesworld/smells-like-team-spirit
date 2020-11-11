@@ -279,7 +279,7 @@ class ChangePasswordWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Change password')
-        self.resize(800, 240)
+        self.resize(600, 120)
 
         layout = QGridLayout()
 
@@ -300,3 +300,5 @@ class ChangePasswordWindow(QWidget):
         self.lineEdit_reenterpassword.setPlaceholderText('Reenter password')
         layout.addWidget(label_reenterpassword, 2, 0)
         layout.addWidget(self.lineEdit_reenterpassword, 2, 1)
+
+        self.setLayout(layout)

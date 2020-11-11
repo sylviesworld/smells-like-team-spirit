@@ -24,10 +24,6 @@ FONT_COLORS = ["Black", "Red", "Green", "Blue", "Yellow", "Gray", "Magenta"]
 class MainWindow(QMainWindow):
     """ This class inherits from QMainWindow and will be used to set up the applications GUI """
 
-    def change_password(self):
-        self.dialog = ChangePasswordWindow()
-        self.dialog.show()
-
     def __init__(self):
         super().__init__()
 
@@ -647,6 +643,9 @@ class MainWindow(QMainWindow):
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
+    def change_password(self):
+        self.password_window = ChangePasswordWindow()
+        self.password_window.show()
 
 class ListStrManip:
     def make_bullet_format(self, str):
