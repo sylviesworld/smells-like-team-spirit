@@ -1,8 +1,8 @@
-# Note taking app
+# Note Taking App
 
-## Description
+## Overview
 An everyday note taking app that supports user profiles and ecrypts all data (files and login information).
-Rich text formatting supported to help you take the best, most effective, notes possible.
+Rich text formatting supported to help you take the best, most effective, notes possible. Two interfaces are offered to best suite all work flows and to encourage user productivity.
 
 Happy note taking!
 
@@ -10,19 +10,23 @@ Happy note taking!
 - [CS-340 Course website](http://web.eecs.utk.edu/courses/fall2020/cosc340/)
 
 
-## Running the program
-From the _smells-like-team-spirit_ directory, run _[main.py](app.py)_:
-
-    UNIX> python main.py
-    
-There is also a seperate UI that implements the same core features (rich text, accounts, data encryption) as _main.py_ with a different interface. It is developed with multitasking in mind, supporting 2 note tabs at once and has the file open and save options pinned to the side of the window, allowing users to quickly switch between notes. Run this version with _[app.py](app.py)_:
-
-    UNIX> python app.py
+## About
+This app offers two different note taking interfaces that both include the same great features, only with different note taking styles in mind. In _main.py_, users can focus on one note at a time and have an open canvas, eliminating distractions in the note taking process. For users that prefer a multitasking environment, we offer _app.py_, a similar experience that adds the ability to have a second note tab to write down quick thoughts. The window also has a pane dedicated to switch between notes (new, open, save, save as) to allow one note taking workspace to quickly be converted into another by picking up where you left off on a different note.
 
 
 ## Preview
+From the _smells-like-team-spirit_ directory, run _[main.py](app.py)_:
 
-![Note app screenshot](images/main_screenshot.png)
+    $ python main.py
+    
+![main.py screenshot](images/main_screenshot.png)
+
+
+Or _[app.py](app.py)_:
+
+    $ python app.py
+
+![app.py screenshot](images/app_screenshot.png)
 
 Toolbar icons sourced from the Blue UI set at [icons8.com](https://icons8.com/).
 
@@ -31,7 +35,7 @@ Toolbar icons sourced from the Blue UI set at [icons8.com](https://icons8.com/).
 All dependencies for this project are listed in _[requirements.txt](requirements.txt)_:
 
 ```
-UNIX> cat requirements.txt
+$ cat requirements.txt
 cryptography
 PyQt5
 bcrypt
@@ -41,7 +45,7 @@ certifi
 To automatically install these dependencies, run the following commands in the _smells-like-team-spirit_ directory:
 
 ```
-UNIX> pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 
@@ -50,4 +54,3 @@ UNIX> pip install -r requirements.txt
 [Dylan Lomax](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3AMaze-Mind),
 [Nick Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Ancreech1),
 [Zach Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Azach7creech)
-
