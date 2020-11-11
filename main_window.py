@@ -10,8 +10,8 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 from open_window import OpenWindow
+from account_windows import ChangePasswordWindow
 from permission_window import PermissionWindow
-
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
 FONT_SIZES.extend(range(12, 29, 2))
@@ -189,6 +189,14 @@ class MainWindow(QMainWindow):
         imageButton.triggered.connect(self.centralWidget.insertImage)
         formatMenu.addAction(imageButton)
 
+        # -----------------------
+        # Create Account menu bar
+        accountMenu = menuBar.addMenu('Account')
+
+        accountButton = QAction('Change password', self)
+        accountButton.triggered.connect(self.change_password)
+        accountMenu.addAction(accountButton)
+        
         # Begin toolbars
         # ==============
 
@@ -652,6 +660,9 @@ class MainWindow(QMainWindow):
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
+    def change_password(self):
+        self.password_window = ChangePasswordWindow()
+        self.password_window.show()
 
 class ListStrManip:
     def make_bullet_format(self, str):

@@ -274,3 +274,31 @@ class LoginWindow(QWidget):
         layout.addWidget(button_noaccount, 3, 0, 3, 0)
 
         self.setLayout(layout)
+
+class ChangePasswordWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Change password')
+        self.resize(600, 120)
+
+        layout = QGridLayout()
+
+        label_oldpassword = QLabel('<font size="4"> Enter current password: </font>')
+        self.lineEdit_oldpassword = QLineEdit()
+        self.lineEdit_oldpassword.setPlaceholderText('Current password')
+        layout.addWidget(label_oldpassword, 0, 0)
+        layout.addWidget(self.lineEdit_oldpassword, 0, 1)
+
+        label_newpassword = QLabel('<font size="4"> Enter new password: </font>')
+        self.lineEdit_newpassword = QLineEdit()
+        self.lineEdit_newpassword.setPlaceholderText('New password')
+        layout.addWidget(label_newpassword, 1, 0)
+        layout.addWidget(self.lineEdit_newpassword, 1, 1)
+
+        label_reenterpassword = QLabel('<font size="4"> Reenter password: </font>')
+        self.lineEdit_reenterpassword = QLineEdit()
+        self.lineEdit_reenterpassword.setPlaceholderText('Reenter password')
+        layout.addWidget(label_reenterpassword, 2, 0)
+        layout.addWidget(self.lineEdit_reenterpassword, 2, 1)
+
+        self.setLayout(layout)
