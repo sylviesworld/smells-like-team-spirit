@@ -24,12 +24,14 @@ def main():
 
     # Declare an instance of the application
     app_example = QApplication(sys.argv)
+    app_example.setWindowIcon(
+        QIcon(os.path.join('images', 'icons8-note-64.png')))
     app_example.setStyleSheet(stylesheet)
 
     # Create default directory
     if not os.path.exists('users/guest'):
         os.makedirs('users/guest')
-    
+
     login_window = LoginWindow()
     login_window.show()
 
