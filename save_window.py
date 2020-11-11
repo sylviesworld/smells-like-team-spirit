@@ -166,6 +166,7 @@ class SaveWindow(QWidget):
                 self.mainWindow.needsSave = False
                 self.mainWindow.window_title = f'Notepad App - {os.path.basename(filePath)}'
                 self.mainWindow.setWindowTitle(self.mainWindow.window_title)
+                self.mainWindow.Edited = False
                 add_permission(self.mainWindow.user, filePath)
 
             # Save PDF
@@ -200,7 +201,13 @@ class SaveWindow(QWidget):
             self.mainWindow.needsSave = False
             self.mainWindow.window_title = f'Notepad App - {os.path.basename(self.mainWindow.currentFile)}'
             self.mainWindow.setWindowTitle(self.mainWindow.window_title)
+            self.mainWindow.Edited = False
             add_permission(self.mainWindow.user, self.mainWindow.currentFile)
+
+        # Save before adding a new user to the current file
+        if self.mainWindow.addUserAfterSave:
+            self.mainWindow.addUserAfterSave = False
+            self.mainWindow.addUserEvent()
 
         # Close the application after save if needed
         if self.closeOnSave:
