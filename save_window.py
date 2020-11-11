@@ -118,7 +118,7 @@ class SaveWindow(QWidget):
 
     # Overrides the QWidget show event
     def showEvent(self, event):
-        filePath = self.oldFile.replace('users/' + self.mainWindow.user + '/', '')
+        filePath = self.oldFile.replace('users/', '')
         self.fnLineEdit.setText(filePath)
 
     # Overrides the QWidget close event
