@@ -1,6 +1,6 @@
-import os
+import os, re
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QTreeView, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QFormLayout, QSizePolicy, QTreeView, QPushButton, QMessageBox
 from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtGui import QTextCursor
 from permissions import check_permission, add_permission
@@ -16,12 +16,14 @@ class OpenWindow(QWidget):
         self.textEdit = mainWindow.centralWidget.textBox
         self.setWindowTitle('Open File')
         self.resize(1600, 800)
-        self.layout = QGridLayout()
+        self.layout = QFormLayout()
 
         self.openPath = ''
 
         self.fileModel = QFileSystemModel()
         self.fileModel.setRootPath(QDir.currentPath() + '/users/')
+        filters = ['*.txt']
+        self.fileModel.setNameFilters(filters)
 
         self.fileTree = QTreeView()
         self.fileTree.setModel(self.fileModel)
@@ -29,16 +31,19 @@ class OpenWindow(QWidget):
             self.fileModel.index(QDir.currentPath() + '/users/'))
         self.fileTree.setColumnWidth(0, 500)
         self.fileTree.doubleClicked.connect(self.openEvent)
+        self.layout.addRow(self.fileTree)
 
-        self.layout.addWidget(self.fileTree, 0, 0)
-
+        gridLayout = QGridLayout()
         openButton = QPushButton('Open')
         openButton.clicked.connect(self.openEvent)
-        self.layout.addWidget(openButton, 1, 0)
+        openButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(openButton, 0, 0)
 
         cancelButton = QPushButton('Cancel')
         cancelButton.clicked.connect(self.close)
-        self.layout.addWidget(cancelButton, 1, 1)
+        cancelButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        gridLayout.addWidget(cancelButton, 0, 1)
+        self.layout.addRow(gridLayout)
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(self.layout)
@@ -52,6 +57,10 @@ class OpenWindow(QWidget):
         indexItem = self.fileModel.index(self.fileTree.currentIndex(
         ).row(), 0, self.fileTree.currentIndex().parent())
         filePath = self.fileModel.filePath(indexItem)
+        removePath = QDir.currentPath() + '/'
+        redata = re.compile(re.escape(removePath), re.IGNORECASE)
+        filePath = redata.sub('', filePath)
+
         # Cannot open directories
         if self.fileModel.isDir(self.fileTree.currentIndex()):
             return

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import os
 from main_window import MainWindow
 from account_windows import LoginWindow
 from PyQt5.QtWidgets import QApplication
@@ -25,6 +26,10 @@ def main():
     app_example = QApplication(sys.argv)
     app_example.setStyleSheet(stylesheet)
 
+    # Create default directory
+    if not os.path.exists('users/guest'):
+        os.makedirs('users/guest')
+    
     login_window = LoginWindow()
     login_window.show()
 
