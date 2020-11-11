@@ -10,6 +10,7 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 from open_window import OpenWindow
+from account_windows import ChangePasswordWindow
 
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
@@ -22,6 +23,10 @@ FONT_COLORS = ["Black", "Red", "Green", "Blue", "Yellow", "Gray", "Magenta"]
 
 class MainWindow(QMainWindow):
     """ This class inherits from QMainWindow and will be used to set up the applications GUI """
+
+    def change_password(self):
+        self.dialog = ChangePasswordWindow()
+        self.dialog.show()
 
     def __init__(self):
         super().__init__()
@@ -184,6 +189,14 @@ class MainWindow(QMainWindow):
         imageButton.triggered.connect(self.centralWidget.insertImage)
         formatMenu.addAction(imageButton)
 
+        # -----------------------
+        # Create Account menu bar
+        accountMenu = menuBar.addMenu('Account')
+
+        accountButton = QAction('Change password', self)
+        accountButton.triggered.connect(self.change_password)
+        accountMenu.addAction(accountButton)
+        
         # Begin toolbars
         # ==============
 
