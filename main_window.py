@@ -678,7 +678,14 @@ class MainWindow(QMainWindow):
             self.centralWidget.textBox.print_(printer)
 
     def change_password(self):
+        if self.user == 'guest':
+            msg = QMessageBox()
+            msg.setText('You must be signed in to an account to change your password.')
+            msg.exec_()
+            return
+
         self.password_window = ChangePasswordWindow()
+        self.password_window.user = self.user
         self.password_window.show()
 
 class ListStrManip:
