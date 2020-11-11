@@ -12,6 +12,7 @@ from save_window import SaveWindow
 from open_window import OpenWindow
 from account_windows import ChangePasswordWindow
 from permission_window import PermissionWindow
+from group_window import GroupWindow
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
 FONT_SIZES.extend(range(12, 29, 2))
@@ -72,6 +73,7 @@ class MainWindow(QMainWindow):
         # Create permission window and group window
         self.permissionWindow = None
         self.addUserAfterSave = False
+        self.groupWindow = None
 
         # Begin menu bars
         # ===============
@@ -249,6 +251,11 @@ class MainWindow(QMainWindow):
         addUserAction.setStatusTip('Give Another User Access to This File')
         addUserAction.triggered.connect(self.addUserEvent)
         edit_toolbar.addAction(addUserAction)
+
+        createGroupAction = QAction('Create Group', self)
+        createGroupAction.setStatusTip('Create a New Note Group Folder')
+        createGroupAction.triggered.connect(self.createGroupEvent)
+        edit_toolbar.addAction(createGroupAction)
 
         # -------------------
         # Create font toolbar
@@ -589,6 +596,12 @@ class MainWindow(QMainWindow):
         if not self.permissionWindow:
             self.permissionWindow = PermissionWindow(self)
             self.permissionWindow.show()
+
+    # Opens the window to create a new note group
+    def createGroupEvent(self):
+        if not self.groupWindow:
+            self.groupWindow = GroupWindow(self)
+            self.groupWindow.show()
 
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
