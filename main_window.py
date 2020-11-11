@@ -10,6 +10,7 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 from open_window import OpenWindow
+from permission_window import PermissionWindow
 
 
 FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
@@ -67,6 +68,10 @@ class MainWindow(QMainWindow):
         self.saveWindow = None
         self.openWindow = None
         self.saveMessageCancel = False
+
+        # Create permission window and group window
+        self.permissionWindow = None
+        self.addUserAfterSave = False
 
         # Begin menu bars
         # ===============
@@ -227,6 +232,11 @@ class MainWindow(QMainWindow):
         findAction.triggered.connect(
             self.centralWidget.findWindow.createWindow)
         edit_toolbar.addAction(findAction)
+
+        addUserAction = QAction('Add User', self)
+        addUserAction.setStatusTip('Give Another User Access to This File')
+        addUserAction.triggered.connect(self.addUserEvent)
+        edit_toolbar.addAction(addUserAction)
 
         # -------------------
         # Create font toolbar
@@ -555,13 +565,21 @@ class MainWindow(QMainWindow):
                 self.fontsize.setCurrentIndex(FONT_SIZES.index(
                     self.centralWidget.textBox.fontPointSize()))
 
+    # Opens the window to add a user to the current file
+    def addUserEvent(self):
+        
+        # Save file before adding user
+        if self.needsSave:
+            self.addUserAfterSave = True
+            self.saveEvent()
+            return
+
+        if not self.permissionWindow:
+            self.permissionWindow = PermissionWindow(self)
+            self.permissionWindow.show()
+
     # Opens the file dialog to save a new file or saves the working file.
     def saveEvent(self):
-
-        if self.Edited:
-            self.window_title = CutStr.snip10(self, self.window_title)
-            self.setWindowTitle(self.window_title)
-            self.Edited = False
 
         if not self.saveWindow:
             self.saveWindow = SaveWindow(self)
