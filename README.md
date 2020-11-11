@@ -11,18 +11,18 @@ Happy note taking!
 
 
 ## About
-This app offers two different note taking interfaces that both include the same great features, only with different note taking styles in mind. In _main.py_, users can focus on one note at a time and have an open canvas, eliminating distractions in the note taking process. For users that prefer a multitasking environment, we offer _app.py_, a similar experience that adds the ability to have a second note tab to write down quick thoughts. The window also has a pane dedicated to switch between notes (new, open, save, save as) to allow one note taking workspace to quickly be converted into another by picking up where you left off on a different note.
+This app offers two different note taking interfaces that both include the same great features, only with different note taking styles in mind. In _[main.py](main.py)_, users can focus on one note at a time and have an open canvas, eliminating distractions in the note taking process. For users that prefer a multitasking environment, we offer _[app.py](app.py)_, a similar experience that adds the ability to have a second note tab to write down quick thoughts. The window also has a pane dedicated to switching between notes (new, open, save, save as) to allow one workspace to quickly be converted into another by picking up where you left off on a different note.
 
 
 ## Preview
-From the _smells-like-team-spirit_ directory, run _[main.py](app.py)_:
+From the _smells-like-team-spirit_ directory, run _[main.py](main.py)_:
 
     $ python main.py
     
 ![main.py screenshot](images/main_screenshot.png)
 
 
-Or _[app.py](app.py)_:
+Or run  _[app.py](app.py)_:
 
     $ python app.py
 
