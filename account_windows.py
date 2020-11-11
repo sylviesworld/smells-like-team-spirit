@@ -279,26 +279,122 @@ class ChangePasswordWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Change password')
-        self.resize(600, 120)
+        self.resize(800, 240)
 
         layout = QGridLayout()
 
-        label_oldpassword = QLabel('<font size="4"> Enter current password: </font>')
+        label_oldpassword = QLabel('<font size="4"> Current password: </font>')
+        self.label_badold = QLabel('')
+        self.label_badold.setStyleSheet("color: red;")
         self.lineEdit_oldpassword = QLineEdit()
-        self.lineEdit_oldpassword.setPlaceholderText('Current password')
+        self.lineEdit_oldpassword.setPlaceholderText('Enter current password')
+        self.lineEdit_oldpassword.setEchoMode(QLineEdit.Password)
         layout.addWidget(label_oldpassword, 0, 0)
         layout.addWidget(self.lineEdit_oldpassword, 0, 1)
+        layout.addWidget(self.label_badold, 1, 1)
 
-        label_newpassword = QLabel('<font size="4"> Enter new password: </font>')
+        label_newpassword = QLabel('<font size="4"> New password: </font>')
+        self.label_badpass = QLabel('')
+        self.label_badpass.setStyleSheet("color: red;")
         self.lineEdit_newpassword = QLineEdit()
-        self.lineEdit_newpassword.setPlaceholderText('New password')
-        layout.addWidget(label_newpassword, 1, 0)
-        layout.addWidget(self.lineEdit_newpassword, 1, 1)
+        self.lineEdit_newpassword.setPlaceholderText('Enter new password')
+        self.lineEdit_newpassword.setEchoMode(QLineEdit.Password)
+        layout.addWidget(label_newpassword, 2, 0)
+        layout.addWidget(self.lineEdit_newpassword, 2, 1)
+        layout.addWidget(self.label_badpass, 3, 1)
 
         label_reenterpassword = QLabel('<font size="4"> Reenter password: </font>')
+        self.label_nomatch = QLabel('')
+        self.label_nomatch.setStyleSheet("color: red;")
         self.lineEdit_reenterpassword = QLineEdit()
         self.lineEdit_reenterpassword.setPlaceholderText('Reenter password')
-        layout.addWidget(label_reenterpassword, 2, 0)
-        layout.addWidget(self.lineEdit_reenterpassword, 2, 1)
+        self.lineEdit_reenterpassword.setEchoMode(QLineEdit.Password)
+        layout.addWidget(label_reenterpassword, 4, 0)
+        layout.addWidget(self.lineEdit_reenterpassword, 4, 1)
+        layout.addWidget(self.label_nomatch, 5, 1)
+
+        button_confirm = QPushButton('Confirm')
+        button_confirm.clicked.connect(self.change_password)
+        layout.addWidget(button_confirm, 6, 1)
+
+        button_cancel = QPushButton('Cancel')
+        button_cancel.clicked.connect(self.close)
+        layout.addWidget(button_cancel, 6, 0)
 
         self.setLayout(layout)
+
+    def change_password(self):
+        illegal_chars = [' ', '`', '~', '[', ']', '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
+        
+        legal = True
+        can_change = True
+
+        old_error = self.label_badold
+        new_error = self.label_badpass
+        match_error = self.label_nomatch
+
+        old_error.setText('')
+        new_error.setText('')
+        match_error.setText('')
+
+        try:
+            f = open('.note_accounts', 'r')
+        except IOError:
+            old_error.setText('No accounts exist')
+            return
+        
+        old = self.lineEdit_oldpassword.text()
+        new = self.lineEdit_newpassword.text()
+        match = self.lineEdit_reenterpassword.text()
+        
+        found = False
+
+        for line in f:
+            cur_account = line.split()
+
+            if decrypt(self.user, cur_account[0]):
+                found = True
+                email = cur_account[2]
+                break
+
+        f.close()
+
+        if found:
+            if not decrypt(old, cur_account[1]):
+                old_error.setText('Incorrect password')
+                can_change = False
+        else:
+            old_error.setText('Account does not exist')
+            can_change = False
+
+        if new == '':
+            new_error.setText('Password cannot be blank')
+            legal = False
+
+        for c in illegal_chars:
+            if new.find(c) != -1:
+                new_error.setText('Password cannot contain "' + c + '"')
+                legal = False
+
+        if new != match:
+            match_error.setText('Passwords do not match')
+            legal = False
+
+        if legal:
+            f = open('.note_accounts', 'r+')
+
+            all_file = f.read()
+            
+            f.seek(0)
+
+            for line in all_file.splitlines():
+                cur_account = line.split()
+
+                if not decrypt(self.user, cur_account[0]):
+                    f.write(line + '\n')
+
+            f.write(encrypt(self.user) + ' ' + encrypt(new) + ' ' + email + '\n')
+
+            f.close()
+
+            self.close()
