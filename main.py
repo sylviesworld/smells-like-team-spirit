@@ -5,7 +5,7 @@ import os
 from main_window import MainWindow
 from account_windows import LoginWindow
 from PyQt5.QtWidgets import QApplication
-
+from PyQt5.QtGui import *
 
 def main():
 
