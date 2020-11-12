@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Test_toolbar_icons.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>Test_toolbar_icons.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Test that each image path exists. Images are used for icons.</p>
+<p>Since this script tests paths, it needs to be run from the same location as</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="n">main_window</span><span class="p">,</span> <span class="n">which</span> <span class="n">should</span> <span class="n">also</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">images</span> <span class="n">directory</span> <span class="n">that</span> <span class="n">holds</span> <span class="n">each</span> <span class="n">of</span> <span class="n">these</span> <span class="n">images</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">import unittest</span>
+<span class="s2">import os</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">class Test_IconsPathExist(unittest.TestCase):</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="n">Methods</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">documented</span><span class="o">.</span>
+    <span class="n">Look</span> <span class="n">at</span> <span class="n">the</span> <span class="n">file</span> <span class="n">name</span> <span class="n">string</span> <span class="n">to</span> <span class="n">see</span> <span class="n">which</span> <span class="n">image</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">test</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_cut_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-cut-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_copy_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-copy-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_paste_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-paste-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_add_image_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-add-image-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_search_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-search-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_text_color_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-text-color-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_highlight_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-marker-pen-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_bold_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-bold-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_italic_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-italic-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_bullet_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-bulleted-list-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_numbered_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-numbered-list-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_aln_left_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-align-left-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_aln_center_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-align-center-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_aln_right_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-align-right-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_aln_justify_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-align-justify-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_add_group_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(os.path.join(</span>
+<span class="s2">            &#39;images&#39;, &#39;icons8-add-user-group-man-man-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_add_user_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(os.path.join(</span>
+<span class="s2">            &#39;images&#39;, &#39;icons8-add-user-male-80.png&#39;)))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_app_icon(self):</span>
+<span class="s2">        self.assertTrue(os.path.exists(</span>
+<span class="s2">            os.path.join(&#39;images&#39;, &#39;icons8-note-64.png&#39;)))</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

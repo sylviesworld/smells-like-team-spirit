@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <title>permissions.py</title>
+  <title>old_permissions.py</title>
   <link rel="stylesheet" href="pycco.css">
 </head>
 <body>
 <div id='container'>
   <div id="background"></div>
   <div class='section'>
-    <div class='docs'><h1>permissions.py</h1></div>
+    <div class='docs'><h1>old_permissions.py</h1></div>
   </div>
   <div class='clearall'>
   <div class='section' id='section-0'>
@@ -20,8 +20,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">encrypt_file</span> <span class="kn">import</span> <span class="n">encrypt_file</span><span class="p">,</span> <span class="n">decrypt_file</span></pre></div>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -68,18 +67,16 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>get permissions for the user</p>
+      
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
     <span class="n">account_permissions</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">account_permissions</span>
-
-    <span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt_file</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></pre></div>
+        <span class="k">return</span> <span class="n">account_permissions</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -91,7 +88,7 @@
       <p>check every line in .permissions</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">decrypted</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">account</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">account</span><span class="p">:</span>
             <span class="k">continue</span>
@@ -142,11 +139,22 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_permission</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
       <p>get all filenames this account can access</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_permission</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="n">get_permissions</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">permissions</span> <span class="o">=</span> <span class="n">get_permissions</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
 
     <span class="n">fix_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -159,10 +167,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>if account doesn&rsquo;t already have access to file, add it to account&rsquo;s permissions</p>
     </div>
@@ -175,38 +183,21 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
-      </div>
-      <p>if .permissions doesn&rsquo;t exist, create it</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;rb+&#39;</span><span class="p">)</span>
-            <span class="n">accounts</span> <span class="o">=</span> <span class="n">decrypt_file</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-
-        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <p>for each account username, write all associated permissions</p>
+      <p>if .permissions doesn&rsquo;t exist, create it</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">cur_account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
-            <span class="n">permission_list</span> <span class="o">=</span> <span class="n">cur_account</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">permission_list</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">byte</span> <span class="o">=</span> <span class="p">(</span><span class="n">permission_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+            <span class="n">accounts</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -215,19 +206,14 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>if this account in the list is the current account, add permissions from permissions instead of permission_list</p>
+      <p>for each account username, write all associated permissions</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">permission_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">account</span><span class="p">:</span>
-                <span class="n">found_user</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">for</span> <span class="n">add</span> <span class="ow">in</span> <span class="n">permissions</span><span class="p">:</span>
-                    <span class="n">byte</span> <span class="o">=</span> <span class="p">(</span><span class="n">add</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">permission_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                    <span class="n">byte</span> <span class="o">=</span> <span class="p">(</span><span class="n">permission</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">cur_account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
+            <span class="n">permission_list</span> <span class="o">=</span> <span class="n">cur_account</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">permission_list</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">permission_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -236,20 +222,31 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
+      <p>if this account in the list is the current account, add permissions from permissions instead of permission_list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">permission_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">account</span><span class="p">:</span>
+                <span class="n">found_user</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">add</span> <span class="ow">in</span> <span class="n">permissions</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">add</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">permission_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">permission</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
       <p>if this account had no permissions, just add them and this permission to the end of the file</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_user</span><span class="p">:</span>
-            <span class="n">byte</span> <span class="o">=</span> <span class="p">(</span><span class="n">account</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">fix_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">account</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">fix_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;.permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;rb+&#39;</span><span class="p">)</span>
-
-        <span class="n">encrypted</span> <span class="o">=</span> <span class="n">encrypt_file</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 </pre></div>

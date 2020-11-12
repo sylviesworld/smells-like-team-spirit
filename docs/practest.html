@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>practest.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>practest.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>The example code from Prof. Henley&rsquo;s Unit Test Lecture.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="n">Not</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Note</span> <span class="n">app</span> <span class="o">--</span> <span class="n">only</span> <span class="k">for</span> <span class="n">reference</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">import sys</span>
+<span class="s2">from PyQt5.QtWidgets import *</span>
+<span class="s2">from PyQt5.QtGui import QIcon</span>
+<span class="s2">import unittest</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">class App(QMainWindow):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def __init__(self):</span>
+<span class="s2">        super().__init__()</span>
+<span class="s2">        self.setGeometry(400, 400, 200, 200)</span>
+<span class="s2">        self.textbox = QLineEdit(self)</span>
+<span class="s2">        self.textbox.move(2, 2)</span>
+<span class="s2">        self.button = QPushButton(&quot;Go Vols!&quot;, self)</span>
+<span class="s2">        self.button.move(15, 20)</span>
+<span class="s2">        self.button.clicked.connect(self.onClick)</span>
+<span class="s2">        self.show()</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def onClick(self):</span>
+<span class="s2">        cleanedText = removeSpaces(self.textbox.text())</span>
+<span class="s2">        QMessageBox.question(self, &quot;&quot;, cleanedText,</span>
+<span class="s2">                             QMessageBox.Ok, QMessageBox.Ok)</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">class CleanUtility:</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def removeSpaces(self, str):</span>
+<span class="s2">        return str.replace(&#39; &#39;, &#39;&#39;)</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def removeNumbers(self, str):</span>
+<span class="s2">        return &#39;&#39;.join(filter(lambda chr: not chr.isdigit(), str))</span>
+
+
+<span class="s2">if __name__ == &#39;__main__&#39;:</span>
+<span class="s2">    app = QApplication(sys.argv)</span>
+<span class="s2">    ex = App()</span>
+<span class="s2">    sys.exit(app.exec_())</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">class TestCleaningMethods(unittest.TestCase):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def setUp(self):</span>
+<span class="s2">        self.cleaner = CleanUtility()</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_removeSpaces(self):</span>
+<span class="s2">        self.assertEqual(self.cleaner.removeSpaces(&quot;a b c&quot;), &quot;abc&quot;)</span>
+<span class="s2">        self.assertLess(</span>
+<span class="s2">            len(self.cleaner.removeSpaces(&quot;foo bar&quot;)), len(&quot;foo bar&quot;))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">    def test_removeNumbers(self):</span>
+<span class="s2">        self.assertEqual(self.cleaner.removeNumbers(&quot;a1b2c3&quot;), &quot;abc&quot;)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Utility Functions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Unit Tests</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

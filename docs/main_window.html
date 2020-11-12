@@ -32,7 +32,7 @@
 <span class="kn">from</span> <span class="nn">permissions</span> <span class="kn">import</span> <span class="n">check_permission</span><span class="p">,</span> <span class="n">add_permission</span>
 <span class="kn">from</span> <span class="nn">save_window</span> <span class="kn">import</span> <span class="n">SaveWindow</span>
 <span class="kn">from</span> <span class="nn">open_window</span> <span class="kn">import</span> <span class="n">OpenWindow</span>
-<span class="kn">from</span> <span class="nn">account_windows</span> <span class="kn">import</span> <span class="n">ChangePasswordWindow</span>
+<span class="kn">from</span> <span class="nn">account_windows</span> <span class="kn">import</span> <span class="n">ChangePasswordWindow</span><span class="p">,</span> <span class="n">DeleteAccountWindow</span>
 <span class="kn">from</span> <span class="nn">permission_window</span> <span class="kn">import</span> <span class="n">PermissionWindow</span>
 <span class="kn">from</span> <span class="nn">group_window</span> <span class="kn">import</span> <span class="n">GroupWindow</span>
 
@@ -372,13 +372,17 @@
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">accountMenu</span> <span class="o">=</span> <span class="n">menuBar</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="s1">&#39;Account&#39;</span><span class="p">)</span>
 
-        <span class="n">accountButton</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Change password&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="n">accountButton</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_password</span><span class="p">)</span>
-        <span class="n">accountMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">accountButton</span><span class="p">)</span>
+        <span class="n">passwordButton</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Change password&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">passwordButton</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_password</span><span class="p">)</span>
+        <span class="n">accountMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">passwordButton</span><span class="p">)</span>
 
         <span class="n">addUserButton</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Add User&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">addUserButton</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addUserEvent</span><span class="p">)</span>
-        <span class="n">accountMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">addUserButton</span><span class="p">)</span></pre></div>
+        <span class="n">accountMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">addUserButton</span><span class="p">)</span>
+
+        <span class="n">deleteAccountButton</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s1">&#39;Delete account&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">deleteAccountButton</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_account</span><span class="p">)</span>
+        <span class="n">accountMenu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">deleteAccountButton</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -651,22 +655,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-25'>#</a>
       </div>
-      <p>Convert selected text to bulleted list</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">BulletList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-26'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
-      </div>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">textSelected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span><span class="o">.</span><span class="n">selectedText</span><span class="p">()</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">BulletList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">textSelected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span><span class="o">.</span><span class="n">selectedText</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">textSelected</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">insertHtml</span><span class="p">(</span>
@@ -678,27 +671,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-26'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
-      </div>
-      <p>Convert selected text to numbered list</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">NumberedList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-28'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">textSelected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span><span class="o">.</span><span class="n">selectedText</span><span class="p">()</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">NumberedList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">textSelected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span><span class="o">.</span><span class="n">selectedText</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">textSelected</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">insertHtml</span><span class="p">(</span>
@@ -710,15 +692,53 @@
     </div>
   </div>
   <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">fontChoice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">font</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">QFontDialog</span><span class="o">.</span><span class="n">getFont</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>Opens the color dialog</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">colorPicker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textColor</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setColorIcon</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setTextColor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
   <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-29'>#</a>
       </div>
-      <p>Select front from QFontDialog and set selected text to that font.</p>
+      <p>Opens the highlight color dialog</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">fontChoice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">highlightPicker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textBackgroundColor</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setHighlightIcon</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setTextBackgroundColor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -730,90 +750,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">font</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">QFontDialog</span><span class="o">.</span><span class="n">getFont</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-31'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
-      </div>
-      <p>Opens the color dialog</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">colorPicker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-32'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textColor</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setColorIcon</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setTextColor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-33'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-33'>#</a>
-      </div>
-      <p>Opens the highlight color dialog</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">highlightPicker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-34'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-34'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textBackgroundColor</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setHighlightIcon</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setTextBackgroundColor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-35'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-35'>#</a>
-      </div>
-      <p>Use selected text as query for Find command in the note</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">SearchSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-36'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-36'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">SearchSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">textCursor</span><span class="p">()</span>
         <span class="n">textSelected</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">selectedText</span><span class="p">()</span>
         <span class="n">flags</span> <span class="o">=</span> <span class="n">QTextDocument</span><span class="o">.</span><span class="n">FindFlags</span><span class="p">()</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">textSelected</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
@@ -833,27 +771,17 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-37'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-37'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>Sets color of text</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">TextColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-38'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">TextColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setColorIcon</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">centralWidget</span><span class="o">.</span><span class="n">textBox</span><span class="o">.</span><span class="n">setTextColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
             <span class="k">return</span>
@@ -893,27 +821,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-39'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-39'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
       <p>Sets the color icon on the QToolBar</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setColorIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-40'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">pixelMap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setColorIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="n">pixelMap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
         <span class="n">pixelMap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
         <span class="n">painter</span> <span class="o">=</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">pixelMap</span><span class="p">)</span>
         <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
@@ -922,27 +839,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-33'>#</a>
       </div>
       <p>Sets the highlight color icon on the QToolBar</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setHighlightIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-42'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">pixelMap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">setHighlightIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="n">pixelMap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
         <span class="n">pixelMap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
         <span class="n">painter</span> <span class="o">=</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">pixelMap</span><span class="p">)</span>
         <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
@@ -951,27 +857,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-34'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-34'>#</a>
       </div>
       <p>Called when the QMainWindow is closed</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-44'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">needsSave</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">needsSave</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">promptSaveMessage</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveMessageCancel</span><span class="p">:</span>
                 <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span>
@@ -981,59 +876,37 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-45'>
+  <div class='section' id='section-35'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
+        <a class='octothorpe' href='#section-35'>#</a>
       </div>
       <p>Called when any key is pressed</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-46'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-46'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-47'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
-      </div>
-      <p>Called when text in the AppWidget QTextEdit is changed</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">textEditedEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-48'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">needsSave</span> <span class="o">=</span> <span class="kc">True</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-36'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Called when text in the AppWidget QTextEdit is changed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">textEditedEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">needsSave</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">clearMessage</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
       </div>
       <p>Update current text color and highlight under cursor for color button displays</p>
     </div>
@@ -1048,10 +921,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-38'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-38'>#</a>
       </div>
       <p>Called when the QTextCursor in the AppWidget QTextEdit is moved</p>
     </div>
@@ -1060,22 +933,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-51'>
+  <div class='section' id='section-39'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-51'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-52'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-52'>#</a>
+        <a class='octothorpe' href='#section-39'>#</a>
       </div>
       <p>Do not update formatting while the user is selecting text</p>
     </div>
@@ -1084,10 +945,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-53'>
+  <div class='section' id='section-40'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-53'>#</a>
+        <a class='octothorpe' href='#section-40'>#</a>
       </div>
       <p>Update current text color and highlight under cursor for color button displays</p>
     </div>
@@ -1098,10 +959,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-54'>
+  <div class='section' id='section-41'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-54'>#</a>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       <p>Update the current font formatting (bold, italics, underline, etc.)</p>
     </div>
@@ -1128,10 +989,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-55'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-55'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       <p>Opens the window to add a user to the current file</p>
     </div>
@@ -1140,22 +1001,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-56'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-56'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-57'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-57'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       <p>Save file before adding user</p>
     </div>
@@ -1171,88 +1020,57 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-58'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-58'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <p>Opens the window to create a new note group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">createGroupEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-59'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-59'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupWindow</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">createGroupEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupWindow</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groupWindow</span> <span class="o">=</span> <span class="n">GroupWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groupWindow</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-60'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-60'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
-      <p>Opens the file dialog to save a new file or saves the working file</p>
+      <p>Opens the file dialog to save a new file or saves the working file.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-61'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-61'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span> <span class="o">=</span> <span class="n">SaveWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="o">.</span><span class="n">initSaveEvent</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-62'>
+  <div class='section' id='section-46'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-62'>#</a>
+        <a class='octothorpe' href='#section-46'>#</a>
       </div>
-      <p>Opens the file dialog even if a file is already open</p>
+      <p>Opens the file dialog even if a file is already open.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveAsEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-63'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-63'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveAsEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span> <span class="o">=</span> <span class="n">SaveWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveWindow</span><span class="o">.</span><span class="n">saveAsEvent</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-64'>
+  <div class='section' id='section-47'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-64'>#</a>
+        <a class='octothorpe' href='#section-47'>#</a>
       </div>
       <p>Opens a file (isNew defines if the file is a new, empty file)</p>
     </div>
@@ -1261,22 +1079,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-65'>
+  <div class='section' id='section-48'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-65'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-66'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-66'>#</a>
+        <a class='octothorpe' href='#section-48'>#</a>
       </div>
       <p>New file</p>
     </div>
@@ -1285,10 +1091,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-67'>
+  <div class='section' id='section-49'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-67'>#</a>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       <p>Prompt save message</p>
     </div>
@@ -1308,10 +1114,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-68'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-68'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       <p>Open file</p>
     </div>
@@ -1322,27 +1128,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-69'>
+  <div class='section' id='section-51'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-69'>#</a>
+        <a class='octothorpe' href='#section-51'>#</a>
       </div>
       <p>Creates the save message prompt window</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">promptSaveMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-70'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-70'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">promptSaveMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Question</span><span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Do you want to save changes to the current file?&#39;</span><span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Notepad App Save Message&#39;</span><span class="p">)</span>
@@ -1353,34 +1148,24 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-71'>
+  <div class='section' id='section-52'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-71'>#</a>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       <p>Handles the save prompt button event when opening a new file</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveMessageEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveMessageEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveMessageCancel</span> <span class="o">=</span> <span class="kc">False</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-72'>
+  <div class='section' id='section-53'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-72'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">saveMessageCancel</span> <span class="o">=</span> <span class="kc">False</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-73'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-73'>#</a>
+        <a class='octothorpe' href='#section-53'>#</a>
       </div>
       <p>Save the file and store the result</p>
     </div>
@@ -1390,10 +1175,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-74'>
+  <div class='section' id='section-54'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-74'>#</a>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       <p>Skip saving the file</p>
     </div>
@@ -1406,27 +1191,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-75'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-75'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       <p>Opens the print dialog</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">printEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-76'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-76'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="n">printer</span> <span class="o">=</span> <span class="n">QPrinter</span><span class="p">(</span><span class="n">QPrinter</span><span class="o">.</span><span class="n">HighResolution</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">printEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">printer</span> <span class="o">=</span> <span class="n">QPrinter</span><span class="p">(</span><span class="n">QPrinter</span><span class="o">.</span><span class="n">HighResolution</span><span class="p">)</span>
         <span class="n">dialogue</span> <span class="o">=</span> <span class="n">QPrintDialog</span><span class="p">(</span><span class="n">printer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">dialogue</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">QPrintDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
@@ -1434,28 +1208,18 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-77'>
+  <div class='section' id='section-56'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-77'>#</a>
+        <a class='octothorpe' href='#section-56'>#</a>
       </div>
-      <p>Change user&rsquo;s password</p>
+      <p>instantiates a window to change account password</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">change_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-78'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-78'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;guest&#39;</span><span class="p">:</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">change_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;guest&#39;</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
                 <span class="s1">&#39;You must be signed in to an account to change your password.&#39;</span><span class="p">)</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
@@ -1467,10 +1231,33 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-79'>
+  <div class='section' id='section-57'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-79'>#</a>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>instantiates a window to delete an account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">delete_account</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;guest&#39;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;You must be signed in to an account to delete it.&#39;</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_account_window</span> <span class="o">=</span> <span class="n">DeleteAccountWindow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_account_window</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_account_window</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_account_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
       <p>Convert strings to list format (bullet or numbered)</p>
     </div>
@@ -1479,10 +1266,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-80'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-80'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
       
     </div>
@@ -1491,58 +1278,36 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-81'>
+  <div class='section' id='section-60'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-81'>#</a>
+        <a class='octothorpe' href='#section-60'>#</a>
       </div>
       <p>Convert str to bulleted list</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">make_bullet_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">make_bullet_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;ul&gt;&lt;li&gt;&quot;</span> <span class="o">+</span> <span class="nb">str</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&lt;/ul&gt;&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-82'>
+  <div class='section' id='section-61'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-82'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="s2">&quot;&lt;ul&gt;&lt;li&gt;&quot;</span> <span class="o">+</span> <span class="nb">str</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&lt;/ul&gt;&quot;</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-83'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-83'>#</a>
+        <a class='octothorpe' href='#section-61'>#</a>
       </div>
       <p>Convert str to numbered list</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">make_numbered_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">make_numbered_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;ol&gt;&lt;li&gt;&quot;</span> <span class="o">+</span> <span class="nb">str</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&lt;/ol&gt;&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-84'>
+  <div class='section' id='section-62'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-84'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="s2">&quot;&lt;ol&gt;&lt;li&gt;&quot;</span> <span class="o">+</span> <span class="nb">str</span> <span class="o">+</span> <span class="s2">&quot;&lt;/li&gt;&lt;/ol&gt;&quot;</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-85'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-85'>#</a>
+        <a class='octothorpe' href='#section-62'>#</a>
       </div>
       <p>Return a snippet of a given string</p>
     </div>
@@ -1551,10 +1316,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-86'>
+  <div class='section' id='section-63'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-86'>#</a>
+        <a class='octothorpe' href='#section-63'>#</a>
       </div>
       
     </div>
@@ -1563,27 +1328,16 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-87'>
+  <div class='section' id='section-64'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-87'>#</a>
+        <a class='octothorpe' href='#section-64'>#</a>
       </div>
-      <p>Return all but last 10 characters of string</p>
+      <p>Return all but last 10 chars of a string</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">snip10</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-88'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-88'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="nb">str</span><span class="p">[:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">snip10</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">[:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
 
 </pre></div>
     </div>
