@@ -62,3 +62,15 @@ class Test_IconsPathExist(unittest.TestCase):
     def test_aln_justify_icon(self):
         self.assertTrue(os.path.exists(
             os.path.join('images', 'icons8-align-justify-80.png')))
+
+    def test_add_group_icon(self):
+        self.assertTrue(os.path.exists(os.path.join(
+            'images', 'icons8-add-user-group-man-man-80.png')))
+
+    def test_add_user_icon(self):
+        self.assertTrue(os.path.exists(os.path.join(
+            'images', 'icons8-add-user-male-80.png')))
+
+    def test_app_icon(self):
+        self.assertTrue(os.path.exists(
+            os.path.join('images', 'icons8-note-64.png')))

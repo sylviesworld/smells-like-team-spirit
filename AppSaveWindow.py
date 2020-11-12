@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
                              QLabel, QLineEdit, QPushButton, QCheckBox, QComboBox)
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtPrintSupport import QPrinter
-from permissions import check_permission, add_permission
+from old_permissions import check_permission, add_permission
 from encrypt_file import encrypt_file
 import os
 

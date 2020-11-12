@@ -137,7 +137,7 @@
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>Tab 1</string>
+         <string>Note</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
@@ -147,7 +147,7 @@
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Tab 2</string>
+         <string>Scratch</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">

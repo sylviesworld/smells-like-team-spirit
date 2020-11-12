@@ -251,13 +251,15 @@ class MainWindow(QMainWindow):
             self.centralWidget.findWindow.createWindow)
         edit_toolbar.addAction(findAction)
 
-        addUserAction = QAction('Add User', self)
+        addUserAction = QAction(
+            QIcon(os.path.join('images', 'icons8-add-user-male-80.png')), 'Add User', self)
         addUserAction.setStatusTip('Give Another User Access to This File')
         addUserAction.triggered.connect(self.addUserEvent)
         edit_toolbar.addAction(addUserAction)
 
-        createGroupAction = QAction('Create Group', self)
-        createGroupAction.setStatusTip('Create a New Note Group Folder')
+        createGroupAction = QAction(QIcon(os.path.join(
+            'images', 'icons8-add-user-group-man-man-80.png')), 'Create Group', self)
+        createGroupAction.setStatusTip('Create a New Group Note Folder')
         createGroupAction.triggered.connect(self.createGroupEvent)
         edit_toolbar.addAction(createGroupAction)
 
@@ -590,7 +592,7 @@ class MainWindow(QMainWindow):
 
     # Opens the window to add a user to the current file
     def addUserEvent(self):
-        
+
         # Save file before adding user
         if self.needsSave or self.currentFile == '':
             self.addUserAfterSave = True
@@ -684,7 +686,8 @@ class MainWindow(QMainWindow):
     def change_password(self):
         if self.user == 'guest':
             msg = QMessageBox()
-            msg.setText('You must be signed in to an account to change your password.')
+            msg.setText(
+                'You must be signed in to an account to change your password.')
             msg.exec_()
             return
 
@@ -704,7 +707,6 @@ class MainWindow(QMainWindow):
         self.delete_account_window.main_window = self
         self.delete_account_window.show()
         
-
 class ListStrManip:
     def make_bullet_format(self, str):
         return "<ul><li>" + str + "</li></ul>"

@@ -1,3 +1,4 @@
-cryptography==3.2.1
-PyQt5==5.15.1
-bcrypt==3.2.0
+cryptography
+PyQt5
+bcrypt
+certifi
