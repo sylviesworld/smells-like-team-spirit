@@ -1,3 +1,6 @@
+"""Encrypt and decrypt files"""
+
+
 from cryptography.fernet import Fernet
 import sys
 

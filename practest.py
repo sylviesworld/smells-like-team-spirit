@@ -1,3 +1,6 @@
+"""The example code from Prof. Henley's Unit Test Lecture.
+Not used in the Note app -- only for reference"""
+
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
@@ -36,6 +39,7 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 
 
+# Unit Tests
 class TestCleaningMethods(unittest.TestCase):
     def setUp(self):
         self.cleaner = CleanUtility()

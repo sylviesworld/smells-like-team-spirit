@@ -279,6 +279,7 @@ class LoginWindow(QWidget):
 
         self.setLayout(layout)
 
+
 # construct a window to let a user change their password
 class ChangePasswordWindow(QWidget):
     def __init__(self):
@@ -308,7 +309,8 @@ class ChangePasswordWindow(QWidget):
         layout.addWidget(self.lineEdit_newpassword, 2, 1)
         layout.addWidget(self.label_badpass, 3, 1)
 
-        label_reenterpassword = QLabel('<font size="4"> Reenter password: </font>')
+        label_reenterpassword = QLabel(
+            '<font size="4"> Reenter password: </font>')
         self.label_nomatch = QLabel('')
         self.label_nomatch.setStyleSheet("color: red;")
         self.lineEdit_reenterpassword = QLineEdit()
@@ -330,8 +332,9 @@ class ChangePasswordWindow(QWidget):
 
     # ask user for current password and new password, change saved password
     def change_password(self):
-        illegal_chars = [' ', '`', '~', '[', ']', '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
-        
+        illegal_chars = [' ', '`', '~', '[', ']',
+                         '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
+
         legal = True
         can_change = True
 
@@ -349,11 +352,11 @@ class ChangePasswordWindow(QWidget):
         except IOError:
             old_error.setText('No accounts exist')
             return
-        
+
         old = self.lineEdit_oldpassword.text()
         new = self.lineEdit_newpassword.text()
         match = self.lineEdit_reenterpassword.text()
-        
+
         found = False
 
         # find the account and save the old information
@@ -394,7 +397,7 @@ class ChangePasswordWindow(QWidget):
             f = open('.note_accounts', 'r+')
 
             all_file = f.read()
-            
+
             f.seek(0)
 
             # write all other accounts back to file, unchanged
@@ -406,11 +409,13 @@ class ChangePasswordWindow(QWidget):
                     f.write(line + '\n')
 
             # write new info at the end of the file
-            f.write(encrypt(self.user) + ' ' + encrypt(new) + ' ' + email + '\n')
+            f.write(encrypt(self.user) + ' ' +
+                    encrypt(new) + ' ' + email + '\n')
 
             f.close()
 
             self.close()
+
 
 # create window to allow user to delete their account
 class DeleteAccountWindow(QWidget):
@@ -445,11 +450,11 @@ class DeleteAccountWindow(QWidget):
     # also double-check that the person actually wants to delete their account
     def prompt_delete_account(self):
         password = self.lineEdit_password.text()
-        
+
         # error checking password
         legal = True
         self.label_incorrectpass.setText('')
-        
+
         try:
             f = open('.note_accounts', 'r')
         except IOError:
@@ -464,14 +469,15 @@ class DeleteAccountWindow(QWidget):
                     self.label_incorrectpass.setText('Incorrect password')
                     legal = False
                     break
-        
+
         f.close()
 
         # output final warning box
         if legal:
             msg = QMessageBox()
             msg.setWindowTitle('Warning!')
-            msg.setText('Are you sure you want to delete your account? This action will also delete all of your files.')
+            msg.setText(
+                'Are you sure you want to delete your account? This action will also delete all of your files.')
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.buttonClicked.connect(self.delete_account)
             msg.exec_()
@@ -485,11 +491,11 @@ class DeleteAccountWindow(QWidget):
                 f = open('.note_accounts', 'r+')
             except IOError:
                 return
-            
+
             all_file = f.read()
 
             f.seek(0)
-            
+
             f.truncate(0)
 
             # rewrite all accounts except for the one to be deleted
@@ -513,7 +519,7 @@ class DeleteAccountWindow(QWidget):
             if exists:
                 all_permissions = decrypt_file(f.read())
                 new_file = ''
-                
+
                 f.seek(0)
 
                 f.truncate(0)

@@ -25,7 +25,8 @@ class SaveWindow(QWidget):
         layout = QFormLayout()
 
         self.fileModel = QFileSystemModel()
-        self.fileModel.setRootPath(QDir.currentPath() + '/users/' + self.mainWindow.user)
+        self.fileModel.setRootPath(
+            QDir.currentPath() + '/users/' + self.mainWindow.user)
         filters = ['*.txt']
         self.fileModel.setNameFilters(filters)
 
@@ -40,7 +41,7 @@ class SaveWindow(QWidget):
 
         self.fnLineEdit = QLineEdit()
         layout.addRow('File name: ', self.fnLineEdit)
-    
+
         self.typeComboBox = QComboBox()
         self.typeComboBox.addItem('Text Files (*.txt)')
         self.typeComboBox.addItem('PDF Files (*.pdf)')
@@ -67,7 +68,7 @@ class SaveWindow(QWidget):
         removePath = QDir.currentPath() + '/users/' + self.mainWindow.user + '/'
         redata = re.compile(re.escape(removePath), re.IGNORECASE)
         subPath = redata.sub('', self.fileModel.filePath(current))
-        
+
         if os.path.isdir(self.fileModel.filePath(current)):
             subPath += '/'
 
@@ -137,7 +138,8 @@ class SaveWindow(QWidget):
         # Save as new file
         if self.mainWindow.currentFile == '':
 
-            fileName, extension = os.path.splitext(os.path.basename(self.fnLineEdit.text().strip()))
+            fileName, extension = os.path.splitext(
+                os.path.basename(self.fnLineEdit.text().strip()))
             subPath = self.fnLineEdit.text().strip().replace(fileName + extension, '')
             filePath = 'users/' + self.mainWindow.user + '/' + subPath + fileName
 
@@ -183,7 +185,7 @@ class SaveWindow(QWidget):
                 if self.oldFile != '':
                     self.mainWindow.currentFile = self.oldFile
                     self.oldFile = ''
-                
+
                 # Attempt to save file
                 if not self.savePDF(filePath):
                     self.saveMessageBox('Invalid file path.')
@@ -239,8 +241,8 @@ class SaveWindow(QWidget):
         except:
             return False
 
-
     # Saves the file as a PDF
+
     def savePDF(self, filePath):
         try:
             printer = QPrinter(QPrinter.HighResolution)

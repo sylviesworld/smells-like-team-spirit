@@ -1,4 +1,4 @@
-from main_window import*
+from main_window import *
 import sys
 import os
 import shutil
@@ -9,8 +9,10 @@ import unittest
 
 app = QApplication(sys.argv)
 
+
 class TestIO(unittest.TestCase):
-    
+    """Unit tests for app IO"""
+
     # Initialize tests
     def setUp(self):
 
@@ -28,8 +30,9 @@ class TestIO(unittest.TestCase):
         self.mainWindow.saveEvent()
         self.mainWindow.centralWidget.textBox.setText('Hello!')
         self.mainWindow.saveWindow.saveFile('test/hello.txt')
-        f = open('test/hello.txt', 'rb') 
-        self.assertEqual(self.mainWindow.centralWidget.textBox.toHtml(), decrypt_file(f.read()))
+        f = open('test/hello.txt', 'rb')
+        self.assertEqual(
+            self.mainWindow.centralWidget.textBox.toHtml(), decrypt_file(f.read()))
         f.close()
 
     # Test if QTextEdit text matches text from file
@@ -42,8 +45,9 @@ class TestIO(unittest.TestCase):
         f.write(encrypt_file(goodbyeText))
         f.close()
         self.mainWindow.openWindow.openFile('test/goodbye.txt')
-        self.assertEqual(self.mainWindow.centralWidget.textBox.toHtml(), goodbyeText)
-    
+        self.assertEqual(
+            self.mainWindow.centralWidget.textBox.toHtml(), goodbyeText)
+
     # Test if note group folder was successfully created
     def testCreateGroup(self):
         self.mainWindow.createGroupEvent()
@@ -55,7 +59,7 @@ class TestIO(unittest.TestCase):
         self.mainWindow.saveEvent()
         self.mainWindow.saveWindow.close()
         self.assertEqual(self.mainWindow.saveWindow, None)
-    
+
     # Test if open window closes successfully
     def testOpenWindowClose(self):
         self.mainWindow.openEvent(False)
@@ -72,5 +76,3 @@ class TestIO(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree('test')
         return
-
-

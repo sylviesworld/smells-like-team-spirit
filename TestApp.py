@@ -8,8 +8,9 @@ from encrypt_file import decrypt_file, encrypt_file
 
 app = QApplication(sys.argv)
 
+
 class TestApp(unittest.TestCase):
-    
+
     # Initialize tests
     def setUp(self):
 
@@ -27,8 +28,9 @@ class TestApp(unittest.TestCase):
         self.mainWindow.saveNoteSlot()
         self.mainWindow.textBox_1.setText('Test!')
         self.mainWindow.saveWindow.saveFile('unittest/test.txt')
-        f = open('unittest/test.txt', 'rb') 
-        self.assertEqual(self.mainWindow.textBox_1.toHtml(), decrypt_file(f.read()))
+        f = open('unittest/test.txt', 'rb')
+        self.assertEqual(self.mainWindow.textBox_1.toHtml(),
+                         decrypt_file(f.read()))
         f.close()
 
     # Test open slot
@@ -50,7 +52,7 @@ class TestApp(unittest.TestCase):
         self.mainWindow.needsSave = False
         self.mainWindow.newNoteSlot()
         self.assertEqual(self.mainWindow.textBox_1.toPlainText(), "")
-    
+
     # Remove unittest dir
     def tearDown(self):
         shutil.rmtree('unittest')

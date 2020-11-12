@@ -1,8 +1,16 @@
+"""Test that each image path exists. Images are used for icons.
+
+Since this script tests paths, it needs to be run from the same location as
+main_window, which should also contain the images directory that holds each of these images"""
+
 import unittest
 import os
 
 
 class Test_IconsPathExist(unittest.TestCase):
+    """Methods are not documented.
+    Look at the file name string to see which image is being test"""
+
     def test_cut_icon(self):
         self.assertTrue(os.path.exists(
             os.path.join('images', 'icons8-cut-80.png')))

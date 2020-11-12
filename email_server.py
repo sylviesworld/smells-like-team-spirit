@@ -1,3 +1,5 @@
+"""Email server"""
+
 # from realpython.com tutorial
 import smtplib
 import ssl

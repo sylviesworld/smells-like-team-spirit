@@ -1,3 +1,5 @@
+""" Implements the note taking interface for main.py"""
+
 import os
 import sys
 import time
@@ -202,7 +204,7 @@ class MainWindow(QMainWindow):
         addUserButton = QAction('Add User', self)
         addUserButton.triggered.connect(self.addUserEvent)
         accountMenu.addAction(addUserButton)
-        
+
         deleteAccountButton = QAction('Delete account', self)
         deleteAccountButton.triggered.connect(self.delete_account)
         accountMenu.addAction(deleteAccountButton)
@@ -710,15 +712,23 @@ class MainWindow(QMainWindow):
         self.delete_account_window.user = self.user
         self.delete_account_window.main_window = self
         self.delete_account_window.show()
-        
+
+
 class ListStrManip:
+    """Convert strings to list format (bullet or numbered)"""
+
+    # Convert str to bulleted list
     def make_bullet_format(self, str):
         return "<ul><li>" + str + "</li></ul>"
 
+    # Convert str to numbered list
     def make_numbered_format(self, str):
         return "<ol><li>" + str + "</li></ol>"
 
 
 class CutStr:
+    """Return a snippet of a given string"""
+
+    # Return all but last 10 chars of a string
     def snip10(self, str):
         return str[:-10]
