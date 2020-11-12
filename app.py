@@ -77,22 +77,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # new note button
         self.newNoteButton = self.findChild(
             QtWidgets.QCommandLinkButton, 'commandLinkButton')
-        #self.newNoteButton.triggered.connect(lambda: self.openNoteSlot(True))
 
         # open note button
         self.openNoteButton = self.findChild(
             QtWidgets.QCommandLinkButton, 'commandLinkButton_2')
-        #self.openNoteButton.clicked.connect(lambda: self.openNoteSlot)
 
         # save note button
         self.saveNoteButton = self.findChild(
             QtWidgets.QCommandLinkButton, 'commandLinkButton_3')
-        # self.saveNoteButton.clicked.connect(self.saveNoteSlot)
 
         # save as button
         self.saveAsButton = self.findChild(
             QtWidgets.QCommandLinkButton, 'commandLinkButton_4')
-        # self.saveAsButton.clicked.connect(self.saveAsNoteSlot)
 
         # Begin menu bars
         # ===============
