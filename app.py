@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from find_window import FindWindow
-from login_window import LoginWindow
+from account_windows import LoginWindow
 from shutil import copyfile
 from permissions import check_permission, add_permission
 import os

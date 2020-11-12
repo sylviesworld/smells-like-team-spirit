@@ -3,7 +3,9 @@
 
 import sys
 import os
+import shutil
 from encrypt_account import encrypt, decrypt
+from encrypt_file import encrypt_file, decrypt_file
 from email_server import send_email
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox)
@@ -398,3 +400,112 @@ class ChangePasswordWindow(QWidget):
             f.close()
 
             self.close()
+
+class DeleteAccountWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Delete account')
+        self.resize(600, 120)
+
+        layout = QGridLayout()
+
+        label_password = QLabel('<font size="4"> Password: </font>')
+        self.label_incorrectpass = QLabel('')
+        self.label_incorrectpass.setStyleSheet("color: red;")
+        self.lineEdit_password = QLineEdit()
+        self.lineEdit_password.setPlaceholderText('Please enter password')
+        self.lineEdit_password.setEchoMode(QLineEdit.Password)
+        layout.addWidget(label_password, 0, 0)
+        layout.addWidget(self.lineEdit_password, 0, 1)
+        layout.addWidget(self.label_incorrectpass, 1, 1)
+
+        button_confirm = QPushButton('Confirm')
+        button_confirm.clicked.connect(self.prompt_delete_account)
+        layout.addWidget(button_confirm, 2, 1)
+
+        button_cancel = QPushButton('Cancel')
+        button_cancel.clicked.connect(self.close)
+        layout.addWidget(button_cancel, 2, 0)
+
+        self.setLayout(layout)
+
+    def prompt_delete_account(self):
+        password = self.lineEdit_password.text()
+        legal = True
+        self.label_incorrectpass.setText('')
+        
+        try:
+            f = open('.note_accounts', 'r')
+        except IOError:
+            return
+
+        for line in f:
+            cur_account = line.split()
+
+            if decrypt(self.user, cur_account[0]):
+                if not decrypt(password, cur_account[1]):
+                    self.label_incorrectpass.setText('Incorrect password')
+                    legal = False
+                    break
+        
+        f.close()
+
+        if legal:
+            msg = QMessageBox()
+            msg.setText('Are you sure you want to delete your account? This action will also delete all of your files.')
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.buttonClicked.connect(self.delete_account)
+            msg.exec_()
+
+    def delete_account(self, button):
+        password = self.lineEdit_password.text()
+
+        if button.text() == '&Yes':
+            try:
+                f = open('.note_accounts', 'r+')
+            except IOError:
+                return
+            
+            all_file = f.read()
+
+            f.seek(0)
+            
+            f.truncate(0)
+
+            for line in all_file.splitlines():
+                cur_account = line.split()
+
+                if not decrypt(self.user, cur_account[0]):
+                    f.write(line + '\n')
+
+            f.close()
+
+            exists = True
+
+            try:
+                f = open('.permissions', 'rb+')
+            except IOError:
+                exists = False
+
+            if exists:
+                all_permissions = decrypt_file(f.read())
+                new_file = ''
+                
+                f.seek(0)
+
+                f.truncate(0)
+
+                for line in all_permissions.splitlines():
+                    cur_account = line.split()
+
+                    if cur_account[0] != self.user:
+                        new_file += (line + '\n')
+
+                f.write(encrypt_file(new_file))
+
+                f.close()
+
+            shutil.rmtree('users/' + self.user)
+
+            self.close()
+            self.main_window.close()
