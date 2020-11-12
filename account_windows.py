@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import (
 # creating an account
 class SignupWindow(QWidget):
     # for checking if signup info is valid, sets label text for each error
-    def legal_account(self, username, password, email):
+    def legal_account(self, username, password, match, email):
         illegal_chars = [' ', '`', '~', '[', ']',
                          '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
         legal = True
@@ -23,12 +23,14 @@ class SignupWindow(QWidget):
 
         user_error = self.label_userError
         password_error = self.label_passwordError
+        match_error = self.label_matchError
         email_error = self.label_emailError
 
         # reset error message to blank before checking each attempt to submit
         # info
         user_error.setText('')
         password_error.setText('')
+        match_error.setText('')
         email_error.setText('')
 
         # for checking if username is already taken
@@ -60,6 +62,11 @@ class SignupWindow(QWidget):
             email_error.setText('Email cannnot be blank')
             legal = False
 
+        # passwords must match
+        if match != password:
+            match_error.setText('Passwords do not match')
+            legal = False
+
         # check each field against illegal characters
         for c in illegal_chars:
             if username.find(c) != -1:
@@ -85,9 +92,10 @@ class SignupWindow(QWidget):
     def create_account(self):
         username = self.lineEdit_newuser.text()
         password = self.lineEdit_newpassword.text()
+        match = self.lineEdit_matchpassword.text()
         email = self.lineEdit_email.text()
 
-        if not self.legal_account(username, password, email):
+        if not self.legal_account(username, password, match, email):
             return
 
         all_file = ''
@@ -151,18 +159,28 @@ class SignupWindow(QWidget):
         layout.addWidget(self.lineEdit_newpassword, 2, 1)
         layout.addWidget(self.label_passwordError, 3, 1)
 
+        label_matchpassword = QLabel('<font size="4"> Reenter password: </font>')
+        self.label_matchError = QLabel('')
+        self.label_matchError.setStyleSheet("color: red;")
+        self.lineEdit_matchpassword = QLineEdit()
+        self.lineEdit_matchpassword.setPlaceholderText('Reenter password')
+        self.lineEdit_matchpassword.setEchoMode(QLineEdit.Password)
+        layout.addWidget(label_matchpassword, 4, 0)
+        layout.addWidget(self.lineEdit_matchpassword, 4, 1)
+        layout.addWidget(self.label_matchError, 5, 1)
+
         label_email = QLabel('<font size="4"> Email: </font>')
         self.label_emailError = QLabel('')
         self.label_emailError.setStyleSheet("color: red;")
         self.lineEdit_email = QLineEdit()
         self.lineEdit_email.setPlaceholderText('Please enter email')
-        layout.addWidget(label_email, 4, 0)
-        layout.addWidget(self.lineEdit_email, 4, 1)
-        layout.addWidget(self.label_emailError, 5, 1)
+        layout.addWidget(label_email, 6, 0)
+        layout.addWidget(self.lineEdit_email, 6, 1)
+        layout.addWidget(self.label_emailError, 7, 1)
 
         button_create_account = QPushButton('Create account')
         button_create_account.clicked.connect(self.create_account)
-        layout.addWidget(button_create_account, 6, 1)
+        layout.addWidget(button_create_account, 8, 1)
 
         self.setLayout(layout)
 
