@@ -195,9 +195,11 @@ class LoginWindow(QWidget):
                 if not os.path.exists('users/' + self.user):
                     os.makedirs('users/' + self.user)
 
+                f.close()
                 return 'True'
 
             elif username and not password:
+                f.close()
                 return 'Wrong pass'
 
         f.close()
@@ -277,6 +279,7 @@ class LoginWindow(QWidget):
 
         self.setLayout(layout)
 
+# construct a window to let a user change their password
 class ChangePasswordWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -325,12 +328,14 @@ class ChangePasswordWindow(QWidget):
 
         self.setLayout(layout)
 
+    # ask user for current password and new password, change saved password
     def change_password(self):
         illegal_chars = [' ', '`', '~', '[', ']', '{', '}', '(', ')', ';', ':', '\'', '"', ',', '<', '>', '/', '?', '\\', '|']
         
         legal = True
         can_change = True
 
+        # outputting errors for incorrect password, new password requirements, and new password matching
         old_error = self.label_badold
         new_error = self.label_badpass
         match_error = self.label_nomatch
@@ -351,6 +356,7 @@ class ChangePasswordWindow(QWidget):
         
         found = False
 
+        # find the account and save the old information
         for line in f:
             cur_account = line.split()
 
@@ -361,6 +367,7 @@ class ChangePasswordWindow(QWidget):
 
         f.close()
 
+        # do error checking
         if found:
             if not decrypt(old, cur_account[1]):
                 old_error.setText('Incorrect password')
@@ -382,6 +389,7 @@ class ChangePasswordWindow(QWidget):
             match_error.setText('Passwords do not match')
             legal = False
 
+        # if all entered info passes all the checks, change the saved data
         if legal:
             f = open('.note_accounts', 'r+')
 
@@ -389,18 +397,22 @@ class ChangePasswordWindow(QWidget):
             
             f.seek(0)
 
+            # write all other accounts back to file, unchanged
             for line in all_file.splitlines():
                 cur_account = line.split()
 
+                # skip account being changed
                 if not decrypt(self.user, cur_account[0]):
                     f.write(line + '\n')
 
+            # write new info at the end of the file
             f.write(encrypt(self.user) + ' ' + encrypt(new) + ' ' + email + '\n')
 
             f.close()
 
             self.close()
 
+# create window to allow user to delete their account
 class DeleteAccountWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -429,8 +441,12 @@ class DeleteAccountWindow(QWidget):
 
         self.setLayout(layout)
 
+    # prompt for verifying person trying to delete the account is the owner
+    # also double-check that the person actually wants to delete their account
     def prompt_delete_account(self):
         password = self.lineEdit_password.text()
+        
+        # error checking password
         legal = True
         self.label_incorrectpass.setText('')
         
@@ -439,6 +455,7 @@ class DeleteAccountWindow(QWidget):
         except IOError:
             return
 
+        # verify credentials
         for line in f:
             cur_account = line.split()
 
@@ -450,13 +467,16 @@ class DeleteAccountWindow(QWidget):
         
         f.close()
 
+        # output final warning box
         if legal:
             msg = QMessageBox()
+            msg.setWindowTitle('Warning!')
             msg.setText('Are you sure you want to delete your account? This action will also delete all of your files.')
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.buttonClicked.connect(self.delete_account)
             msg.exec_()
 
+    # delete the account info from .note_accounts and all associated permissions in .permissions
     def delete_account(self, button):
         password = self.lineEdit_password.text()
 
@@ -472,6 +492,7 @@ class DeleteAccountWindow(QWidget):
             
             f.truncate(0)
 
+            # rewrite all accounts except for the one to be deleted
             for line in all_file.splitlines():
                 cur_account = line.split()
 
@@ -479,6 +500,8 @@ class DeleteAccountWindow(QWidget):
                     f.write(line + '\n')
 
             f.close()
+
+            # check if .permissions exists and needs to be checked and modified
 
             exists = True
 
@@ -495,6 +518,7 @@ class DeleteAccountWindow(QWidget):
 
                 f.truncate(0)
 
+                # rewrite all permissions except the account to be deleted's
                 for line in all_permissions.splitlines():
                     cur_account = line.split()
 
@@ -505,6 +529,7 @@ class DeleteAccountWindow(QWidget):
 
                 f.close()
 
+            # delete the user's directory and all of its contents, then close the app
             shutil.rmtree('users/' + self.user)
 
             self.close()
