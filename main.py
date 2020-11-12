@@ -7,6 +7,7 @@ from account_windows import LoginWindow
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import *
 
+
 def main():
 
     # placeholder stylesheet

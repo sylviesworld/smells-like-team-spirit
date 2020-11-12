@@ -1,3 +1,7 @@
+"""Implements note taking interface for app.py
+Reference main_window, the same code that drives main.py,
+for documentation on each method."""
+
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -22,7 +26,9 @@ FONT_SIZES = [5, 5.5, 6.5, 7.5, 8, 9, 10, 10.5, 11]
 FONT_SIZES.extend(range(12, 30, 2))
 FONT_SIZES.extend([36, 48, 72])
 
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -65,24 +71,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.openWindow = None
         self.saveMessageCancel = False
 
-        #create find window
+        # create find window
         self.findWindow = FindWindow(self.textBox_1)
 
-        #new note button
-        self.newNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton')
+        # new note button
+        self.newNoteButton = self.findChild(
+            QtWidgets.QCommandLinkButton, 'commandLinkButton')
         #self.newNoteButton.triggered.connect(lambda: self.openNoteSlot(True))
 
-        #open note button
-        self.openNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_2')
+        # open note button
+        self.openNoteButton = self.findChild(
+            QtWidgets.QCommandLinkButton, 'commandLinkButton_2')
         #self.openNoteButton.clicked.connect(lambda: self.openNoteSlot)
-            
-        #save note button
-        self.saveNoteButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_3')
-        #self.saveNoteButton.clicked.connect(self.saveNoteSlot)
 
-        #save as button
-        self.saveAsButton = self.findChild(QtWidgets.QCommandLinkButton, 'commandLinkButton_4')
-        #self.saveAsButton.clicked.connect(self.saveAsNoteSlot)
+        # save note button
+        self.saveNoteButton = self.findChild(
+            QtWidgets.QCommandLinkButton, 'commandLinkButton_3')
+        # self.saveNoteButton.clicked.connect(self.saveNoteSlot)
+
+        # save as button
+        self.saveAsButton = self.findChild(
+            QtWidgets.QCommandLinkButton, 'commandLinkButton_4')
+        # self.saveAsButton.clicked.connect(self.saveAsNoteSlot)
 
         # Begin menu bars
         # ===============
@@ -95,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.status = QStatusBar()
         self.setStatusBar(self.status)
 
-        #-----------------
+        # -----------------
         # Create File menu bar
         fileMenu = menuBar.addMenu('File')
 
@@ -134,7 +144,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         printButton.triggered.connect(self.printEvent)
         fileMenu.addAction(printButton)
 
-        #---------------------
+        # ---------------------
         # Create Edit menu bar
         editMenu = menuBar.addMenu('Edit')
 
@@ -180,7 +190,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         selectButton.triggered.connect(self.textBox_1.selectAll)
         editMenu.addAction(selectButton)
 
-        #-----------------------
+        # -----------------------
         # Create Format menu bar
         formatMenu = menuBar.addMenu('Format')
 
@@ -542,7 +552,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # Called when the QTextCursor in the AppWidget QTextEdit is moved
     def cursorMovedEvent(self):
-        
+
         # Do not update formatting while the user is selecting text
         if not self.textBox_1.textCursor().hasSelection():
 
@@ -583,7 +593,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.saveWindow:
             self.saveWindow = AppSaveWindow(self)
             self.saveWindow.initSaveEvent()
-      
 
     # Opens the file dialog even if a file is already open. Returns false if canceled
     def saveAsNoteSlot(self):
@@ -599,9 +608,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def openNoteSlot(self, isNew=False):
 
         # New File
-        if isNew: 
+        if isNew:
 
-             # Prompt save mesage
+            # Prompt save mesage
             if self.needsSave:
                 self.promptSaveMessage()
 
@@ -619,7 +628,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         elif not self.openWindow:
             self.openWindow = AppOpenWindow(self)
             self.openWindow.show()
-            
+
     # Creates the save message prompt window
     def promptSaveMessage(self):
         msg = QMessageBox()
@@ -661,12 +670,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self, 'Select an Image', '', 'PNG (*.png);;JPEG (*.jpg *.jpeg)')
 
         if filePath:
-            
+
             # Create image directory
             if not os.path.exists('users/' + self.textBox_1.mainWindow.user + '/images'):
-                os.makedirs('users/' + self.textBox_1.mainWindow.user + '/images')
+                os.makedirs(
+                    'users/' + self.textBox_1.mainWindow.user + '/images')
 
-            dest = copyfile(filePath, 'users/' + self.textBox_1.mainWindow.user + '/images/' + os.path.basename(filePath))
+            dest = copyfile(filePath, 'users/' + self.textBox_1.mainWindow.user +
+                            '/images/' + os.path.basename(filePath))
             self.textBox_1.textCursor().insertImage(dest)
 
     # Creaes a new file or opens an existing and saves the QTextEdit text
@@ -674,7 +685,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         f = open(fileName, 'w')
         f.write(self.textBox_1.toHtml())
         f.close()
-
 
 
 if __name__ == '__main__':

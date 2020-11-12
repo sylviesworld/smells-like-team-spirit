@@ -5,9 +5,10 @@ from PyQt5 import QtCore
 from permissions import check_permission, add_permission
 import os
 
-# The window for giving another user access to a file
 
 class PermissionWindow(QWidget):
+    """The window for giving another user access to a file"""
+
     def __init__(self, mainWindow):
         super().__init__()
 

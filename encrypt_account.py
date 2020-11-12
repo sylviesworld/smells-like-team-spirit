@@ -1,3 +1,5 @@
+"""Encrypt and decrypt strings"""
+
 import bcrypt
 
 

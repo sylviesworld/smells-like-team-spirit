@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox, QGridLayout,
                              QLabel, QLineEdit, QPushButton, QCheckBox)
 from PyQt5 import QtGui
 
-# The window for finding text in the QTextEdit
-
 
 class FindWindow(QWidget):
+    """The window for finding text in the QTextEdit"""
+
     def __init__(self, textEdit):
         super().__init__()
 
@@ -71,5 +71,6 @@ class FindWindow(QWidget):
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
 
+    # Show window once created
     def createWindow(self):
         self.show()

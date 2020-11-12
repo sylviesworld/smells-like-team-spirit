@@ -22,7 +22,8 @@ class GroupWindow(QWidget):
 
         self.fileModel = QFileSystemModel()
         self.fileModel.setOption(QFileSystemModel.DontWatchForChanges, True)
-        self.fileModel.setRootPath(QDir.currentPath() + '/users/' + self.mainWindow.user)
+        self.fileModel.setRootPath(
+            QDir.currentPath() + '/users/' + self.mainWindow.user)
 
         self.fileTree = QTreeView()
         self.fileTree.setModel(self.fileModel)
@@ -57,7 +58,7 @@ class GroupWindow(QWidget):
         removePath = QDir.currentPath() + '/users/' + self.mainWindow.user + '/'
         redata = re.compile(re.escape(removePath), re.IGNORECASE)
         subPath = redata.sub('', self.fileModel.filePath(current))
-        
+
         if os.path.isdir(self.fileModel.filePath(current)):
             subPath += '/'
 
@@ -109,7 +110,8 @@ class GroupWindow(QWidget):
     # Called when the user clicks the 'Create' button
     def createEvent(self):
 
-        fileName, extension = os.path.splitext(os.path.basename(self.fnLineEdit.text().strip()))
+        fileName, extension = os.path.splitext(
+            os.path.basename(self.fnLineEdit.text().strip()))
         subPath = self.fnLineEdit.text().strip().replace(fileName + extension, '')
         filePath = 'users/' + self.mainWindow.user + '/' + subPath + fileName
 
@@ -141,4 +143,3 @@ class GroupWindow(QWidget):
             return True
         except:
             return False
-

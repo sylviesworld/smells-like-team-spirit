@@ -10,6 +10,7 @@ class dictionary(dict):
         self[key] = value
 
 
+# get permissions for the user
 def get_permissions(user):
     account_permissions = []
 
@@ -58,8 +59,8 @@ def check_permission(account, fullpath):
     return False
 
 
+# get all filenames this account can access
 def add_permission(account, filepath):
-    # get all filenames this account can access
     permissions = get_permissions(account)
 
     fix_path = ''

@@ -28,7 +28,7 @@ class AppWidget(QWidget):
 
         # Set main layout to app widget
         self.setLayout(self.mainLayout)
-    
+
     # Opens the image file dialog and inserts an image into the QTextEdit
     def insertImage(self):
         filePath, _ = QFileDialog.getOpenFileName(
@@ -55,8 +55,6 @@ def splitext(p):
 
 
 class TextEdit(QTextEdit):
-
-    #AutoBulletList()
 
     def canInsertFromMimeData(self, source):
 

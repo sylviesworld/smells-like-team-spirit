@@ -6,6 +6,7 @@ from PyQt5.QtGui import QTextCursor
 from old_permissions import check_permission, add_permission
 from encrypt_file import decrypt_file
 
+
 # The window for opening a file
 class AppOpenWindow(QWidget):
     def __init__(self, mainWindow):
@@ -42,6 +43,7 @@ class AppOpenWindow(QWidget):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.setLayout(self.layout)
 
+    # Close window
     def closeEvent(self, event):
         self.mainWindow.openWindow = None
 

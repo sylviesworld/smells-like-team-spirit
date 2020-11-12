@@ -1,4 +1,5 @@
-import os, re
+import os
+import re
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QFileSystemModel, QGridLayout, QFormLayout, QSizePolicy, QTreeView, QPushButton, QMessageBox
 from PyQt5.QtCore import QDir, Qt
@@ -7,8 +8,9 @@ from permissions import check_permission, add_permission
 from encrypt_file import decrypt_file
 
 
-# The window for opening a file
 class OpenWindow(QWidget):
+    """The window for opening a file"""
+
     def __init__(self, mainWindow):
         super().__init__()
 
