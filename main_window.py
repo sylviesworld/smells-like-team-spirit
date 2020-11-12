@@ -10,7 +10,7 @@ from app_widget import AppWidget
 from permissions import check_permission, add_permission
 from save_window import SaveWindow
 from open_window import OpenWindow
-from account_windows import ChangePasswordWindow
+from account_windows import ChangePasswordWindow, DeleteAccountWindow
 from permission_window import PermissionWindow
 from group_window import GroupWindow
 
@@ -195,13 +195,17 @@ class MainWindow(QMainWindow):
         # Create Account menu bar
         accountMenu = menuBar.addMenu('Account')
 
-        accountButton = QAction('Change password', self)
-        accountButton.triggered.connect(self.change_password)
-        accountMenu.addAction(accountButton)
+        passwordButton = QAction('Change password', self)
+        passwordButton.triggered.connect(self.change_password)
+        accountMenu.addAction(passwordButton)
 
         addUserButton = QAction('Add User', self)
         addUserButton.triggered.connect(self.addUserEvent)
         accountMenu.addAction(addUserButton)
+        
+        deleteAccountButton = QAction('Delete account', self)
+        deleteAccountButton.triggered.connect(self.delete_account)
+        accountMenu.addAction(deleteAccountButton)
 
         # Begin toolbars
         # ==============
@@ -691,7 +695,18 @@ class MainWindow(QMainWindow):
         self.password_window.user = self.user
         self.password_window.show()
 
+    def delete_account(self):
+        if self.user == 'guest':
+            msg = QMessageBox()
+            msg.setText('You must be signed in to an account to delete it.')
+            msg.exec_()
+            return
 
+        self.delete_account_window = DeleteAccountWindow()
+        self.delete_account_window.user = self.user
+        self.delete_account_window.main_window = self
+        self.delete_account_window.show()
+        
 class ListStrManip:
     def make_bullet_format(self, str):
         return "<ul><li>" + str + "</li></ul>"
