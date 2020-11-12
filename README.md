@@ -1,55 +1,56 @@
-# Note taking app
+# Note Taking App
 
-## Description
+## Overview
 An everyday note taking app that supports user profiles and ecrypts all data (files and login information).
-Rich text formatting supported to help you take the best, most effective, notes possible.
+Rich text formatting supported to help you take the best, most effective, notes possible. Two interfaces are offered to best suite all work flows and to encourage user productivity.
 
 Happy note taking!
 
 ### Group name: smells-like-team-spirit
 - [CS-340 Course website](http://web.eecs.utk.edu/courses/fall2020/cosc340/)
 
-## Running the program
-From the _smells-like-team-spirit_ directory, run _main.py_:
 
-    UNIX> python main.py
-    
-There is also a seperate UI being worked on to integrate as the main page in _[app.py](app.py)_. To run it type:
+## About
+This app offers two different note taking interfaces that both include the same great features, only with different note taking styles in mind. In _[main.py](main.py)_, users can focus on one note at a time and have an open canvas, eliminating distractions in the note taking process. For users that prefer a multitasking environment, we offer _[app.py](app.py)_, a similar experience that adds the ability to have a second note tab to write down quick thoughts. The window also has a pane dedicated to switching between notes (new, open, save, save as) to allow one workspace to quickly be converted into another by picking up where you left off on a different note.
 
-    UNIX> python app.py
 
 ## Preview
+From the _smells-like-team-spirit_ directory, run _[main.py](main.py)_:
 
-![Note app screenshot](images/main_screenshot.png)
+    $ python main.py
+    
+![main.py screenshot](images/main_screenshot.png)
 
-Icons courtesy of [icons8.com](https://icons8.com/)
+
+Or run  _[app.py](app.py)_:
+
+    $ python app.py
+
+![app.py screenshot](images/app_screenshot.png)
+
+Toolbar icons sourced from the Blue UI set at [icons8.com](https://icons8.com/).
+
 
 ## Dependencies 
-All dependencies for this project can be found in _[requirements.txt](requirements.txt)_:
+All dependencies for this project are listed in _[requirements.txt](requirements.txt)_:
 
 ```
-UNIX> cat requirements.txt
-cryptography==3.2.1
-PyQt5==5.15.1
-bcrypt==3.2.0
+$ cat requirements.txt
+cryptography
+PyQt5
+bcrypt
+certifi
 ```
 
 To automatically install these dependencies, run the following commands in the _smells-like-team-spirit_ directory:
 
 ```
-UNIX> pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
-Note: If `certifi` was not installed by running _Install Certificates.command_ when setting up Python, or by doing so manually, install the package before using this program.
-- `certifi` documentation:  [link](https://pypi.org/project/certifi/)
-- StackOverflow help for Mac, the most common culprit of this issuse: [link](https://stackoverflow.com/questions/42098126/mac-osx-python-ssl-sslerror-ssl-certificate-verify-failed-certificate-verify)
-
-## Known Issues
-- Not all buttons are linked/functional in _[app.py](app.py)_
 
 ## Authors
 [Noah Burgin](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=assignee%3Anoah-22+is%3Aopen),
 [Dylan Lomax](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3AMaze-Mind),
 [Nick Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Ancreech1),
 [Zach Creech](https://github.com/UTK-CS340-Fall-2020/smells-like-team-spirit/issues?q=is%3Aopen+assignee%3Azach7creech)
-
