@@ -683,9 +683,11 @@ class MainWindow(QMainWindow):
         if dialogue.exec_() == QPrintDialog.Accepted:
             self.centralWidget.textBox.print_(printer)
 
+    # instantiates a window to change account password
     def change_password(self):
         if self.user == 'guest':
             msg = QMessageBox()
+            msg.setWindowTitle('Error')
             msg.setText(
                 'You must be signed in to an account to change your password.')
             msg.exec_()
@@ -695,9 +697,11 @@ class MainWindow(QMainWindow):
         self.password_window.user = self.user
         self.password_window.show()
 
+    # instantiates a window to delete an account
     def delete_account(self):
         if self.user == 'guest':
             msg = QMessageBox()
+            msg.setWindowTitle('Error')
             msg.setText('You must be signed in to an account to delete it.')
             msg.exec_()
             return
